@@ -151,7 +151,9 @@ export default function IndexPage() {
                   fontSize: '14px',
                   fontFamily: 'inherit',
                   flex: '1',
-                  minWidth: '0'
+                  minWidth: '0',
+                  backgroundColor: 'white',
+                  color: '#0F172A'
                 }}
               />
 
