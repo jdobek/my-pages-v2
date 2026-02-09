@@ -1,8 +1,64 @@
 "use client"
 
+import { currentUser } from "@/lib/data"
+
 export default function IndexPage() {
   return (
     <section className="w-full">
+      {/* Header and boxes section with light background */}
+      <div style={{ backgroundColor: '#FBFBFB' }}>
+        <div className="container mx-auto max-w-7xl px-4 py-10 md:py-16">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            {/* Total amount of vehicles */}
+            <div style={{ border: '1px solid #E2E8F0', borderRadius: '8px', padding: '24px', backgroundColor: '#FFFFFF' }}>
+            <p style={{ fontFamily: 'Inter', color: '#64748B', fontSize: '14px', fontWeight: '500', marginBottom: '16px' }}>
+              Total amount of vehicles
+            </p>
+            <p style={{ fontFamily: 'Inter', color: '#0F172A', fontSize: '32px', fontWeight: '700' }}>
+              {currentUser.totalVehicles}
+            </p>
+          </div>
+
+          {/* Total amount of premium */}
+          <div style={{ border: '1px solid #E2E8F0', borderRadius: '8px', padding: '24px', backgroundColor: '#FFFFFF' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+              <p style={{ fontFamily: 'Inter', color: '#64748B', fontSize: '14px', fontWeight: '500' }}>
+                Total amount of premium
+              </p>
+              <svg style={{ width: '16px', height: '16px', color: '#94A3B8' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+              </svg>
+            </div>
+            <p style={{ fontFamily: 'Inter', color: '#0F172A', fontSize: '32px', fontWeight: '700' }}>
+              {currentUser.totalPremium.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} kr
+            </p>
+          </div>
+
+          {/* Avg. vehicle insurance price */}
+          <div style={{ border: '1px solid #E2E8F0', borderRadius: '8px', padding: '24px', backgroundColor: '#FFFFFF' }}>
+            <p style={{ fontFamily: 'Inter', color: '#64748B', fontSize: '14px', fontWeight: '500', marginBottom: '16px' }}>
+              Avg. vehicle insurance price
+            </p>
+            <p style={{ fontFamily: 'Inter', color: '#0F172A', fontSize: '32px', fontWeight: '700' }}>
+              {currentUser.avgVehicleInsurancePrice.toLocaleString('sv-SE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} kr
+            </p>
+          </div>
+
+          {/* Risk score */}
+          <div style={{ border: '1px solid #E2E8F0', borderRadius: '8px', padding: '24px', backgroundColor: '#FFFFFF' }}>
+            <p style={{ fontFamily: 'Inter', color: '#64748B', fontSize: '14px', fontWeight: '500', marginBottom: '16px' }}>
+              Risk score
+            </p>
+            <p style={{ fontFamily: 'Inter', color: '#0F172A', fontSize: '32px', fontWeight: '700' }}>
+              {currentUser.riskScore}/10
+            </p>
+          </div>
+        </div>
+        </div>
+      </div>
+
       <div className="container mx-auto max-w-7xl px-4 py-10 md:py-16">
         <div className="flex flex-col gap-6">
           <div className="flex flex-col gap-3">

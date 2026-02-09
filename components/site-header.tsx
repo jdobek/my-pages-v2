@@ -27,7 +27,7 @@ export function SiteHeader() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
   return (
-    <header className="bg-background sticky top-0 z-40 w-full">
+    <header className="sticky top-0 z-40 w-full" style={{ backgroundColor: '#FBFBFB' }}>
       <div className="container mx-auto max-w-7xl flex h-16 items-center justify-between px-4">
         <MainNav items={siteConfig.mainNav} />
         <div
