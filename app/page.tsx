@@ -11,7 +11,7 @@ export default function IndexPage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
             {/* Total amount of vehicles */}
             <div style={{ border: '1px solid #E2E8F0', borderRadius: '8px', padding: '24px', backgroundColor: '#FFFFFF' }}>
-            <p style={{ fontFamily: 'Inter', color: '#64748B', fontSize: '14px', fontWeight: '500', marginBottom: '16px' }}>
+            <p style={{ color: '#64748B', fontSize: '14px', fontWeight: '500', marginBottom: '16px' }}>
               Total amount of vehicles
             </p>
             <p style={{ fontFamily: 'Inter', color: '#0F172A', fontSize: '32px', fontWeight: '700' }}>
@@ -22,7 +22,7 @@ export default function IndexPage() {
           {/* Total amount of premium */}
           <div style={{ border: '1px solid #E2E8F0', borderRadius: '8px', padding: '24px', backgroundColor: '#FFFFFF' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
-              <p style={{ fontFamily: 'Inter', color: '#64748B', fontSize: '14px', fontWeight: '500' }}>
+              <p style={{ color: '#64748B', fontSize: '14px', fontWeight: '500' }}>
                 Total amount of premium
               </p>
               <svg style={{ width: '16px', height: '16px', color: '#94A3B8' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -31,27 +31,27 @@ export default function IndexPage() {
                 <line x1="12" y1="8" x2="12.01" y2="8"></line>
               </svg>
             </div>
-            <p style={{ fontFamily: 'Inter', color: '#0F172A', fontSize: '32px', fontWeight: '700' }}>
+            <p style={{ color: '#0F172A', fontSize: '32px', fontWeight: '700' }}>
               {currentUser.totalPremium.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} kr
             </p>
           </div>
 
           {/* Avg. vehicle insurance price */}
           <div style={{ border: '1px solid #E2E8F0', borderRadius: '8px', padding: '24px', backgroundColor: '#FFFFFF' }}>
-            <p style={{ fontFamily: 'Inter', color: '#64748B', fontSize: '14px', fontWeight: '500', marginBottom: '16px' }}>
+            <p style={{ color: '#64748B', fontSize: '14px', fontWeight: '500', marginBottom: '16px' }}>
               Avg. vehicle insurance price
             </p>
-            <p style={{ fontFamily: 'Inter', color: '#0F172A', fontSize: '32px', fontWeight: '700' }}>
+            <p style={{ color: '#0F172A', fontSize: '32px', fontWeight: '700' }}>
               {currentUser.avgVehicleInsurancePrice.toLocaleString('sv-SE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} kr
             </p>
           </div>
 
           {/* Risk score */}
           <div style={{ border: '1px solid #E2E8F0', borderRadius: '8px', padding: '24px', backgroundColor: '#FFFFFF' }}>
-            <p style={{ fontFamily: 'Inter', color: '#64748B', fontSize: '14px', fontWeight: '500', marginBottom: '16px' }}>
+            <p style={{ color: '#64748B', fontSize: '14px', fontWeight: '500', marginBottom: '16px' }}>
               Risk score
             </p>
-            <p style={{ fontFamily: 'Inter', color: '#0F172A', fontSize: '32px', fontWeight: '700' }}>
+            <p style={{ color: '#0F172A', fontSize: '32px', fontWeight: '700' }}>
               {currentUser.riskScore}/10
             </p>
           </div>
@@ -62,10 +62,10 @@ export default function IndexPage() {
       <div className="container mx-auto max-w-7xl px-4 py-10 md:py-16">
         <div className="flex flex-col gap-6">
           <div className="flex flex-col gap-3">
-            <h1 style={{ color: '#0F172A', fontFamily: 'Inter', fontWeight: '600', fontSize: '24px' }}>
+            <h1 style={{ color: '#0F172A', fontWeight: '600', fontSize: '24px' }}>
               Get in touch
             </h1>
-            <p style={{ fontFamily: 'Inter', color: '#334155', fontSize: '14px', lineHeight: '24px' }}>
+            <p style={{ color: '#334155', fontSize: '14px', lineHeight: '24px' }}>
               Want to update something in your active policy? Send us a request whenever you need - it&apos;s fast, simple, and we&apos;ll take care of everything for you.
             </p>
           </div>
@@ -80,8 +80,7 @@ export default function IndexPage() {
             padding: '8px 20px',
             borderRadius: '8px',
             border: 'none',
-            fontFamily: 'Inter',
-            fontSize: '14px',
+                        fontSize: '14px',
             fontWeight: '500',
             cursor: 'pointer',
             transition: 'opacity 0.2s'
@@ -102,8 +101,7 @@ export default function IndexPage() {
             padding: '8px 20px',
             borderRadius: '8px',
             border: '1px solid #E2E8F0',
-            fontFamily: 'Inter',
-            fontSize: '14px',
+                        fontSize: '14px',
             fontWeight: '500',
             cursor: 'pointer',
             transition: 'background-color 0.2s'

@@ -2,7 +2,7 @@ import { User } from "./types"
 
 export const currentUser: User = {
   id: "user-001",
-  firstName: "Jakub",
+  firstName: "Daniel",
   lastName: "Dobek",
   totalVehicles: 24,
   totalPremium: 217618.00,

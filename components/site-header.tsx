@@ -4,12 +4,7 @@ import { useState } from "react"
 
 import { siteConfig } from "@/config/site"
 import { MainNav } from "@/components/main-nav"
-
-// Mock customer data - replace with actual user data
-const customer = {
-  firstName: "Jakub",
-  lastName: "Dobek",
-}
+import { currentUser } from "@/lib/data"
 
 function Avatar({ firstName, lastName }: { firstName: string; lastName: string }) {
   const initials = (firstName.charAt(0) + lastName.charAt(0)).toUpperCase()
@@ -38,10 +33,10 @@ export function SiteHeader() {
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity whitespace-nowrap"
           >
-            <span className="text-sm font-normal text-black" style={{ fontFamily: 'Inter' }}>
-              {customer.firstName}, {customer.lastName}
+            <span className="text-sm font-normal text-black">
+              {currentUser.firstName}, {currentUser.lastName}
             </span>
-            <Avatar firstName={customer.firstName} lastName={customer.lastName} />
+            <Avatar firstName={currentUser.firstName} lastName={currentUser.lastName} />
             <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="6 9 12 15 18 9"></polyline>
             </svg>
@@ -49,7 +44,7 @@ export function SiteHeader() {
 
           {isDropdownOpen && (
             <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1">
-              <div className="px-4 py-1.5 text-sm font-medium text-black" style={{ fontFamily: 'Inter' }}>
+              <div className="px-4 py-1.5 text-sm font-medium text-black">
                 My Account
               </div>
               <div className="border-t border-gray-200"></div>
@@ -58,7 +53,7 @@ export function SiteHeader() {
                   <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
                   <polyline points="13 2 13 9 20 9"></polyline>
                 </svg>
-                <span style={{ fontFamily: 'Inter' }}>Terms of Use</span>
+                <span>Terms of Use</span>
               </button>
               <div className="border-t border-gray-200"></div>
               <button className="w-full flex items-center gap-2 px-4 py-1.5 text-sm hover:bg-gray-50 transition-colors text-red-600">
@@ -67,7 +62,7 @@ export function SiteHeader() {
                   <polyline points="16 17 21 12 16 7"></polyline>
                   <line x1="21" y1="12" x2="9" y2="12"></line>
                 </svg>
-                <span style={{ fontFamily: 'Inter' }}>Log out</span>
+                <span>Log out</span>
               </button>
             </div>
           )}
