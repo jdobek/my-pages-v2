@@ -360,55 +360,60 @@ export default function IndexPage() {
             </button>
           </div>
 
-          <div className="mt-8" style={{ borderRadius: '6px', overflow: 'hidden' }}>
-            <table className="w-full border-collapse">
-              <thead className="table-header">
-                <tr>
-                  <th style={{ padding: '12px 8px', textAlign: 'left', fontWeight: '600', fontSize: '14px', color: '#0F172A' }}>Plate number</th>
-                  <th style={{ padding: '12px 8px', textAlign: 'left', fontWeight: '600', fontSize: '14px', color: '#0F172A' }}>Model</th>
-                  <th style={{ padding: '12px 8px', textAlign: 'left', fontWeight: '600', fontSize: '14px', color: '#0F172A' }}>Age</th>
-                  <th style={{ padding: '12px 8px', textAlign: 'left', fontWeight: '600', fontSize: '14px', color: '#0F172A' }}>Price</th>
-                  <th style={{ padding: '12px 8px', textAlign: 'left', fontWeight: '600', fontSize: '14px', color: '#0F172A' }}>Price (TFA)</th>
-                  <th style={{ padding: '12px 8px', textAlign: 'left', fontWeight: '600', fontSize: '14px', color: '#0F172A' }}>Cover lvl</th>
-                  <th style={{ padding: '12px 8px', textAlign: 'left', fontWeight: '600', fontSize: '14px', color: '#0F172A' }}>Add-ons</th>
-                  <th style={{ padding: '12px 8px', textAlign: 'left', fontWeight: '600', fontSize: '14px', color: '#0F172A' }}>Start Date</th>
-                  <th style={{ padding: '12px 8px', textAlign: 'left', fontWeight: '600', fontSize: '14px', color: '#0F172A' }}>Renewal Date</th>
-                  <th style={{ padding: '12px 8px', textAlign: 'left', fontWeight: '600', fontSize: '14px', color: '#0F172A' }}>Action</th>
-                </tr>
-              </thead>
-              <tbody className="table-body" style={{ border: '1px solid #E2E8F0', borderRadius: '8px', display: 'table-row-group' }}>
-                {currentUser.vehicles.map((vehicle) => (
-                  <tr key={vehicle.id} style={{ borderBottom: '1px solid #E2E8F0' }}>
-                    <td style={{ padding: '16px 8px', fontSize: '14px', color: '#005055' }}>
+          <div className="mt-8">
+            <div className="w-full" style={{ display: 'grid', gridTemplateColumns: '1fr 1.8fr 0.6fr 1fr 1fr 1fr 1fr 1fr 1fr 2.2fr', gap: '0', marginBottom: '8px'}}>
+              <div style={{ padding: '8px 8px 8px 16px', textAlign: 'left', fontWeight: '600', fontSize: '14px', color: '#0F172A' }}>Plate no.</div>
+              <div style={{ padding: '8px 8px 8px 16px', textAlign: 'left', fontWeight: '600', fontSize: '14px', color: '#0F172A' }}>Model</div>
+              <div style={{ padding: '8px 8px 8px 16px', textAlign: 'left', fontWeight: '600', fontSize: '14px', color: '#0F172A' }}>Age</div>
+              <div style={{ padding: '8px 8px 8px 16px', textAlign: 'left', fontWeight: '600', fontSize: '14px', color: '#0F172A' }}>Price</div>
+              <div style={{ padding: '8px 8px 8px 16px', textAlign: 'left', fontWeight: '600', fontSize: '14px', color: '#0F172A' }}>Price (TFA)</div>
+              <div style={{ padding: '8px 8px 8px 16px', textAlign: 'left', fontWeight: '600', fontSize: '14px', color: '#0F172A' }}>Cover lvl</div>
+              <div style={{ padding: '8px 8px 8px 16px', textAlign: 'left', fontWeight: '600', fontSize: '14px', color: '#0F172A' }}>Add-ons</div>
+              <div style={{ padding: '8px 8px 8px 16px', textAlign: 'left', fontWeight: '600', fontSize: '14px', color: '#0F172A' }}>Start Date</div>
+              <div style={{ padding: '8px 8px 8px 16px', textAlign: 'left', fontWeight: '600', fontSize: '14px', color: '#0F172A' }}>End Date</div>
+              <div style={{ padding: '8px 8px 8px 16px', textAlign: 'left', fontWeight: '600', fontSize: '14px', color: '#0F172A' }}>Action</div>
+            </div>
+
+            <div style={{ borderRadius: '6px', overflow: 'hidden', border: '1px solid #E2E8F0' }}>
+              <div className="w-full">
+                {currentUser.vehicles.map((vehicle, index) => (
+                  <div key={vehicle.id} style={{ display: 'grid', gridTemplateColumns: '1fr 1.8fr 0.6fr 1fr 1fr 1fr 1fr 1fr 1fr 2.2fr', gap: '0', borderBottom: index < currentUser.vehicles.length - 1 ? '1px solid #E2E8F0' : 'none', alignItems: 'center' }}>
+                    <div style={{ padding: '8px 8px 8px 16px', textAlign: 'left', fontSize: '14px', color: '#005055' }}>
                       <a href="#" style={{ textDecoration: 'underline', color: '#005055', fontWeight: '500' }}>
                         {vehicle.plateNumber}
                       </a>
-                    </td>
-                    <td style={{ padding: '16px 8px', fontSize: '14px', color: '#0F172A' }}>{vehicle.model}</td>
-                    <td style={{ padding: '16px 8px', fontSize: '14px', color: '#0F172A' }}>{vehicle.age} yo</td>
-                    <td style={{ padding: '16px 8px', fontSize: '14px', color: '#0F172A' }}>{vehicle.price.toLocaleString('sv-SE')} kr</td>
-                    <td style={{ padding: '16px 8px', fontSize: '14px', color: '#0F172A' }}>{vehicle.priceWithTFA.toLocaleString('sv-SE')} kr</td>
-                    <td style={{ padding: '16px 8px', fontSize: '14px', color: '#0F172A' }}>{vehicle.coverLevel}</td>
-                    <td style={{ padding: '16px 8px', fontSize: '14px', color: '#0F172A' }}>{vehicle.addOns.length}</td>
-                    <td style={{ padding: '16px 8px', fontSize: '14px', color: '#0F172A' }}>
+                    </div>
+                    <div style={{ padding: '8px 8px 8px 16px', textAlign: 'left', fontSize: '14px', color: '#0F172A' }}>{vehicle.model}</div>
+                    <div style={{ padding: '8px 8px 8px 16px', textAlign: 'left', fontSize: '14px', color: '#0F172A' }}>{vehicle.age} yo</div>
+                    <div style={{ padding: '8px 8px 8px 16px', textAlign: 'left', fontSize: '14px', color: '#0F172A' }}>{vehicle.price.toLocaleString('sv-SE')} kr</div>
+                    <div style={{ padding: '8px 8px 8px 16px', textAlign: 'left', fontSize: '14px', color: '#0F172A' }}>{vehicle.priceWithTFA.toLocaleString('sv-SE')} kr</div>
+                    <div style={{ padding: '8px 8px 8px 16px', textAlign: 'left', fontSize: '14px', color: '#0F172A' }}>{vehicle.coverLevel}</div>
+                    <div style={{ padding: '8px 8px 8px 16px', textAlign: 'left', fontSize: '14px', color: '#0F172A' }}>{vehicle.addOns.length}</div>
+                    <div style={{ padding: '8px 8px 8px 16px', textAlign: 'left', fontSize: '14px', color: '#0F172A' }}>
                       {new Date(vehicle.startDate).toLocaleDateString('sv-SE', { year: 'numeric', month: '2-digit', day: '2-digit' })}
-                    </td>
-                    <td style={{ padding: '16px 8px', fontSize: '14px', color: '#0F172A' }}>
+                    </div>
+                    <div style={{ padding: '8px 8px 8px 16px', textAlign: 'left', fontSize: '14px', color: '#0F172A' }}>
                       {new Date(vehicle.renewalDate).toLocaleDateString('sv-SE', { year: 'numeric', month: '2-digit', day: '2-digit' })}
-                    </td>
-                    <td style={{ padding: '16px 8px', fontSize: '14px' }}>
+                    </div>
+                    <div style={{ padding: '8px 8px 8px 16px', textAlign: 'left', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <button
                         style={{
                           display: 'flex',
                           alignItems: 'center',
                           gap: '8px',
-                          backgroundColor: 'transparent',
+                          backgroundColor: 'white',
                           color: '#0F172A',
-                          border: 'none',
+                          border: '1px solid #E2E8F0',
                           cursor: 'pointer',
                           fontSize: '14px',
-                          fontWeight: '500'
+                          fontWeight: '500',
+                          padding: '6px 12px',
+                          borderRadius: '6px',
+                          whiteSpace: 'nowrap',
+                          transition: 'background-color 0.2s'
                         }}
+                        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#F8FAFC')}
+                        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'white')}
                       >
                         <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="#005055" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                           <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -417,11 +422,35 @@ export default function IndexPage() {
                         </svg>
                         Submit a request
                       </button>
-                    </td>
-                  </tr>
+                      <button
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          backgroundColor: 'white',
+                          color: '#0F172A',
+                          border: '1px solid #E2E8F0',
+                          cursor: 'pointer',
+                          padding: '6px 8px',
+                          borderRadius: '6px',
+                          width: '32px',
+                          height: '32px',
+                          transition: 'background-color 0.2s'
+                        }}
+                        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#F8FAFC')}
+                        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'white')}
+                      >
+                        <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="#005055" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                          <polyline points="7 10 12 15 17 10"></polyline>
+                          <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
                 ))}
-              </tbody>
-            </table>
+              </div>
+            </div>
           </div>
 
           <div style={{ marginTop: '32px', marginBottom: '48px' }}>
