@@ -423,6 +423,12 @@ export default function IndexPage() {
               </tbody>
             </table>
           </div>
+
+          <div style={{ marginTop: '32px', marginBottom: '48px' }}>
+            <p style={{ fontSize: '12px', color: '#64748B' }}>
+              ©2026 Fair Car Insurance
+            </p>
+          </div>
         </div>
       </div>
     </section>
