@@ -13,6 +13,7 @@ export default function IndexPage() {
   const [selectedCoverLevels, setSelectedCoverLevels] = useState<string[]>([])
   const [selectedAddOns, setSelectedAddOns] = useState<string[]>([])
   const [selectedSortBy, setSelectedSortBy] = useState<string>("")
+  const [searchQuery, setSearchQuery] = useState<string>("")
   return (
     <section className="w-full">
       {/* Header and boxes section with light background */}
@@ -144,6 +145,8 @@ export default function IndexPage() {
               <input
                 type="text"
                 placeholder="Search by plate number or model"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 style={{
                   padding: '8px 16px',
                   borderRadius: '8px',
@@ -376,8 +379,34 @@ export default function IndexPage() {
 
             <div style={{ borderRadius: '6px', overflow: 'hidden', border: '1px solid #E2E8F0' }}>
               <div className="w-full">
-                {currentUser.vehicles.map((vehicle, index) => (
-                  <div key={vehicle.id} style={{ display: 'grid', gridTemplateColumns: '1fr 1.8fr 0.6fr 1fr 1fr 1fr 1fr 1fr 1fr 2.2fr', gap: '0', borderBottom: index < currentUser.vehicles.length - 1 ? '1px solid #E2E8F0' : 'none', alignItems: 'center' }}>
+                {(() => {
+                  const filteredVehicles = currentUser.vehicles.filter((vehicle) => {
+                    const query = searchQuery.toLowerCase()
+                    return (
+                      vehicle.plateNumber.toLowerCase().includes(query) ||
+                      vehicle.model.toLowerCase().includes(query)
+                    )
+                  })
+
+                  if (filteredVehicles.length === 0 && searchQuery) {
+                    return (
+                      <div style={{ padding: '32px 16px', textAlign: 'center' }}>
+                        <svg className="h-12 w-12" style={{ margin: '0 auto 16px', color: '#94A3B8' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <circle cx="11" cy="11" r="8"></circle>
+                          <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                        <p style={{ fontSize: '16px', fontWeight: '500', color: '#0F172A', marginBottom: '8px' }}>
+                          No vehicles found
+                        </p>
+                        <p style={{ fontSize: '14px', color: '#64748B' }}>
+                          We couldn't find any vehicles matching "{searchQuery}". Try searching for a different plate number or model.
+                        </p>
+                      </div>
+                    )
+                  }
+
+                  return filteredVehicles.map((vehicle, index) => (
+                    <div key={vehicle.id} style={{ display: 'grid', gridTemplateColumns: '1fr 1.8fr 0.6fr 1fr 1fr 1fr 1fr 1fr 1fr 2.2fr', gap: '0', borderBottom: index < filteredVehicles.length - 1 ? '1px solid #E2E8F0' : 'none', alignItems: 'center' }}>
                     <div style={{ padding: '8px 8px 8px 16px', textAlign: 'left', fontSize: '14px', color: '#005055' }}>
                       <a href="#" style={{ textDecoration: 'underline', color: '#005055', fontWeight: '500' }}>
                         {vehicle.plateNumber}
@@ -448,7 +477,8 @@ export default function IndexPage() {
                       </button>
                     </div>
                   </div>
-                ))}
+                  ))
+                })()}
               </div>
             </div>
           </div>
