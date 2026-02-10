@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 
 import { siteConfig } from "@/config/site"
 import { MainNav } from "@/components/main-nav"
@@ -20,14 +20,31 @@ function Avatar({ firstName, lastName }: { firstName: string; lastName: string }
 
 export function SiteHeader() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false)
+      }
+    }
+
+    if (isDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isDropdownOpen])
 
   return (
     <header className="sticky top-0 z-40 w-full" style={{ backgroundColor: '#FBFBFB' }}>
       <div className="container mx-auto max-w-7xl flex h-16 items-center justify-between px-4">
         <MainNav items={siteConfig.mainNav} />
         <div
+          ref={dropdownRef}
           className="flex items-center gap-2 relative"
-          onMouseLeave={() => setIsDropdownOpen(false)}
         >
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
