@@ -208,17 +208,6 @@ export default function IndexPage() {
               onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")}
               onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
             >
-              <span
-                style={{
-                  fontSize: "24px",
-                  lineHeight: "24px",
-                  display: "flex",
-                  alignItems: "center",
-                  fontWeight: "400",
-                }}
-              >
-                +
-              </span>
               Submit a request
             </button>
             <button
@@ -274,7 +263,7 @@ export default function IndexPage() {
           </div>
 
           <div className="flex flex-col items-start justify-between gap-4 lg:flex-row lg:items-center">
-            <div className="flex flex-1 items-center gap-4">
+            <div className="flex flex-1 items-center gap-2">
               <input
                 type="text"
                 placeholder="Search by plate number or model"
@@ -543,7 +532,7 @@ export default function IndexPage() {
               style={{
                 display: "grid",
                 gridTemplateColumns:
-                  "1fr 1.8fr 0.6fr 1fr 1fr 1fr 1fr 1fr 1fr 2.2fr",
+                  "1fr 1.8fr 0.8fr 1fr 1fr 1fr 1fr 1.2fr 1fr 2.2fr",
                 gap: "0",
                 marginBottom: "8px",
               }}
@@ -649,7 +638,7 @@ export default function IndexPage() {
               </div>
               <div
                 style={{
-                  padding: "8px 8px 8px 24px",
+                  padding: "8px 8px 8px 40px",
                   textAlign: "left",
                   fontWeight: "600",
                   fontSize: "14px",
@@ -720,7 +709,7 @@ export default function IndexPage() {
                       style={{
                         display: "grid",
                         gridTemplateColumns:
-                          "1fr 1.8fr 0.6fr 1fr 1fr 1fr 1fr 1fr 1fr 2.2fr",
+                          "1fr 1.8fr 0.8fr 1fr 1fr 1fr 1fr 1.2fr 1fr 2.2fr",
                         gap: "0",
                         borderBottom:
                           index < filteredVehicles.length - 1
@@ -836,7 +825,7 @@ export default function IndexPage() {
                       </div>
                       <div
                         style={{
-                          padding: "8px 8px 8px 24px",
+                          padding: "8px 8px 8px 40px",
                           textAlign: "left",
                           fontSize: "14px",
                           display: "flex",
@@ -867,19 +856,6 @@ export default function IndexPage() {
                             (e.currentTarget.style.backgroundColor = "white")
                           }
                         >
-                          <svg
-                            className="size-4"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="#005055"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          >
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                            <polyline points="7 10 12 15 17 10"></polyline>
-                            <line x1="12" y1="15" x2="12" y2="3"></line>
-                          </svg>
                           Submit a request
                         </button>
                         <button
