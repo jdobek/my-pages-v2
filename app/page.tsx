@@ -339,7 +339,7 @@ export default function IndexPage() {
                 gap: '8px',
                 backgroundColor: 'white',
                 color: '#0F172A',
-                padding: '8px 16px',
+                padding: '8px 16px 8px 16px',
                 borderRadius: '8px',
                 border: '1px solid #E2E8F0',
                 fontSize: '14px',
@@ -371,7 +371,7 @@ export default function IndexPage() {
               <div style={{ padding: '8px 8px 8px 16px', textAlign: 'left', fontWeight: '600', fontSize: '14px', color: '#0F172A' }}>Add-ons</div>
               <div style={{ padding: '8px 8px 8px 16px', textAlign: 'left', fontWeight: '600', fontSize: '14px', color: '#0F172A' }}>Start Date</div>
               <div style={{ padding: '8px 8px 8px 16px', textAlign: 'left', fontWeight: '600', fontSize: '14px', color: '#0F172A' }}>End Date</div>
-              <div style={{ padding: '8px 8px 8px 16px', textAlign: 'left', fontWeight: '600', fontSize: '14px', color: '#0F172A' }}>Action</div>
+              <div style={{ padding: '8px 8px 8px 24px', textAlign: 'left', fontWeight: '600', fontSize: '14px', color: '#0F172A' }}>Action</div>
             </div>
 
             <div style={{ borderRadius: '6px', overflow: 'hidden', border: '1px solid #E2E8F0' }}>
@@ -395,7 +395,7 @@ export default function IndexPage() {
                     <div style={{ padding: '8px 8px 8px 16px', textAlign: 'left', fontSize: '14px', color: '#0F172A' }}>
                       {new Date(vehicle.renewalDate).toLocaleDateString('sv-SE', { year: 'numeric', month: '2-digit', day: '2-digit' })}
                     </div>
-                    <div style={{ padding: '8px 8px 8px 16px', textAlign: 'left', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div style={{ padding: '8px 8px 8px 24px', textAlign: 'left', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <button
                         style={{
                           display: 'flex',
