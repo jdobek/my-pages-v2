@@ -708,9 +708,7 @@ export default function IndexPage() {
                           No vehicles found
                         </p>
                         <p style={{ fontSize: "14px", color: "#64748B" }}>
-                          We couldn't find any vehicles matching "{searchQuery}
-                          ". Try searching for a different plate number or
-                          model.
+                            {`We couldn't find any vehicles matching "${searchQuery}". Try searching for a different plate number or model.`}
                         </p>
                       </div>
                     )
