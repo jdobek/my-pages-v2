@@ -345,34 +345,51 @@ export default function IndexPage() {
                     </svg>
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent>
+                <DropdownMenuContent className="min-w-fit">
                   <DropdownMenuCheckboxItem
-                    checked={selectedCoverLevels.includes("full")}
+                    checked={selectedCoverLevels.includes("Ansvar")}
                     onCheckedChange={(checked) => {
                       setSelectedCoverLevels(
                         checked
-                          ? [...selectedCoverLevels, "full"]
+                          ? [...selectedCoverLevels, "Ansvar"]
                           : selectedCoverLevels.filter(
-                              (item) => item !== "full"
+                              (item) => item !== "Ansvar"
                             )
                       )
                     }}
+                    onSelect={(e) => e.preventDefault()}
                   >
-                    Full Coverage
+                    Ansvar
                   </DropdownMenuCheckboxItem>
                   <DropdownMenuCheckboxItem
-                    checked={selectedCoverLevels.includes("basic")}
+                    checked={selectedCoverLevels.includes("Kasko")}
                     onCheckedChange={(checked) => {
                       setSelectedCoverLevels(
                         checked
-                          ? [...selectedCoverLevels, "basic"]
+                          ? [...selectedCoverLevels, "Kasko"]
                           : selectedCoverLevels.filter(
-                              (item) => item !== "basic"
+                              (item) => item !== "Kasko"
                             )
                       )
                     }}
+                    onSelect={(e) => e.preventDefault()}
                   >
-                    Basic Coverage
+                    Kasko
+                  </DropdownMenuCheckboxItem>
+                  <DropdownMenuCheckboxItem
+                    checked={selectedCoverLevels.includes("Delkasko")}
+                    onCheckedChange={(checked) => {
+                      setSelectedCoverLevels(
+                        checked
+                          ? [...selectedCoverLevels, "Delkasko"]
+                          : selectedCoverLevels.filter(
+                              (item) => item !== "Delkasko"
+                            )
+                      )
+                    }}
+                    onSelect={(e) => e.preventDefault()}
+                  >
+                    Delkasko
                   </DropdownMenuCheckboxItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -407,56 +424,47 @@ export default function IndexPage() {
                     </svg>
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent>
+                <DropdownMenuContent className="min-w-fit">
                   <DropdownMenuCheckboxItem
-                    checked={selectedAddOns.includes("roadside")}
+                    checked={selectedAddOns.includes("Rental car")}
                     onCheckedChange={(checked) => {
                       setSelectedAddOns(
                         checked
-                          ? [...selectedAddOns, "roadside"]
-                          : selectedAddOns.filter((item) => item !== "roadside")
+                          ? [...selectedAddOns, "Rental car"]
+                          : selectedAddOns.filter((item) => item !== "Rental car")
                       )
                     }}
+                    onSelect={(e) => e.preventDefault()}
                   >
-                    Roadside Assistance
+                    Rental car
                   </DropdownMenuCheckboxItem>
                   <DropdownMenuCheckboxItem
-                    checked={selectedAddOns.includes("glass")}
+                    checked={selectedAddOns.includes("Tools")}
                     onCheckedChange={(checked) => {
                       setSelectedAddOns(
                         checked
-                          ? [...selectedAddOns, "glass"]
-                          : selectedAddOns.filter((item) => item !== "glass")
+                          ? [...selectedAddOns, "Tools"]
+                          : selectedAddOns.filter((item) => item !== "Tools")
                       )
                     }}
+                    onSelect={(e) => e.preventDefault()}
                   >
-                    Glass Protection
+                    Tools
                   </DropdownMenuCheckboxItem>
                   <DropdownMenuCheckboxItem
-                    checked={selectedAddOns.includes("belongings")}
+                    checked={selectedAddOns.includes("Maskinskade")}
                     onCheckedChange={(checked) => {
                       setSelectedAddOns(
                         checked
-                          ? [...selectedAddOns, "belongings"]
+                          ? [...selectedAddOns, "Maskinskade"]
                           : selectedAddOns.filter(
-                              (item) => item !== "belongings"
+                              (item) => item !== "Maskinskade"
                             )
                       )
                     }}
+                    onSelect={(e) => e.preventDefault()}
                   >
-                    Personal Belongings
-                  </DropdownMenuCheckboxItem>
-                  <DropdownMenuCheckboxItem
-                    checked={selectedAddOns.includes("legal")}
-                    onCheckedChange={(checked) => {
-                      setSelectedAddOns(
-                        checked
-                          ? [...selectedAddOns, "legal"]
-                          : selectedAddOns.filter((item) => item !== "legal")
-                      )
-                    }}
-                  >
-                    Legal Protection
+                    Maskinskade
                   </DropdownMenuCheckboxItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -491,12 +499,13 @@ export default function IndexPage() {
                     </svg>
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent>
+                <DropdownMenuContent className="min-w-fit">
                   <DropdownMenuCheckboxItem
                     checked={selectedSortBy === "model"}
                     onCheckedChange={(checked) => {
                       setSelectedSortBy(checked ? "model" : "")
                     }}
+                    onSelect={(e) => e.preventDefault()}
                   >
                     Model
                   </DropdownMenuCheckboxItem>
@@ -505,6 +514,7 @@ export default function IndexPage() {
                     onCheckedChange={(checked) => {
                       setSelectedSortBy(checked ? "price" : "")
                     }}
+                    onSelect={(e) => e.preventDefault()}
                   >
                     Price
                   </DropdownMenuCheckboxItem>
@@ -513,6 +523,7 @@ export default function IndexPage() {
                     onCheckedChange={(checked) => {
                       setSelectedSortBy(checked ? "age" : "")
                     }}
+                    onSelect={(e) => e.preventDefault()}
                   >
                     Age
                   </DropdownMenuCheckboxItem>
