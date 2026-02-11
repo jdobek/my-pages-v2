@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import * as XLSX from "xlsx"
 
 import { currentUser, Vehicle } from "@/lib/data"
 import {
@@ -29,6 +30,25 @@ export default function IndexPage() {
   const closeModal = () => {
     setModal({ isOpen: false, vehicle: null })
   }
+
+  const downloadExcel = () => {
+    const data = currentUser.vehicles.map((vehicle) => ({
+      "Plate Number": vehicle.plateNumber,
+      "Model": vehicle.model,
+      "Age": `${vehicle.age} years`,
+      "Price": vehicle.price,
+      "Price (TFA)": vehicle.priceWithTFA,
+      "Cover Level": vehicle.coverLevel,
+      "Add-ons": vehicle.addOns.join(", "),
+      "Start Date": new Date(vehicle.startDate).toLocaleDateString("sv-SE"),
+      "End Date": new Date(vehicle.renewalDate).toLocaleDateString("sv-SE"),
+    }))
+
+    const worksheet = XLSX.utils.json_to_sheet(data)
+    const workbook = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Vehicles")
+    XLSX.writeFile(workbook, "my_vehicles.xlsx")
+  }
   return (
     <section className="w-full">
       {/* Header and boxes section with light background */}
@@ -46,7 +66,7 @@ export default function IndexPage() {
             >
               <p
                 style={{
-                  color: "#64748B",
+                  color: "#334155",
                   fontSize: "14px",
                   fontWeight: "500",
                   marginBottom: "16px",
@@ -85,7 +105,7 @@ export default function IndexPage() {
               >
                 <p
                   style={{
-                    color: "#64748B",
+                    color: "#334155",
                     fontSize: "14px",
                     fontWeight: "500",
                   }}
@@ -131,7 +151,7 @@ export default function IndexPage() {
             >
               <p
                 style={{
-                  color: "#64748B",
+                  color: "#334155",
                   fontSize: "14px",
                   fontWeight: "500",
                   marginBottom: "16px",
@@ -165,7 +185,7 @@ export default function IndexPage() {
             >
               <p
                 style={{
-                  color: "#64748B",
+                  color: "#334155",
                   fontSize: "14px",
                   fontWeight: "500",
                   marginBottom: "16px",
@@ -501,6 +521,7 @@ export default function IndexPage() {
             </div>
 
             <button
+              onClick={downloadExcel}
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -710,7 +731,7 @@ export default function IndexPage() {
                         >
                           No vehicles found
                         </p>
-                        <p style={{ fontSize: "14px", color: "#64748B" }}>
+                        <p style={{ fontSize: "14px", color: "#334155" }}>
                             {`We couldn't find any vehicles matching "${searchQuery}". Try searching for a different plate number or model.`}
                         </p>
                       </div>
@@ -922,7 +943,7 @@ export default function IndexPage() {
           </div>
 
           <div style={{ marginTop: "32px", marginBottom: "48px" }}>
-            <p style={{ fontSize: "12px", color: "#64748B" }}>
+            <p style={{ fontSize: "12px", color: "#334155" }}>
               ©2026 Fair Car Insurance
             </p>
           </div>
@@ -952,7 +973,7 @@ export default function IndexPage() {
                   alignItems: "center",
                   gap: "8px",
                   backgroundColor: "white",
-                  color: "#005055",
+                  color: "black",
                   padding: "8px 12px",
                   borderRadius: "6px",
                   border: "1px solid #E2E8F0",
@@ -962,10 +983,9 @@ export default function IndexPage() {
                 }}
               >
                 <svg
-                  style={{ width: "16px", height: "16px" }}
+                  style={{ width: "16px", height: "16px", stroke: "#005055" }}
                   viewBox="0 0 24 24"
                   fill="none"
-                  stroke="currentColor"
                   strokeWidth="2"
                 >
                   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -1018,13 +1038,13 @@ export default function IndexPage() {
               </h3>
               <div style={{ border: "1px solid #E2E8F0", borderRadius: "8px", overflow: "hidden" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", padding: "12px 16px", borderBottom: "1px solid #E2E8F0" }}>
-                  <span style={{ color: "#64748B", fontSize: "14px" }}>Start Date</span>
+                  <span style={{ color: "#334155", fontSize: "14px" }}>Start Date</span>
                   <span style={{ color: "#0F172A", fontWeight: "500", fontSize: "14px" }}>
                     {new Date(modal.vehicle.startDate).toLocaleDateString("sv-SE")}
                   </span>
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between", padding: "12px 16px" }}>
-                  <span style={{ color: "#64748B", fontSize: "14px" }}>Renewal Date</span>
+                  <span style={{ color: "#334155", fontSize: "14px" }}>Renewal Date</span>
                   <span style={{ color: "#0F172A", fontWeight: "500", fontSize: "14px" }}>
                     {new Date(modal.vehicle.renewalDate).toLocaleDateString("sv-SE")}
                   </span>
@@ -1039,13 +1059,13 @@ export default function IndexPage() {
               </h3>
               <div style={{ border: "1px solid #E2E8F0", borderRadius: "8px", overflow: "hidden" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", padding: "12px 16px", borderBottom: "1px solid #E2E8F0" }}>
-                  <span style={{ color: "#64748B", fontSize: "14px" }}>Price without TFA</span>
+                  <span style={{ color: "#334155", fontSize: "14px" }}>Price without TFA</span>
                   <span style={{ color: "#0F172A", fontWeight: "500", fontSize: "14px" }}>
                     {new Intl.NumberFormat("sv-SE").format(modal.vehicle.price)} kr
                   </span>
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between", padding: "12px 16px" }}>
-                  <span style={{ color: "#64748B", fontSize: "14px" }}>Price with TFA</span>
+                  <span style={{ color: "#334155", fontSize: "14px" }}>Price with TFA</span>
                   <span style={{ color: "#0F172A", fontWeight: "500", fontSize: "14px" }}>
                     {new Intl.NumberFormat("sv-SE").format(modal.vehicle.priceWithTFA)} kr
                   </span>
@@ -1064,7 +1084,7 @@ export default function IndexPage() {
                   const isLast = index === 2
                   return (
                     <div key={addon} style={{ display: "flex", justifyContent: "space-between", padding: "12px 16px", borderBottom: isLast ? "none" : "1px solid #E2E8F0" }}>
-                      <span style={{ color: "#64748B", fontSize: "14px" }}>{addon}</span>
+                      <span style={{ color: "#334155", fontSize: "14px" }}>{addon}</span>
                       {hasAddon ? (
                         <img src="/icons/check-ic.svg" alt="checked" style={{ width: "24px", height: "24px" }} />
                       ) : (
