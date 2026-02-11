@@ -933,11 +933,11 @@ export default function IndexPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
           <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-white p-8 shadow-lg">
             {/* Header with Policy Number and Download Button */}
-            <div className="mb-6 flex items-start justify-between">
-              <div>
-                <div className="mb-4 flex items-baseline gap-2">
-                  <span style={{ color: "#64748B", fontSize: "14px" }}>Policy number:</span>
-                  <span style={{ color: "#0F172A", fontWeight: "600", fontSize: "14px" }}>
+            <div className="mb-4 flex items-center justify-between">
+              <div style={{ marginTop: "14px" }}>
+                <div className="mb-4 flex items-baseline gap-1">
+                  <span style={{ fontFamily: "Inter", fontSize: "14px", color: "#334155", fontWeight: "400" }}>Policy number:</span>
+                  <span style={{ fontFamily: "Inter", fontSize: "14px", color: "#334155", fontWeight: "400" }}>
                     {Math.floor(Math.random() * 10000000).toString().padStart(7, "0")}
                   </span>
                 </div>
@@ -977,48 +977,53 @@ export default function IndexPage() {
             </div>
 
             {/* Vehicle Info Section */}
-            <div className="mb-8 flex items-start justify-between pb-6 border-b border-gray-200">
-              <div>
-                <h2 style={{ color: "#0F172A", fontWeight: "700", fontSize: "28px", marginBottom: "12px" }}>
-                  {modal.vehicle.model}
-                </h2>
-                <div className="flex items-center gap-3">
-                  <span style={{ color: "#0F172A", fontWeight: "600", fontSize: "14px" }}>
+            <div style={{
+              backgroundColor: "#FBFBFB",
+              border: "1px solid #E2E8F0",
+              borderRadius: "8px",
+              padding: "16px",
+              marginBottom: "24px",
+            }}>
+              <h2 style={{ color: "#0F172A", fontWeight: "700", fontSize: "28px", marginBottom: "4px" }}>
+                {modal.vehicle.model}
+              </h2>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <span style={{ fontFamily: "Inter", fontSize: "16px", color: "black", fontWeight: "400" }}>
                     {modal.vehicle.plateNumber}
                   </span>
                   <span style={{
-                    backgroundColor: "#E0F2FE",
-                    color: "#0369A1",
-                    padding: "4px 12px",
-                    borderRadius: "16px",
-                    fontSize: "12px",
-                    fontWeight: "600",
+                    fontFamily: "Inter",
+                    fontSize: "14px",
+                    color: "black",
+                    fontWeight: "500",
+                    backgroundColor: "white",
+                    border: "1px solid #CBD5E1",
+                    padding: "2px 10px 4px 10px",
+                    borderRadius: "40px",
                   }}>
                     {modal.vehicle.coverLevel}
                   </span>
                 </div>
-              </div>
-              <div style={{ textAlign: "right" }}>
-                <p style={{ color: "#64748B", fontSize: "12px", marginBottom: "4px" }}>Age of car</p>
-                <p style={{ color: "#0F172A", fontWeight: "700", fontSize: "24px" }}>
+                <span style={{ fontFamily: "Inter", fontSize: "14px", fontWeight: "400", color: "#334155" }}>
                   {modal.vehicle.age} {modal.vehicle.age === 1 ? "year" : "years"} old
-                </p>
+                </span>
               </div>
             </div>
 
             {/* Dates Section */}
             <div style={{ marginBottom: "24px" }}>
-              <h3 style={{ color: "#0F172A", fontWeight: "600", fontSize: "14px", marginBottom: "12px" }}>
+              <h3 style={{ color: "#0F172A", fontWeight: "600", fontSize: "14px", marginBottom: "4px" }}>
                 Dates
               </h3>
-              <div>
-                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "12px" }}>
+              <div style={{ border: "1px solid #E2E8F0", borderRadius: "8px", overflow: "hidden" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", padding: "12px 16px", borderBottom: "1px solid #E2E8F0" }}>
                   <span style={{ color: "#64748B", fontSize: "14px" }}>Start Date</span>
                   <span style={{ color: "#0F172A", fontWeight: "500", fontSize: "14px" }}>
                     {new Date(modal.vehicle.startDate).toLocaleDateString("sv-SE")}
                   </span>
                 </div>
-                <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", padding: "12px 16px" }}>
                   <span style={{ color: "#64748B", fontSize: "14px" }}>Renewal Date</span>
                   <span style={{ color: "#0F172A", fontWeight: "500", fontSize: "14px" }}>
                     {new Date(modal.vehicle.renewalDate).toLocaleDateString("sv-SE")}
@@ -1029,17 +1034,17 @@ export default function IndexPage() {
 
             {/* Price Section */}
             <div style={{ marginBottom: "24px" }}>
-              <h3 style={{ color: "#0F172A", fontWeight: "600", fontSize: "14px", marginBottom: "12px" }}>
+              <h3 style={{ color: "#0F172A", fontWeight: "600", fontSize: "14px", marginBottom: "4px" }}>
                 Price
               </h3>
-              <div>
-                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "12px" }}>
+              <div style={{ border: "1px solid #E2E8F0", borderRadius: "8px", overflow: "hidden" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", padding: "12px 16px", borderBottom: "1px solid #E2E8F0" }}>
                   <span style={{ color: "#64748B", fontSize: "14px" }}>Price without TFA</span>
                   <span style={{ color: "#0F172A", fontWeight: "500", fontSize: "14px" }}>
                     {new Intl.NumberFormat("sv-SE").format(modal.vehicle.price)} kr
                   </span>
                 </div>
-                <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", padding: "12px 16px" }}>
                   <span style={{ color: "#64748B", fontSize: "14px" }}>Price with TFA</span>
                   <span style={{ color: "#0F172A", fontWeight: "500", fontSize: "14px" }}>
                     {new Intl.NumberFormat("sv-SE").format(modal.vehicle.priceWithTFA)} kr
@@ -1049,27 +1054,21 @@ export default function IndexPage() {
             </div>
 
             {/* Add-ons Section */}
-            <div style={{ marginBottom: "24px" }}>
-              <h3 style={{ color: "#0F172A", fontWeight: "600", fontSize: "14px", marginBottom: "12px" }}>
+            <div style={{ marginBottom: "8px" }}>
+              <h3 style={{ color: "#0F172A", fontWeight: "600", fontSize: "14px", marginBottom: "4px" }}>
                 Add-ons
               </h3>
-              <div>
-                {["Rental car", "Tools", "Maskinskade"].map((addon) => {
+              <div style={{ border: "1px solid #E2E8F0", borderRadius: "8px", overflow: "hidden" }}>
+                {["Rental car", "Tools", "Maskinskade"].map((addon, index) => {
                   const hasAddon = modal.vehicle?.addOns.includes(addon)
+                  const isLast = index === 2
                   return (
-                    <div key={addon} style={{ display: "flex", justifyContent: "space-between", marginBottom: "12px" }}>
+                    <div key={addon} style={{ display: "flex", justifyContent: "space-between", padding: "12px 16px", borderBottom: isLast ? "none" : "1px solid #E2E8F0" }}>
                       <span style={{ color: "#64748B", fontSize: "14px" }}>{addon}</span>
                       {hasAddon ? (
-                        <svg style={{ width: "20px", height: "20px", color: "#10B981" }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <circle cx="12" cy="12" r="10"></circle>
-                          <polyline points="16 12 12 8 8 12"></polyline>
-                        </svg>
+                        <img src="/icons/check-ic.svg" alt="checked" style={{ width: "24px", height: "24px" }} />
                       ) : (
-                        <svg style={{ width: "20px", height: "20px", color: "#EF4444" }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <circle cx="12" cy="12" r="10"></circle>
-                          <line x1="15" y1="9" x2="9" y2="15"></line>
-                          <line x1="9" y1="9" x2="15" y2="15"></line>
-                        </svg>
+                        <img src="/icons/failed-ic.svg" alt="unchecked" style={{ width: "24px", height: "24px" }} />
                       )}
                     </div>
                   )
@@ -1078,7 +1077,7 @@ export default function IndexPage() {
             </div>
 
             {/* Footer Buttons */}
-            <div style={{ display: "flex", justifyContent: "flex-end", gap: "12px", paddingTop: "24px", borderTop: "1px solid #E2E8F0" }}>
+            <div style={{ display: "flex", justifyContent: "flex-end", gap: "12px", paddingTop: "24px" }}>
               <button
                 type="button"
                 onClick={closeModal}

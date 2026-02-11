@@ -80,7 +80,7 @@ export function VehicleDetailsModal({
             </div>
           </div>
           <div className="text-right">
-            <p className="text-sm text-gray-600">Age of car</p>
+            
             <p className="text-2xl font-bold text-gray-900">
               {vehicle.age} {vehicle.age === 1 ? "year" : "years"} old
             </p>
