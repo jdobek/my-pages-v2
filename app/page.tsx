@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 
-import { currentUser } from "@/lib/data"
+import { currentUser, Vehicle } from "@/lib/data"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -10,11 +10,25 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
+type ModalState = {
+  isOpen: boolean
+  vehicle: Vehicle | null
+}
+
 export default function IndexPage() {
   const [selectedCoverLevels, setSelectedCoverLevels] = useState<string[]>([])
   const [selectedAddOns, setSelectedAddOns] = useState<string[]>([])
   const [selectedSortBy, setSelectedSortBy] = useState<string>("")
   const [searchQuery, setSearchQuery] = useState<string>("")
+  const [modal, setModal] = useState<ModalState>({ isOpen: false, vehicle: null })
+
+  const openModal = (vehicle: Vehicle) => {
+    setModal({ isOpen: true, vehicle })
+  }
+
+  const closeModal = () => {
+    setModal({ isOpen: false, vehicle: null })
+  }
   return (
     <section className="w-full">
       {/* Header and boxes section with light background */}
@@ -726,16 +740,21 @@ export default function IndexPage() {
                           color: "#005055",
                         }}
                       >
-                        <a
-                          href="#"
+                        <button
+                          type="button"
+                          onClick={() => openModal(vehicle)}
                           style={{
                             textDecoration: "underline",
                             color: "#005055",
                             fontWeight: "500",
+                            background: "none",
+                            border: "none",
+                            cursor: "pointer",
+                            padding: 0,
                           }}
                         >
                           {vehicle.plateNumber}
-                        </a>
+                        </button>
                       </div>
                       <div
                         style={{
@@ -909,6 +928,199 @@ export default function IndexPage() {
           </div>
         </div>
       </div>
+
+      {modal.isOpen && modal.vehicle && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-white p-8 shadow-lg">
+            {/* Header with Policy Number and Download Button */}
+            <div className="mb-6 flex items-start justify-between">
+              <div>
+                <div className="mb-4 flex items-baseline gap-2">
+                  <span style={{ color: "#64748B", fontSize: "14px" }}>Policy number:</span>
+                  <span style={{ color: "#0F172A", fontWeight: "600", fontSize: "14px" }}>
+                    {Math.floor(Math.random() * 10000000).toString().padStart(7, "0")}
+                  </span>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault()
+                }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  backgroundColor: "white",
+                  color: "#005055",
+                  padding: "8px 12px",
+                  borderRadius: "6px",
+                  border: "1px solid #E2E8F0",
+                  fontSize: "14px",
+                  fontWeight: "500",
+                  cursor: "pointer",
+                }}
+              >
+                <svg
+                  style={{ width: "16px", height: "16px" }}
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                Download insurance letter
+              </button>
+            </div>
+
+            {/* Vehicle Info Section */}
+            <div className="mb-8 flex items-start justify-between pb-6 border-b border-gray-200">
+              <div>
+                <h2 style={{ color: "#0F172A", fontWeight: "700", fontSize: "28px", marginBottom: "12px" }}>
+                  {modal.vehicle.model}
+                </h2>
+                <div className="flex items-center gap-3">
+                  <span style={{ color: "#0F172A", fontWeight: "600", fontSize: "14px" }}>
+                    {modal.vehicle.plateNumber}
+                  </span>
+                  <span style={{
+                    backgroundColor: "#E0F2FE",
+                    color: "#0369A1",
+                    padding: "4px 12px",
+                    borderRadius: "16px",
+                    fontSize: "12px",
+                    fontWeight: "600",
+                  }}>
+                    {modal.vehicle.coverLevel}
+                  </span>
+                </div>
+              </div>
+              <div style={{ textAlign: "right" }}>
+                <p style={{ color: "#64748B", fontSize: "12px", marginBottom: "4px" }}>Age of car</p>
+                <p style={{ color: "#0F172A", fontWeight: "700", fontSize: "24px" }}>
+                  {modal.vehicle.age} {modal.vehicle.age === 1 ? "year" : "years"} old
+                </p>
+              </div>
+            </div>
+
+            {/* Dates Section */}
+            <div style={{ marginBottom: "24px" }}>
+              <h3 style={{ color: "#0F172A", fontWeight: "600", fontSize: "14px", marginBottom: "12px" }}>
+                Dates
+              </h3>
+              <div>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "12px" }}>
+                  <span style={{ color: "#64748B", fontSize: "14px" }}>Start Date</span>
+                  <span style={{ color: "#0F172A", fontWeight: "500", fontSize: "14px" }}>
+                    {new Date(modal.vehicle.startDate).toLocaleDateString("sv-SE")}
+                  </span>
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between" }}>
+                  <span style={{ color: "#64748B", fontSize: "14px" }}>Renewal Date</span>
+                  <span style={{ color: "#0F172A", fontWeight: "500", fontSize: "14px" }}>
+                    {new Date(modal.vehicle.renewalDate).toLocaleDateString("sv-SE")}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Price Section */}
+            <div style={{ marginBottom: "24px" }}>
+              <h3 style={{ color: "#0F172A", fontWeight: "600", fontSize: "14px", marginBottom: "12px" }}>
+                Price
+              </h3>
+              <div>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "12px" }}>
+                  <span style={{ color: "#64748B", fontSize: "14px" }}>Price without TFA</span>
+                  <span style={{ color: "#0F172A", fontWeight: "500", fontSize: "14px" }}>
+                    {new Intl.NumberFormat("sv-SE").format(modal.vehicle.price)} kr
+                  </span>
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between" }}>
+                  <span style={{ color: "#64748B", fontSize: "14px" }}>Price with TFA</span>
+                  <span style={{ color: "#0F172A", fontWeight: "500", fontSize: "14px" }}>
+                    {new Intl.NumberFormat("sv-SE").format(modal.vehicle.priceWithTFA)} kr
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Add-ons Section */}
+            <div style={{ marginBottom: "24px" }}>
+              <h3 style={{ color: "#0F172A", fontWeight: "600", fontSize: "14px", marginBottom: "12px" }}>
+                Add-ons
+              </h3>
+              <div>
+                {["Rental car", "Tools", "Maskinskade"].map((addon) => {
+                  const hasAddon = modal.vehicle?.addOns.includes(addon)
+                  return (
+                    <div key={addon} style={{ display: "flex", justifyContent: "space-between", marginBottom: "12px" }}>
+                      <span style={{ color: "#64748B", fontSize: "14px" }}>{addon}</span>
+                      {hasAddon ? (
+                        <svg style={{ width: "20px", height: "20px", color: "#10B981" }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <circle cx="12" cy="12" r="10"></circle>
+                          <polyline points="16 12 12 8 8 12"></polyline>
+                        </svg>
+                      ) : (
+                        <svg style={{ width: "20px", height: "20px", color: "#EF4444" }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <circle cx="12" cy="12" r="10"></circle>
+                          <line x1="15" y1="9" x2="9" y2="15"></line>
+                          <line x1="9" y1="9" x2="15" y2="15"></line>
+                        </svg>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+
+            {/* Footer Buttons */}
+            <div style={{ display: "flex", justifyContent: "flex-end", gap: "12px", paddingTop: "24px", borderTop: "1px solid #E2E8F0" }}>
+              <button
+                type="button"
+                onClick={closeModal}
+                style={{
+                  padding: "8px 20px",
+                  borderRadius: "6px",
+                  border: "1px solid #E2E8F0",
+                  backgroundColor: "white",
+                  color: "#0F172A",
+                  fontSize: "14px",
+                  fontWeight: "500",
+                  cursor: "pointer",
+                  transition: "background-color 0.2s",
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#F8FAFC")}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "white")}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={closeModal}
+                style={{
+                  padding: "8px 20px",
+                  borderRadius: "6px",
+                  backgroundColor: "#005055",
+                  color: "white",
+                  fontSize: "14px",
+                  fontWeight: "500",
+                  cursor: "pointer",
+                  border: "none",
+                  transition: "opacity 0.2s",
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")}
+                onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+              >
+                Submit a request
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   )
 }
