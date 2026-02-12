@@ -332,6 +332,26 @@ export default function IndexPage() {
                     }}
                   >
                     Cover lvl
+                    {selectedCoverLevels.length > 0 && (
+                      <span
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          width: "20px",
+                          height: "20px",
+                          borderRadius: "50%",
+                          backgroundColor: "#E2E8F0",
+                          fontSize: "11px",
+                          fontWeight: "600",
+                          color: "#0F172A",
+                          marginLeft: "4px",
+                          marginRight: "-4px",
+                        }}
+                      >
+                        {selectedCoverLevels.length}
+                      </span>
+                    )}
                     <svg
                       className="size-4"
                       viewBox="0 0 24 24"
@@ -411,6 +431,26 @@ export default function IndexPage() {
                     }}
                   >
                     Add-ons
+                    {selectedAddOns.length > 0 && (
+                      <span
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          width: "20px",
+                          height: "20px",
+                          borderRadius: "50%",
+                          backgroundColor: "#E2E8F0",
+                          fontSize: "11px",
+                          fontWeight: "600",
+                          color: "#0F172A",
+                          marginLeft: "4px",
+                          marginRight: "-4px",
+                        }}
+                      >
+                        {selectedAddOns.length}
+                      </span>
+                    )}
                     <svg
                       className="size-4"
                       viewBox="0 0 24 24"
@@ -486,6 +526,26 @@ export default function IndexPage() {
                     }}
                   >
                     Sort by
+                    {selectedSortBy && (
+                      <span
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          width: "20px",
+                          height: "20px",
+                          borderRadius: "50%",
+                          backgroundColor: "#E2E8F0",
+                          fontSize: "11px",
+                          fontWeight: "600",
+                          color: "#0F172A",
+                          marginLeft: "4px",
+                          marginRight: "-4px",
+                        }}
+                      >
+                        1
+                      </span>
+                    )}
                     <svg
                       className="size-4"
                       viewBox="0 0 24 24"
@@ -547,6 +607,51 @@ export default function IndexPage() {
                   </DropdownMenuCheckboxItem>
                 </DropdownMenuContent>
               </DropdownMenu>
+
+              {(searchQuery || selectedCoverLevels.length > 0 || selectedAddOns.length > 0 || selectedSortBy) && (
+                <button
+                  onClick={() => {
+                    setSearchQuery("")
+                    setSelectedCoverLevels([])
+                    setSelectedAddOns([])
+                    setSelectedSortBy("")
+                  }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    backgroundColor: "transparent",
+                    color: "#DC2626",
+                    padding: "8px 16px",
+                    borderRadius: "8px",
+                    border: "none",
+                    fontSize: "14px",
+                    fontWeight: "500",
+                    cursor: "pointer",
+                    transition: "background-color 0.2s",
+                  }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.backgroundColor = "#F8FAFC")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.backgroundColor = "transparent")
+                  }
+                >
+                  <svg
+                    className="size-4"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#DC2626"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                  Clear all
+                </button>
+              )}
             </div>
 
             <button

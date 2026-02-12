@@ -53,9 +53,14 @@ export default function MyPagesPage() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button
-                  className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50"
+                  className="flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50"
                 >
                   Cover lvl
+                  {selectedCoverLevels.length > 0 && (
+                    <span className="flex items-center justify-center w-5 h-5 rounded-full bg-gray-200 text-[11px] font-semibold text-gray-900 ml-1 -mr-1">
+                      {selectedCoverLevels.length}
+                    </span>
+                  )}
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="min-w-fit">
@@ -106,9 +111,14 @@ export default function MyPagesPage() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button
-                  className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50"
+                  className="flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50"
                 >
                   Add-ons
+                  {selectedAddOns.length > 0 && (
+                    <span className="flex items-center justify-center w-5 h-5 rounded-full bg-gray-200 text-[11px] font-semibold text-gray-900 ml-1 -mr-1">
+                      {selectedAddOns.length}
+                    </span>
+                  )}
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="min-w-fit">
@@ -159,9 +169,14 @@ export default function MyPagesPage() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button
-                  className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50"
+                  className="flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50"
                 >
                   Sort by
+                  {selectedSortBy && (
+                    <span className="flex items-center justify-center w-5 h-5 rounded-full bg-gray-200 text-[11px] font-semibold text-gray-900 ml-1 -mr-1">
+                      1
+                    </span>
+                  )}
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="min-w-80 pr-6">
@@ -212,6 +227,32 @@ export default function MyPagesPage() {
                 </DropdownMenuCheckboxItem>
               </DropdownMenuContent>
             </DropdownMenu>
+
+            {(searchQuery || selectedCoverLevels.length > 0 || selectedAddOns.length > 0 || selectedSortBy) && (
+              <button
+                onClick={() => {
+                  setSearchQuery("")
+                  setSelectedCoverLevels([])
+                  setSelectedAddOns([])
+                  setSelectedSortBy("")
+                }}
+                className="flex items-center gap-2 rounded-lg bg-transparent px-4 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-gray-100"
+              >
+                <svg
+                  className="size-4"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#DC2626"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+                Clear all
+              </button>
+            )}
           </div>
 
           {/* Vehicles Table */}
