@@ -33,8 +33,6 @@ export function VehicleDetailsModal({
 }) {
   const policyNumber = generatePolicyNumber()
 
-  console.log("Modal rendered for vehicle:", vehicle.plateNumber)
-
   const handleBackdropClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
       onClose()
@@ -45,10 +43,12 @@ export function VehicleDetailsModal({
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
       onClick={handleBackdropClick}
+      style={{ pointerEvents: "auto" }}
     >
       <div
         className="w-full max-w-2xl rounded-lg bg-white p-8 shadow-lg"
         onClick={(e) => e.stopPropagation()}
+        style={{ pointerEvents: "auto" }}
       >
         {/* Header */}
         <div className="mb-6 flex items-start justify-between">
@@ -80,7 +80,7 @@ export function VehicleDetailsModal({
             </div>
           </div>
           <div className="text-right">
-            
+            <p className="text-sm text-gray-600">Age of car</p>
             <p className="text-2xl font-bold text-gray-900">
               {vehicle.age} {vehicle.age === 1 ? "year" : "years"} old
             </p>

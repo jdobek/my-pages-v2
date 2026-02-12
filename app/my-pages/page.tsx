@@ -2,6 +2,12 @@
 
 import { useState } from "react"
 import { currentUser, Vehicle } from "@/lib/data"
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 type ModalState = {
   isOpen: boolean
@@ -10,6 +16,10 @@ type ModalState = {
 
 export default function MyPagesPage() {
   const [modal, setModal] = useState<ModalState>({ isOpen: false, vehicle: null })
+  const [searchQuery, setSearchQuery] = useState<string>("")
+  const [selectedCoverLevels, setSelectedCoverLevels] = useState<string[]>([])
+  const [selectedAddOns, setSelectedAddOns] = useState<string[]>([])
+  const [selectedSortBy, setSelectedSortBy] = useState<string>("")
 
   const openModal = (vehicle: Vehicle) => {
     console.log("Opening modal for vehicle:", vehicle.plateNumber)
@@ -30,13 +40,178 @@ export default function MyPagesPage() {
             </h1>
           </div>
 
-          {/* Search Bar */}
-          <div className="w-full">
+          {/* Filter Controls */}
+          <div className="flex flex-wrap gap-2">
             <input
               type="text"
               placeholder="Search by plate number or model"
-              className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder:text-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder:text-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
             />
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50"
+                >
+                  Cover lvl
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="min-w-fit">
+                <DropdownMenuCheckboxItem
+                  checked={selectedCoverLevels.includes("Ansvar")}
+                  onCheckedChange={(checked) => {
+                    setSelectedCoverLevels(
+                      checked
+                        ? [...selectedCoverLevels, "Ansvar"]
+                        : selectedCoverLevels.filter((item) => item !== "Ansvar")
+                    )
+                  }}
+                  onSelect={(e) => e.preventDefault()}
+                >
+                  Ansvar
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem
+                  checked={selectedCoverLevels.includes("Kasko")}
+                  onCheckedChange={(checked) => {
+                    setSelectedCoverLevels(
+                      checked
+                        ? [...selectedCoverLevels, "Kasko"]
+                        : selectedCoverLevels.filter((item) => item !== "Kasko")
+                    )
+                  }}
+                  onSelect={(e) => e.preventDefault()}
+                >
+                  Kasko
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem
+                  checked={selectedCoverLevels.includes("Delkasko")}
+                  onCheckedChange={(checked) => {
+                    setSelectedCoverLevels(
+                      checked
+                        ? [...selectedCoverLevels, "Delkasko"]
+                        : selectedCoverLevels.filter(
+                            (item) => item !== "Delkasko"
+                          )
+                    )
+                  }}
+                  onSelect={(e) => e.preventDefault()}
+                >
+                  Delkasko
+                </DropdownMenuCheckboxItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50"
+                >
+                  Add-ons
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="min-w-fit">
+                <DropdownMenuCheckboxItem
+                  checked={selectedAddOns.includes("Rental car")}
+                  onCheckedChange={(checked) => {
+                    setSelectedAddOns(
+                      checked
+                        ? [...selectedAddOns, "Rental car"]
+                        : selectedAddOns.filter((item) => item !== "Rental car")
+                    )
+                  }}
+                  onSelect={(e) => e.preventDefault()}
+                >
+                  Rental car
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem
+                  checked={selectedAddOns.includes("Tools")}
+                  onCheckedChange={(checked) => {
+                    setSelectedAddOns(
+                      checked
+                        ? [...selectedAddOns, "Tools"]
+                        : selectedAddOns.filter((item) => item !== "Tools")
+                    )
+                  }}
+                  onSelect={(e) => e.preventDefault()}
+                >
+                  Tools
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem
+                  checked={selectedAddOns.includes("Maskinskade")}
+                  onCheckedChange={(checked) => {
+                    setSelectedAddOns(
+                      checked
+                        ? [...selectedAddOns, "Maskinskade"]
+                        : selectedAddOns.filter(
+                            (item) => item !== "Maskinskade"
+                          )
+                    )
+                  }}
+                  onSelect={(e) => e.preventDefault()}
+                >
+                  Maskinskade
+                </DropdownMenuCheckboxItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50"
+                >
+                  Sort by
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="min-w-80 pr-6">
+                <DropdownMenuCheckboxItem
+                  checked={selectedSortBy === ""}
+                  onCheckedChange={(checked) => {
+                    setSelectedSortBy(checked ? "" : selectedSortBy)
+                  }}
+                  onSelect={(e) => e.preventDefault()}
+                >
+                  None
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem
+                  checked={selectedSortBy === "price_asc"}
+                  onCheckedChange={(checked) => {
+                    setSelectedSortBy(checked ? "price_asc" : "")
+                  }}
+                  onSelect={(e) => e.preventDefault()}
+                >
+                  Price ascending
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem
+                  checked={selectedSortBy === "price_desc"}
+                  onCheckedChange={(checked) => {
+                    setSelectedSortBy(checked ? "price_desc" : "")
+                  }}
+                  onSelect={(e) => e.preventDefault()}
+                >
+                  Price descending
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem
+                  checked={selectedSortBy === "startDate_desc"}
+                  onCheckedChange={(checked) => {
+                    setSelectedSortBy(checked ? "startDate_desc" : "")
+                  }}
+                  onSelect={(e) => e.preventDefault()}
+                >
+                  Start date descending
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem
+                  checked={selectedSortBy === "age_desc"}
+                  onCheckedChange={(checked) => {
+                    setSelectedSortBy(checked ? "age_desc" : "")
+                  }}
+                  onSelect={(e) => e.preventDefault()}
+                >
+                  Age descending
+                </DropdownMenuCheckboxItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
 
           {/* Vehicles Table */}
@@ -53,25 +228,71 @@ export default function MyPagesPage() {
                 </tr>
               </thead>
               <tbody>
-                {currentUser.vehicles.map((vehicle) => (
-                  <tr
-                    key={vehicle.id}
-                    className="border-b border-gray-200 hover:bg-gray-50"
-                  >
-                    <td className="px-6 py-4">
-                      <button
-                        type="button"
-                        onClick={() => openModal(vehicle)}
-                        className="text-sm font-semibold text-blue-600 hover:text-blue-700 hover:underline"
-                      >
-                        {vehicle.plateNumber}
-                      </button>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-900">
-                      {vehicle.model}
-                    </td>
-                  </tr>
-                ))}
+                {(() => {
+                  const filteredVehicles = currentUser.vehicles.filter((vehicle) => {
+                    // Search filter
+                    const query = searchQuery.toLowerCase()
+                    const matchesSearch =
+                      vehicle.plateNumber.toLowerCase().includes(query) ||
+                      vehicle.model.toLowerCase().includes(query)
+
+                    // Cover level filter (OR logic - match ANY selected level)
+                    const matchesCoverLevel =
+                      selectedCoverLevels.length === 0 ||
+                      selectedCoverLevels.includes(vehicle.coverLevel)
+
+                    // Add-ons filter (AND logic - must have ALL selected add-ons)
+                    const matchesAddOns =
+                      selectedAddOns.length === 0 ||
+                      selectedAddOns.every((addon) => vehicle.addOns.includes(addon))
+
+                    return matchesSearch && matchesCoverLevel && matchesAddOns
+                  }).sort((a, b) => {
+                    // Apply sorting
+                    switch (selectedSortBy) {
+                      case "price_asc":
+                        return a.price - b.price
+                      case "price_desc":
+                        return b.price - a.price
+                      case "startDate_desc":
+                        return new Date(b.startDate).getTime() - new Date(a.startDate).getTime()
+                      case "age_desc":
+                        return b.age - a.age
+                      default:
+                        return 0
+                    }
+                  })
+
+                  if (filteredVehicles.length === 0 && (searchQuery || selectedCoverLevels.length > 0 || selectedAddOns.length > 0)) {
+                    return (
+                      <tr>
+                        <td colSpan={2} className="px-6 py-8 text-center text-gray-500">
+                          No vehicles found. Try adjusting your search or filter criteria.
+                        </td>
+                      </tr>
+                    )
+                  }
+
+                  return filteredVehicles.map((vehicle) => (
+                    <tr
+                      key={vehicle.id}
+                      className="border-b border-gray-200 hover:bg-gray-50"
+                    >
+                      <td className="px-6 py-4">
+                        <button
+                          type="button"
+                          onClick={() => openModal(vehicle)}
+                          className="text-sm font-semibold text-blue-600 hover:text-blue-700 hover:underline"
+                        >
+                          {vehicle.plateNumber}
+                        </button>
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-900">
+                        {vehicle.model}
+                      </td>
+                    </tr>
+                  ))
+                })()}
               </tbody>
             </table>
           </div>

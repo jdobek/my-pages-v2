@@ -499,33 +499,51 @@ export default function IndexPage() {
                     </svg>
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="min-w-fit">
+                <DropdownMenuContent className="min-w-80 pr-6">
                   <DropdownMenuCheckboxItem
-                    checked={selectedSortBy === "model"}
+                    checked={selectedSortBy === ""}
                     onCheckedChange={(checked) => {
-                      setSelectedSortBy(checked ? "model" : "")
+                      setSelectedSortBy(checked ? "" : selectedSortBy)
                     }}
                     onSelect={(e) => e.preventDefault()}
                   >
-                    Model
+                    None
                   </DropdownMenuCheckboxItem>
                   <DropdownMenuCheckboxItem
-                    checked={selectedSortBy === "price"}
+                    checked={selectedSortBy === "price_asc"}
                     onCheckedChange={(checked) => {
-                      setSelectedSortBy(checked ? "price" : "")
+                      setSelectedSortBy(checked ? "price_asc" : "")
                     }}
                     onSelect={(e) => e.preventDefault()}
                   >
-                    Price
+                    Price ascending
                   </DropdownMenuCheckboxItem>
                   <DropdownMenuCheckboxItem
-                    checked={selectedSortBy === "age"}
+                    checked={selectedSortBy === "price_desc"}
                     onCheckedChange={(checked) => {
-                      setSelectedSortBy(checked ? "age" : "")
+                      setSelectedSortBy(checked ? "price_desc" : "")
                     }}
                     onSelect={(e) => e.preventDefault()}
                   >
-                    Age
+                    Price descending
+                  </DropdownMenuCheckboxItem>
+                  <DropdownMenuCheckboxItem
+                    checked={selectedSortBy === "startDate_desc"}
+                    onCheckedChange={(checked) => {
+                      setSelectedSortBy(checked ? "startDate_desc" : "")
+                    }}
+                    onSelect={(e) => e.preventDefault()}
+                  >
+                    Start date descending
+                  </DropdownMenuCheckboxItem>
+                  <DropdownMenuCheckboxItem
+                    checked={selectedSortBy === "age_desc"}
+                    onCheckedChange={(checked) => {
+                      setSelectedSortBy(checked ? "age_desc" : "")
+                    }}
+                    onSelect={(e) => e.preventDefault()}
+                  >
+                    Age descending
                   </DropdownMenuCheckboxItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -704,17 +722,41 @@ export default function IndexPage() {
             >
               <div className="w-full">
                 {(() => {
-                  const filteredVehicles = currentUser.vehicles.filter(
-                    (vehicle) => {
-                      const query = searchQuery.toLowerCase()
-                      return (
-                        vehicle.plateNumber.toLowerCase().includes(query) ||
-                        vehicle.model.toLowerCase().includes(query)
-                      )
-                    }
-                  )
+                  const filteredVehicles = currentUser.vehicles.filter((vehicle) => {
+                    // Search filter
+                    const query = searchQuery.toLowerCase()
+                    const matchesSearch =
+                      vehicle.plateNumber.toLowerCase().includes(query) ||
+                      vehicle.model.toLowerCase().includes(query)
 
-                  if (filteredVehicles.length === 0 && searchQuery) {
+                    // Cover level filter (OR logic - match ANY selected level)
+                    const matchesCoverLevel =
+                      selectedCoverLevels.length === 0 ||
+                      selectedCoverLevels.includes(vehicle.coverLevel)
+
+                    // Add-ons filter (AND logic - must have ALL selected add-ons)
+                    const matchesAddOns =
+                      selectedAddOns.length === 0 ||
+                      selectedAddOns.every((addon) => vehicle.addOns.includes(addon))
+
+                    return matchesSearch && matchesCoverLevel && matchesAddOns
+                  }).sort((a, b) => {
+                    // Apply sorting
+                    switch (selectedSortBy) {
+                      case "price_asc":
+                        return a.price - b.price
+                      case "price_desc":
+                        return b.price - a.price
+                      case "startDate_desc":
+                        return new Date(b.startDate).getTime() - new Date(a.startDate).getTime()
+                      case "age_desc":
+                        return b.age - a.age
+                      default:
+                        return 0
+                    }
+                  })
+
+                  if (filteredVehicles.length === 0 && (searchQuery || selectedCoverLevels.length > 0 || selectedAddOns.length > 0)) {
                     return (
                       <div
                         style={{ padding: "32px 16px", textAlign: "center" }}
@@ -743,7 +785,7 @@ export default function IndexPage() {
                           No vehicles found
                         </p>
                         <p style={{ fontSize: "14px", color: "#334155" }}>
-                            {`We couldn't find any vehicles matching "${searchQuery}". Try searching for a different plate number or model.`}
+                            Try adjusting your search or filter criteria to find matching vehicles.
                         </p>
                       </div>
                     )
@@ -854,6 +896,7 @@ export default function IndexPage() {
                           textAlign: "left",
                           fontSize: "14px",
                           color: "#0F172A",
+                          whiteSpace: "nowrap",
                         }}
                       >
                         {new Date(vehicle.startDate).toLocaleDateString(
@@ -867,6 +910,7 @@ export default function IndexPage() {
                           textAlign: "left",
                           fontSize: "14px",
                           color: "#0F172A",
+                          whiteSpace: "nowrap",
                         }}
                       >
                         {new Date(vehicle.renewalDate).toLocaleDateString(
