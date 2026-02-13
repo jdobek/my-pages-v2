@@ -61,6 +61,9 @@ export function DatePicker({ value, onChange, placeholder = "Pick a date" }: Dat
           selected={date}
           onSelect={handleSelect}
           disabled={(d) => d < today}
+          classNames={{
+            today: date ? "bg-accent text-accent-foreground rounded-md data-[selected=true]:rounded-none" : ""
+          }}
         />
       </PopoverContent>
     </Popover>
