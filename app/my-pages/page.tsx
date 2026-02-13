@@ -486,6 +486,7 @@ export default function MyPagesPage() {
       {showSubmitRequestModal && (
         <SubmitRequestModal
           onClose={closeSubmitRequestModal}
+          onSubmitSuccess={closeSubmitRequestModal}
           vehicle={modal.vehicle || undefined}
         />
       )}
