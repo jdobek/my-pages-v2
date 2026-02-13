@@ -1,3 +1,5 @@
+"use client"
+
 import * as React from "react"
 import { format } from "date-fns"
 import { Calendar as CalendarIcon } from "lucide-react"
@@ -21,18 +23,23 @@ export function DatePicker({ value, onChange, placeholder = "Pick a date" }: Dat
   const [date, setDate] = React.useState<Date | undefined>(
     value ? new Date(value) : undefined
   )
+  const [open, setOpen] = React.useState(false)
 
-  const handleDateSelect = (newDate: Date | undefined) => {
-    setDate(newDate)
-    if (newDate) {
-      // Format as YYYY-MM-DD for input compatibility
-      const formattedDate = format(newDate, "yyyy-MM-dd")
+  const handleSelect = (selectedDate: Date | undefined) => {
+    setDate(selectedDate)
+    if (selectedDate) {
+      const formattedDate = format(selectedDate, "yyyy-MM-dd")
       onChange?.(formattedDate)
+      setOpen(false)
     }
   }
 
+  // Get today's date at midnight for proper comparison
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
@@ -40,26 +47,17 @@ export function DatePicker({ value, onChange, placeholder = "Pick a date" }: Dat
             "w-full justify-start text-left font-normal",
             !date && "text-muted-foreground"
           )}
-          style={{
-            backgroundColor: "white",
-            color: date ? "#0f172a" : "#64748b",
-            borderColor: "#e2e8f0",
-            padding: "10px 16px",
-          }}
         >
-          <CalendarIcon className="mr-2 size-4" />
-          {date ? format(date, "MMM dd, yyyy") : placeholder}
+          <CalendarIcon className="mr-2 h-4 w-4" />
+          {date ? format(date, "dd.MM.yyyy") : placeholder}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
+      <PopoverContent className="w-auto p-1 rounded-lg border border-slate-200" align="start">
         <Calendar
           mode="single"
           selected={date}
-          onSelect={handleDateSelect}
-          disabled={(date) =>
-            date > new Date() || date < new Date("1900-01-01")
-          }
-          initialFocus
+          onSelect={handleSelect}
+          disabled={(d) => d < today}
         />
       </PopoverContent>
     </Popover>
