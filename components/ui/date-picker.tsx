@@ -4,8 +4,6 @@ import * as React from "react"
 import { format } from "date-fns"
 import { Calendar as CalendarIcon } from "lucide-react"
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 import {
   Popover,
@@ -25,6 +23,12 @@ export function DatePicker({ value, onChange, placeholder = "Pick a date" }: Dat
   )
   const [open, setOpen] = React.useState(false)
 
+  React.useEffect(() => {
+    if (value && !date) {
+      setDate(new Date(value))
+    }
+  }, [value, date])
+
   const handleSelect = (selectedDate: Date | undefined) => {
     setDate(selectedDate)
     if (selectedDate) {
@@ -41,16 +45,15 @@ export function DatePicker({ value, onChange, placeholder = "Pick a date" }: Dat
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          className={cn(
-            "w-full justify-start text-left font-normal",
-            !date && "text-muted-foreground"
-          )}
+        <button
+          type="button"
+          className="w-full rounded-lg border border-slate-200 bg-white pl-3 pr-10 py-2.5 text-sm text-slate-900 placeholder:text-slate-500 focus:border-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-400 text-left flex items-center"
         >
-          <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? format(date, "dd.MM.yyyy") : placeholder}
-        </Button>
+          <CalendarIcon className="mr-2 h-4 w-4 flex-shrink-0" />
+          <span className="flex-1">
+            {date ? format(date, "dd.MM.yyyy") : placeholder}
+          </span>
+        </button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-1 rounded-lg border border-slate-200" align="start">
         <Calendar
