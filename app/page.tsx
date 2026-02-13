@@ -1111,6 +1111,7 @@ export default function IndexPage() {
                           Submit a request
                         </button>
                         <button
+                          onClick={downloadSingleInsuranceLetter}
                           style={{
                             display: "flex",
                             alignItems: "center",
