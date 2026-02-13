@@ -1357,6 +1357,7 @@ export default function IndexPage() {
           onClose={closeSubmitRequestModal}
           onSubmitSuccess={handleSubmitSuccess}
           vehicle={modal.vehicle || undefined}
+          vehicles={currentUser.vehicles}
         />
       )}
 
