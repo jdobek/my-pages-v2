@@ -1,9 +1,11 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import * as XLSX from "xlsx"
 
 import { currentUser, Vehicle } from "@/lib/data"
+import { SubmitRequestModal } from "@/components/submit-request-modal"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -22,6 +24,21 @@ export default function IndexPage() {
   const [selectedSortBy, setSelectedSortBy] = useState<string>("")
   const [searchQuery, setSearchQuery] = useState<string>("")
   const [modal, setModal] = useState<ModalState>({ isOpen: false, vehicle: null })
+  const [showSubmitRequestModal, setShowSubmitRequestModal] = useState(false)
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false)
+
+  useEffect(() => {
+    if (showSuccessAlert) {
+      const timer = setTimeout(() => {
+        setShowSuccessAlert(false)
+      }, 5000)
+      return () => clearTimeout(timer)
+    }
+  }, [showSuccessAlert])
+
+  const handleSubmitSuccess = () => {
+    setShowSuccessAlert(true)
+  }
 
   const openModal = (vehicle: Vehicle) => {
     setModal({ isOpen: true, vehicle })
@@ -29,6 +46,20 @@ export default function IndexPage() {
 
   const closeModal = () => {
     setModal({ isOpen: false, vehicle: null })
+  }
+
+  const openSubmitRequestModal = () => {
+    setShowSubmitRequestModal(true)
+  }
+
+  const closeSubmitRequestModal = () => {
+    setShowSubmitRequestModal(false)
+    setModal({ isOpen: false, vehicle: null })
+  }
+
+  const openSubmitRequestModalForVehicle = (vehicle: Vehicle) => {
+    setModal({ isOpen: false, vehicle })
+    setShowSubmitRequestModal(true)
   }
 
   const downloadExcel = () => {
@@ -225,6 +256,7 @@ export default function IndexPage() {
           </div>
           <div className="flex items-center gap-4">
             <button
+              onClick={openSubmitRequestModal}
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -1034,6 +1066,7 @@ export default function IndexPage() {
                         }}
                       >
                         <button
+                          onClick={() => openSubmitRequestModalForVehicle(vehicle)}
                           style={{
                             display: "flex",
                             alignItems: "center",
@@ -1298,6 +1331,41 @@ export default function IndexPage() {
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {showSubmitRequestModal && (
+        <SubmitRequestModal
+          onClose={closeSubmitRequestModal}
+          onSubmitSuccess={handleSubmitSuccess}
+          vehicle={modal.vehicle || undefined}
+        />
+      )}
+
+      {showSuccessAlert && (
+        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 max-w-2xl z-50">
+          <Alert className="bg-white border-gray-200 shadow-lg">
+            <div style={{ display: "flex", gap: "16px", alignItems: "flex-start" }}>
+              <div style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "40px",
+                height: "40px",
+                minWidth: "40px",
+                borderRadius: "50%",
+                backgroundColor: "transparent"
+              }}>
+                <img src="/icons/check-ic.svg" alt="success" style={{ width: "20px", height: "20px" }} />
+              </div>
+              <div style={{ flex: 1 }}>
+                <AlertTitle className="text-gray-900" style={{ fontSize: "18px", fontWeight: "600", marginBottom: "8px" }}>Your request has been sent</AlertTitle>
+                <AlertDescription className="text-gray-600" style={{ fontSize: "15px", lineHeight: "1.5" }}>
+                  Your request has been submitted and is being processed by our support team. You will receive a confirmation email once the change has been completed.
+                </AlertDescription>
+              </div>
+            </div>
+          </Alert>
         </div>
       )}
     </section>

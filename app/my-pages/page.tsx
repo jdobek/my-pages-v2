@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { currentUser, Vehicle } from "@/lib/data"
+import { SubmitRequestModal } from "@/components/submit-request-modal"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -16,6 +17,7 @@ type ModalState = {
 
 export default function MyPagesPage() {
   const [modal, setModal] = useState<ModalState>({ isOpen: false, vehicle: null })
+  const [showSubmitRequestModal, setShowSubmitRequestModal] = useState(false)
   const [searchQuery, setSearchQuery] = useState<string>("")
   const [selectedCoverLevels, setSelectedCoverLevels] = useState<string[]>([])
   const [selectedAddOns, setSelectedAddOns] = useState<string[]>([])
@@ -28,6 +30,19 @@ export default function MyPagesPage() {
 
   const closeModal = () => {
     setModal({ isOpen: false, vehicle: null })
+  }
+
+  const openSubmitRequestModal = () => {
+    setShowSubmitRequestModal(true)
+  }
+
+  const closeSubmitRequestModal = () => {
+    setShowSubmitRequestModal(false)
+  }
+
+  const openSubmitRequestModalForVehicle = (vehicle: Vehicle) => {
+    setModal({ isOpen: true, vehicle })
+    setShowSubmitRequestModal(true)
   }
 
   return (
@@ -455,7 +470,10 @@ export default function MyPagesPage() {
               </button>
               <button
                 type="button"
-                onClick={closeModal}
+                onClick={() => {
+                  closeModal()
+                  openSubmitRequestModal()
+                }}
                 className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
               >
                 Submit a request
@@ -463,6 +481,13 @@ export default function MyPagesPage() {
             </div>
           </div>
         </div>
+      )}
+
+      {showSubmitRequestModal && (
+        <SubmitRequestModal
+          onClose={closeSubmitRequestModal}
+          vehicle={modal.vehicle || undefined}
+        />
       )}
     </>
   )
