@@ -35,6 +35,8 @@ export function SubmitRequestModal({ onClose, onSubmitSuccess, vehicle }: Submit
   const [coverLevel, setCoverLevel] = useState("")
   const [selectedAddOns, setSelectedAddOns] = useState<string[]>([])
   const [message, setMessage] = useState("")
+  const [plateNumberOrVIN, setPlateNumberOrVIN] = useState("")
+  const [startDate, setStartDate] = useState("")
   const isVehicleSpecific = !!vehicle
 
   const handleBackdropClick = (e: React.MouseEvent) => {
@@ -46,6 +48,12 @@ export function SubmitRequestModal({ onClose, onSubmitSuccess, vehicle }: Submit
   const handleSubmit = () => {
     console.log("Submitting request:", {
       requestType,
+      ...(requestType === "Add car" && {
+        plateNumberOrVIN,
+        coverLevel,
+        startDate,
+        selectedAddOns,
+      }),
       ...(requestType === "Remove car" && {
         reason,
         ...(reason === "other" && { customReason })
@@ -68,6 +76,7 @@ export function SubmitRequestModal({ onClose, onSubmitSuccess, vehicle }: Submit
   const isSubmitDisabled =
     !requestType ||
     !message.trim() ||
+    (requestType === "Add car" && (!plateNumberOrVIN.trim() || !coverLevel || !startDate)) ||
     (requestType === "Remove car" && reason === "other" && !customReason.trim()) ||
     (requestType === "Change cover level" && !coverLevel)
 
@@ -113,6 +122,97 @@ export function SubmitRequestModal({ onClose, onSubmitSuccess, vehicle }: Submit
               ))}
             </select>
           </div>
+
+          {/* Add Car Form (only for Add car) */}
+          {requestType === "Add car" && (
+            <>
+              <div>
+                <label className="mb-2 block text-sm font-medium text-slate-900">
+                  Plate number or VIN
+                </label>
+                <input
+                  type="text"
+                  value={plateNumberOrVIN}
+                  onChange={(e) => setPlateNumberOrVIN(e.target.value)}
+                  placeholder="Enter plate number or VIN"
+                  className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-500 focus:border-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-400"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-slate-900">
+                    Cover level
+                  </label>
+                  <select
+                    value={coverLevel}
+                    onChange={(e) => setCoverLevel(e.target.value)}
+                    className="w-full rounded-lg border border-slate-200 bg-white pl-3 pr-10 py-2.5 text-sm text-slate-900 placeholder:text-slate-500 focus:border-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-400"
+                  >
+                    <option value="">Select cover level</option>
+                    <option value="Ansvar">Ansvar</option>
+                    <option value="Delkasko">Delkasko</option>
+                    <option value="Kasko">Kasko</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-slate-900">
+                    Start Date
+                  </label>
+                  <input
+                    type="date"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-500 focus:border-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-400"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-medium text-slate-900">
+                  Add-ons
+                </label>
+                <div className="rounded-lg border border-slate-200 overflow-hidden bg-white">
+                  {AVAILABLE_ADDONS.map((addon, index) => (
+                    <div key={addon}>
+                      <button
+                        type="button"
+                        onClick={() => toggleAddOn(addon)}
+                        className="w-full flex items-center gap-3 px-4 py-3 text-left text-sm text-slate-900 hover:bg-slate-50 transition"
+                      >
+                        <div
+                          className="w-5 h-5 rounded border flex items-center justify-center flex-shrink-0 transition"
+                          style={{
+                            backgroundColor: selectedAddOns.includes(addon) ? "#005055" : "white",
+                            borderColor: selectedAddOns.includes(addon) ? "#005055" : "#CBD5E1",
+                          }}
+                        >
+                          {selectedAddOns.includes(addon) && (
+                            <svg
+                              className="w-4 h-4"
+                              fill="white"
+                              viewBox="0 0 20 20"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          )}
+                        </div>
+                        <span>{addon}</span>
+                      </button>
+                      {index < AVAILABLE_ADDONS.length - 1 && (
+                        <div className="border-t border-slate-200" />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
 
           {/* Cover Level Dropdown (only for Change cover level) */}
           {requestType === "Change cover level" && (
