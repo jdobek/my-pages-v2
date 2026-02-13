@@ -80,6 +80,24 @@ export default function IndexPage() {
     XLSX.utils.book_append_sheet(workbook, worksheet, "Vehicles")
     XLSX.writeFile(workbook, "my_vehicles.xlsx")
   }
+
+  const downloadAllInsuranceLetters = () => {
+    const link = document.createElement("a")
+    link.href = "/Insurance-Letter-Overview-.pdf"
+    link.download = "Insurance-Letter-Overview.pdf"
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
+
+  const downloadSingleInsuranceLetter = () => {
+    const link = document.createElement("a")
+    link.href = "/Insurance-Letter-Single.pdf"
+    link.download = "Insurance-Letter-Single.pdf"
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
   return (
     <section className="w-full">
       {/* Header and boxes section with light background */}
@@ -277,6 +295,7 @@ export default function IndexPage() {
               Submit a request
             </button>
             <button
+              onClick={downloadAllInsuranceLetters}
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -1158,9 +1177,7 @@ export default function IndexPage() {
               </div>
               <button
                 type="button"
-                onClick={(e) => {
-                  e.preventDefault()
-                }}
+                onClick={downloadSingleInsuranceLetter}
                 style={{
                   display: "flex",
                   alignItems: "center",
