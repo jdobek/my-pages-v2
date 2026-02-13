@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { Vehicle } from "@/lib/data"
+import { DatePicker } from "@/components/ui/date-picker"
 
 const REQUEST_TYPES_GENERAL = [
   "Select a request type",
@@ -160,11 +161,10 @@ export function SubmitRequestModal({ onClose, onSubmitSuccess, vehicle }: Submit
                   <label className="mb-2 block text-sm font-medium text-slate-900">
                     Start Date
                   </label>
-                  <input
-                    type="date"
+                  <DatePicker
                     value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
-                    className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-500 focus:border-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-400"
+                    onChange={setStartDate}
+                    placeholder="Select start date"
                   />
                 </div>
               </div>
