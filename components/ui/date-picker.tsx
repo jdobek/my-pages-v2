@@ -62,7 +62,8 @@ export function DatePicker({ value, onChange, placeholder = "Pick a date" }: Dat
           onSelect={handleSelect}
           disabled={(d) => d < today}
           classNames={{
-            today: date ? "bg-accent text-accent-foreground rounded-md data-[selected=true]:rounded-none" : ""
+            today: date ? "bg-accent text-accent-foreground rounded-md data-[selected=true]:rounded-none" : "",
+            day_button: "data-[selected-single=true]:bg-[#005055] data-[selected-single=true]:text-white"
           }}
         />
       </PopoverContent>
