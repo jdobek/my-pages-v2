@@ -6,6 +6,9 @@ import { Vehicle } from "@/lib/data"
 const REQUEST_TYPES_GENERAL = [
   "Select a request type",
   "Add car",
+  "Remove car",
+  "Change cover level",
+  "Adjust add-ons",
   "Other",
 ]
 
