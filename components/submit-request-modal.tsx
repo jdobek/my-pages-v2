@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
 import { Vehicle } from "@/lib/data"
 
 const REQUEST_TYPES = [
@@ -70,48 +69,33 @@ export function SubmitRequestModal({ onClose, onSubmitSuccess, vehicle }: Submit
       style={{ pointerEvents: "auto" }}
     >
       <div
-        className="w-full max-w-2xl rounded-lg bg-white p-8 shadow-lg"
+        className="w-full max-w-xl rounded-lg bg-white p-6 shadow-lg"
         onClick={(e) => e.stopPropagation()}
         style={{ pointerEvents: "auto" }}
       >
         {/* Header */}
-        <div className="mb-2">
-          <h2 className="text-2xl font-bold text-gray-900">
+        <div className="mb-6">
+          <h2 className="mb-3 text-xl font-bold text-slate-900">
             {isVehicleSpecific ? `Request for ${vehicle.plateNumber}` : "Submit a request"}
           </h2>
+          <p className="text-sm text-slate-600">
+            {isVehicleSpecific
+              ? "Submit a request to our support team if you'd like to make any changes to the selected vehicle."
+              : "Submit a request to our support team if you'd like to make any changes."}
+          </p>
         </div>
-        <p className="mb-6 text-gray-600">
-          {isVehicleSpecific
-            ? "Submit a request to our support team if you&apos;d like to make any changes to the selected vehicle."
-            : "Submit a request to our support team if you&apos;d like to make any changes."}
-        </p>
-
-        {/* Vehicle Info Section (for vehicle-specific requests) */}
-        {isVehicleSpecific && (
-          <div className="mb-6 rounded-lg bg-blue-50 p-4 border border-blue-200">
-            <div className="flex justify-between items-start">
-              <div>
-                <h3 className="text-sm font-semibold text-gray-900">{vehicle.model}</h3>
-                <p className="text-sm text-gray-600">{vehicle.plateNumber}</p>
-              </div>
-              <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">
-                {vehicle.coverLevel}
-              </span>
-            </div>
-          </div>
-        )}
 
         {/* Form Fields */}
-        <div className="space-y-5">
+        <div className="space-y-5 mb-6">
           {/* Type Dropdown */}
           <div>
-            <label className="mb-2 block text-sm font-medium text-gray-900">
+            <label className="mb-2 block text-sm font-medium text-slate-900">
               Type
             </label>
             <select
               value={requestType}
               onChange={(e) => setRequestType(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 bg-white pl-3 pr-10 py-2.5 text-sm text-gray-900 placeholder:text-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="w-full rounded-lg border border-slate-200 bg-white pl-3 pr-10 py-2.5 text-sm text-slate-900 placeholder:text-slate-500 focus:border-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-400"
             >
               {REQUEST_TYPES.map((type) => (
                 <option key={type} value={type === "Select a request type" ? "" : type}>
@@ -124,13 +108,13 @@ export function SubmitRequestModal({ onClose, onSubmitSuccess, vehicle }: Submit
           {/* Cover Level Dropdown (only for Change cover level) */}
           {requestType === "Change cover level" && (
             <div>
-              <label className="mb-2 block text-sm font-medium text-gray-900">
+              <label className="mb-2 block text-sm font-medium text-slate-900">
                 Cover level
               </label>
               <select
                 value={coverLevel}
                 onChange={(e) => setCoverLevel(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 bg-white pl-3 pr-10 py-2.5 text-sm text-gray-900 placeholder:text-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full rounded-lg border border-slate-200 bg-white pl-3 pr-10 py-2.5 text-sm text-slate-900 placeholder:text-slate-500 focus:border-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-400"
               >
                 <option value="">Select cover level</option>
                 <option value="Ansvar">Ansvar</option>
@@ -143,22 +127,22 @@ export function SubmitRequestModal({ onClose, onSubmitSuccess, vehicle }: Submit
           {/* Add-ons Selection (only for Adjust add-ons) */}
           {requestType === "Adjust add-ons" && (
             <div>
-              <label className="mb-2 block text-sm font-medium text-gray-900">
+              <label className="mb-2 block text-sm font-medium text-slate-900">
                 Add-ons
               </label>
-              <div className="rounded-lg border border-gray-300 overflow-hidden bg-white">
+              <div className="rounded-lg border border-slate-200 overflow-hidden bg-white">
                 {AVAILABLE_ADDONS.map((addon, index) => (
                   <div key={addon}>
                     <button
                       type="button"
                       onClick={() => toggleAddOn(addon)}
-                      className="w-full flex items-center gap-3 px-4 py-3 text-left text-sm text-gray-900 hover:bg-gray-50 transition"
+                      className="w-full flex items-center gap-3 px-4 py-3 text-left text-sm text-slate-900 hover:bg-slate-50 transition"
                     >
                       <div
                         className="w-5 h-5 rounded border flex items-center justify-center flex-shrink-0 transition"
                         style={{
                           backgroundColor: selectedAddOns.includes(addon) ? "#005055" : "white",
-                          borderColor: selectedAddOns.includes(addon) ? "#005055" : "#D1D5DB",
+                          borderColor: selectedAddOns.includes(addon) ? "#005055" : "#CBD5E1",
                         }}
                       >
                         {selectedAddOns.includes(addon) && (
@@ -178,7 +162,7 @@ export function SubmitRequestModal({ onClose, onSubmitSuccess, vehicle }: Submit
                       <span>{addon}</span>
                     </button>
                     {index < AVAILABLE_ADDONS.length - 1 && (
-                      <div className="border-t border-gray-300" />
+                      <div className="border-t border-slate-200" />
                     )}
                   </div>
                 ))}
@@ -190,13 +174,13 @@ export function SubmitRequestModal({ onClose, onSubmitSuccess, vehicle }: Submit
           {requestType === "Remove car" && (
             <>
               <div>
-                <label className="mb-2 block text-sm font-medium text-gray-900">
+                <label className="mb-2 block text-sm font-medium text-slate-900">
                   Reason
                 </label>
                 <select
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
-                  className="w-full rounded-lg border border-gray-300 bg-white pl-3 pr-10 py-2.5 text-sm text-gray-900 placeholder:text-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-slate-200 bg-white pl-3 pr-10 py-2.5 text-sm text-slate-900 placeholder:text-slate-500 focus:border-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-400"
                 >
                   <option value="">Select reason</option>
                   <option value="too_expensive">Too expensive</option>
@@ -216,7 +200,7 @@ export function SubmitRequestModal({ onClose, onSubmitSuccess, vehicle }: Submit
               {/* Custom Reason Input (only when "Other" is selected) */}
               {reason === "other" && (
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-gray-900">
+                  <label className="mb-2 block text-sm font-medium text-slate-900">
                     Please specify
                   </label>
                   <input
@@ -224,7 +208,7 @@ export function SubmitRequestModal({ onClose, onSubmitSuccess, vehicle }: Submit
                     value={customReason}
                     onChange={(e) => setCustomReason(e.target.value)}
                     placeholder="Enter your reason"
-                    className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-500 focus:border-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-400"
                   />
                 </div>
               )}
@@ -233,7 +217,7 @@ export function SubmitRequestModal({ onClose, onSubmitSuccess, vehicle }: Submit
 
           {/* Message Textarea */}
           <div>
-            <label className="mb-2 block text-sm font-medium text-gray-900">
+            <label className="mb-2 block text-sm font-medium text-slate-900">
               Your message
             </label>
             <textarea
@@ -241,24 +225,30 @@ export function SubmitRequestModal({ onClose, onSubmitSuccess, vehicle }: Submit
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Type your message here"
               rows={5}
-              className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 resize-none"
+              className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-500 focus:border-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-400 resize-none"
             />
           </div>
         </div>
 
         {/* Footer Buttons */}
-        <div className="flex justify-end gap-3 pt-6">
-          <Button variant="outline" onClick={onClose}>
+        <div className="flex justify-end gap-3">
+          <button
+            onClick={onClose}
+            className="px-4 py-2.5 text-sm font-medium text-slate-700 border border-slate-200 rounded-lg hover:bg-slate-50 transition"
+          >
             Cancel
-          </Button>
-          <Button
+          </button>
+          <button
             onClick={handleSubmit}
             disabled={isSubmitDisabled}
-            className={isSubmitDisabled ? "opacity-50 cursor-not-allowed" : ""}
-            style={{ backgroundColor: "#005055" }}
+            className="px-6 py-2.5 text-sm font-medium text-white rounded-lg transition"
+            style={{
+              backgroundColor: isSubmitDisabled ? "#CBD5E1" : "#005055",
+              cursor: isSubmitDisabled ? "not-allowed" : "pointer",
+            }}
           >
             Submit
-          </Button>
+          </button>
         </div>
       </div>
     </div>
