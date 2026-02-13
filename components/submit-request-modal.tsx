@@ -3,7 +3,13 @@
 import { useState } from "react"
 import { Vehicle } from "@/lib/data"
 
-const REQUEST_TYPES = [
+const REQUEST_TYPES_GENERAL = [
+  "Select a request type",
+  "Add car",
+  "Other",
+]
+
+const REQUEST_TYPES_VEHICLE = [
   "Select a request type",
   "Remove car",
   "Change cover level",
@@ -97,7 +103,7 @@ export function SubmitRequestModal({ onClose, onSubmitSuccess, vehicle }: Submit
               onChange={(e) => setRequestType(e.target.value)}
               className="w-full rounded-lg border border-slate-200 bg-white pl-3 pr-10 py-2.5 text-sm text-slate-900 placeholder:text-slate-500 focus:border-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-400"
             >
-              {REQUEST_TYPES.map((type) => (
+              {(isVehicleSpecific ? REQUEST_TYPES_VEHICLE : REQUEST_TYPES_GENERAL).map((type) => (
                 <option key={type} value={type === "Select a request type" ? "" : type}>
                   {type}
                 </option>
