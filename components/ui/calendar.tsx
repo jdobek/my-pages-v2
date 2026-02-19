@@ -108,7 +108,7 @@ function Calendar({
         range_middle: cn("rounded-none", defaultClassNames.range_middle),
         range_end: cn("!bg-slate-100 rounded-r-md", defaultClassNames.range_end),
         today: cn(
-          "!bg-slate-100 !text-slate-900 rounded-md data-[selected=true]:rounded-none",
+          "!text-slate-900 rounded-md data-[selected=true]:rounded-none",
           defaultClassNames.today
         ),
         outside: cn(

@@ -63,7 +63,7 @@ export function DatePicker({ value, onChange, placeholder = "Pick a date" }: Dat
           disabled={(d) => d < today}
           className="!bg-white"
           classNames={{
-            today: date ? "!bg-slate-100 !text-slate-900 rounded-md data-[selected=true]:rounded-none" : "",
+            today: date ? "!text-slate-900 rounded-md data-[selected=true]:rounded-none" : "",
             day_button: "!text-slate-900 data-[selected-single=true]:!bg-[#005055] data-[selected-single=true]:!text-white"
           }}
         />
