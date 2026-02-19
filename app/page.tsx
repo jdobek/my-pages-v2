@@ -1164,8 +1164,18 @@ export default function IndexPage() {
       </div>
 
       {modal.isOpen && modal.vehicle && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-white p-8 shadow-lg">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              closeModal()
+            }
+          }}
+        >
+          <div
+            className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-white p-8 shadow-lg"
+            onClick={(e) => e.stopPropagation()}
+          >
             {/* Header with Policy Number and Download Button */}
             <div className="mb-4 flex items-center justify-between">
               <div style={{ marginTop: "14px" }}>
@@ -1307,13 +1317,12 @@ export default function IndexPage() {
               </div>
             </div>
 
-            {/* Footer Buttons */}
+            {/* Action Buttons */}
             <div style={{ display: "flex", justifyContent: "flex-end", gap: "12px", paddingTop: "24px" }}>
               <button
-                type="button"
                 onClick={closeModal}
                 style={{
-                  padding: "8px 20px",
+                  padding: "10px 20px",
                   borderRadius: "6px",
                   border: "1px solid #E2E8F0",
                   backgroundColor: "white",
@@ -1329,10 +1338,9 @@ export default function IndexPage() {
                 Cancel
               </button>
               <button
-                type="button"
-                onClick={closeModal}
+                onClick={() => modal.vehicle && openSubmitRequestModalForVehicle(modal.vehicle)}
                 style={{
-                  padding: "8px 20px",
+                  padding: "10px 20px",
                   borderRadius: "6px",
                   backgroundColor: "#005055",
                   color: "white",

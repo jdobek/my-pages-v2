@@ -27,9 +27,11 @@ function formatDate(dateString: string): string {
 export function VehicleDetailsModal({
   vehicle,
   onClose,
+  onSubmitRequest,
 }: {
   vehicle: Vehicle
   onClose: () => void
+  onSubmitRequest?: (vehicle: Vehicle) => void
 }) {
   const policyNumber = generatePolicyNumber()
 
@@ -146,14 +148,6 @@ export function VehicleDetailsModal({
               })}
             </div>
           </div>
-        </div>
-
-        {/* Footer Buttons */}
-        <div className="flex justify-end gap-3 border-t pt-6">
-          <Button variant="outline" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button onClick={onClose}>Submit a request</Button>
         </div>
       </div>
     </div>
