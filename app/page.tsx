@@ -101,7 +101,7 @@ export default function IndexPage() {
   return (
     <section className="w-full">
       {/* Header and boxes section with light background */}
-      <div style={{ backgroundColor: "#FBFBFB" }}>
+      <div>
         <div className="container mx-auto max-w-7xl px-4 pb-4 pt-10 md:pb-4 md:pt-16">
           <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-4">
             {/* Total amount of vehicles */}
