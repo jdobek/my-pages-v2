@@ -125,11 +125,11 @@ export default function IndexPage() {
               </p>
               <p
                 style={{
-                  fontFamily: "Inter",
                   color: "#0F172A",
                   fontSize: "32px",
                   fontWeight: "700",
                 }}
+                className="font-sans"
               >
                 {currentUser.totalVehicles}
               </p>
