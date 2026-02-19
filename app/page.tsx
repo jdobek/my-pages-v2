@@ -2,14 +2,17 @@
 
 import { useState, useEffect } from "react"
 import * as XLSX from "xlsx"
+import { ChevronDown } from "lucide-react"
 
 import { currentUser, Vehicle } from "@/lib/data"
 import { SubmitRequestModal } from "@/components/submit-request-modal"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { SidebarTrigger } from "@/components/ui/sidebar"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
@@ -100,6 +103,34 @@ export default function IndexPage() {
   }
   return (
     <section className="w-full">
+      {/* Header with Sidebar toggle and Submit button */}
+      <div className="sticky top-0 z-50 border-b border-gray-200 bg-white">
+        <div className="container mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
+          <SidebarTrigger />
+          <button
+            onClick={openSubmitRequestModal}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              backgroundColor: "#005055",
+              color: "white",
+              padding: "8px 20px",
+              borderRadius: "8px",
+              border: "none",
+              fontSize: "14px",
+              fontWeight: "500",
+              cursor: "pointer",
+              transition: "opacity 0.2s",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")}
+            onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+          >
+            Submit a request
+          </button>
+        </div>
+      </div>
+
       {/* Header and boxes section with light background */}
       <div>
         <div className="container mx-auto max-w-7xl px-4 pb-4 pt-10 md:pb-4 md:pt-16">
@@ -253,87 +284,6 @@ export default function IndexPage() {
               </p>
             </div>
           </div>
-        </div>
-      </div>
-
-      <div className="container mx-auto max-w-7xl px-4 pb-4 pt-10 md:pb-4 md:pt-16">
-        <div className="flex flex-col gap-6">
-          <div className="flex flex-col gap-3">
-            <h1
-              style={{ color: "#0F172A", fontWeight: "600", fontSize: "24px" }}
-            >
-              Get in touch
-            </h1>
-            <p
-              style={{ color: "#334155", fontSize: "14px", lineHeight: "24px" }}
-            >
-              Want to update something in your active policy? Send us a request
-              whenever you need - it&apos;s fast, simple, and we&apos;ll take
-              care of everything for you.
-            </p>
-          </div>
-          <div className="flex items-center gap-4">
-            <button
-              onClick={openSubmitRequestModal}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                backgroundColor: "#005055",
-                color: "white",
-                padding: "8px 20px",
-                borderRadius: "8px",
-                border: "none",
-                fontSize: "14px",
-                fontWeight: "500",
-                cursor: "pointer",
-                transition: "opacity 0.2s",
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")}
-              onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
-            >
-              Submit a request
-            </button>
-            <button
-              onClick={downloadAllInsuranceLetters}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                backgroundColor: "white",
-                color: "#0F172A",
-                padding: "8px 20px",
-                borderRadius: "8px",
-                border: "1px solid #E2E8F0",
-                fontSize: "14px",
-                fontWeight: "500",
-                cursor: "pointer",
-                transition: "background-color 0.2s",
-              }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.backgroundColor = "#F8FAFC")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.backgroundColor = "white")
-              }
-            >
-              <svg
-                className="size-5"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#005055"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                <polyline points="7 10 12 15 17 10"></polyline>
-                <line x1="12" y1="15" x2="12" y2="3"></line>
-              </svg>
-              Download all insurance letters
-            </button>
-          </div>
-          <div className="mt-12 border-t border-gray-200"></div>
         </div>
       </div>
 
@@ -705,45 +655,57 @@ export default function IndexPage() {
               )}
             </div>
 
-            <button
-              onClick={downloadExcel}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                backgroundColor: "white",
-                color: "#0F172A",
-                padding: "8px 16px 8px 16px",
-                borderRadius: "8px",
-                border: "1px solid #E2E8F0",
-                fontSize: "14px",
-                fontWeight: "500",
-                cursor: "pointer",
-                transition: "background-color 0.2s",
-                whiteSpace: "nowrap",
-              }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.backgroundColor = "#F8FAFC")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.backgroundColor = "white")
-              }
-            >
-              <svg
-                className="size-5"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#005055"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
-                <polyline points="17 21 17 13 7 13 7 21"></polyline>
-                <polyline points="7 5 7 13 17 13 17 5"></polyline>
-              </svg>
-              Download excel file
-            </button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    backgroundColor: "white",
+                    color: "#0F172A",
+                    padding: "8px 16px 8px 16px",
+                    borderRadius: "8px",
+                    border: "1px solid #E2E8F0",
+                    fontSize: "14px",
+                    fontWeight: "500",
+                    cursor: "pointer",
+                    transition: "background-color 0.2s",
+                    whiteSpace: "nowrap",
+                  }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.backgroundColor = "#F8FAFC")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.backgroundColor = "white")
+                  }
+                >
+                  <svg
+                    className="size-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#005055"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                  </svg>
+                  Download
+                  <ChevronDown className="size-4" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={downloadAllInsuranceLetters}>
+                  All Insurance Letters
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={downloadExcel}>
+                  Excel File
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
 
           <div className="mt-8">
