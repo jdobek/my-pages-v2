@@ -5,6 +5,7 @@ import { ChartRiskRadial } from "@/components/chart-risk-radial"
 import { ChartRiskScoreTrend } from "@/components/chart-risk-score-trend"
 import { ChartHorizontalBar } from "@/components/chart-horizontal-bar"
 import { ChartHorizontalBar2 } from "@/components/chart-horizontal-bar-2"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { currentUser } from "@/lib/data"
 
 export default function DashboardPage() {
@@ -27,36 +28,16 @@ export default function DashboardPage() {
           {/* Cards and Chart Section */}
           <div className="grid gap-6 md:grid-cols-2">
             {/* Total amount of vehicles card */}
-            <div
-              style={{
-                border: "1px solid #E2E8F0",
-                borderRadius: "8px",
-                padding: "24px",
-                backgroundColor: "#FFFFFF",
-              }}
-            >
-              <p
-                style={{
-                  color: "#334155",
-                  fontSize: "14px",
-                  fontWeight: "500",
-                  marginBottom: "16px",
-                }}
-              >
-                Total amount of vehicles
-              </p>
-              <p
-                style={{
-                  color: "#0F172A",
-                  fontSize: "100px",
-                  fontWeight: "400",
-                  paddingTop: "60px",
-                }}
-                className="font-sans"
-              >
-                {currentUser.totalVehicles}
-              </p>
-            </div>
+            <Card>
+              <CardHeader>
+                <CardTitle>Total amount of vehicles</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="pt-[60px] text-[100px] font-normal leading-none">
+                  {currentUser.totalVehicles}
+                </p>
+              </CardContent>
+            </Card>
 
             {/* Risk Score Chart */}
             <ChartRiskRadial />

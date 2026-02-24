@@ -26,7 +26,7 @@ export function ChartHorizontalBar() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Bar Chart - Custom Label</CardTitle>
+        <CardTitle>Vehicles by Risk Category</CardTitle>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="min-h-[200px] max-h-[300px] w-full">

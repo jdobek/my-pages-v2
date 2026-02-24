@@ -40,7 +40,7 @@ export function ChartRiskRadial() {
 
   return (
     <Card className="flex flex-col">
-      <CardHeader className="items-center pb-0">
+      <CardHeader className="pb-0">
         <CardTitle>Current Risk Score</CardTitle>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
