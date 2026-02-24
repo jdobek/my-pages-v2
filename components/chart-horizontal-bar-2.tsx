@@ -1,0 +1,63 @@
+"use client"
+
+import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart"
+import { Bar, BarChart, LabelList, XAxis, YAxis } from "recharts"
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+
+const chartData = [
+  { category: "Category A", value: 150 },
+  { category: "Category B", value: 220 },
+  { category: "Category C", value: 180 },
+]
+
+const chartConfig = {
+  value: {
+    label: "Value",
+    color: "#005055",
+  },
+} satisfies ChartConfig
+
+export function ChartHorizontalBar2() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Bar Chart - Custom Label</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <ChartContainer config={chartConfig} className="min-h-[200px] max-h-[300px] w-full">
+          <BarChart
+            data={chartData}
+            layout="vertical"
+            margin={{ left: 0, right: 40 }}
+          >
+            <XAxis type="number" hide />
+            <YAxis type="category" dataKey="category" hide />
+            <ChartTooltip
+              cursor={false}
+              content={<ChartTooltipContent hideLabel />}
+            />
+            <Bar dataKey="value" fill="#005055" radius={4}>
+              <LabelList
+                dataKey="category"
+                position="insideLeft"
+                className="fill-white"
+                fontSize={12}
+              />
+              <LabelList
+                dataKey="value"
+                position="right"
+                className="fill-foreground"
+                fontSize={12}
+              />
+            </Bar>
+          </BarChart>
+        </ChartContainer>
+      </CardContent>
+    </Card>
+  )
+}
