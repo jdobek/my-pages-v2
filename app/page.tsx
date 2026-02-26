@@ -134,6 +134,9 @@ export default function IndexPage() {
       {/* Header and boxes section with light background */}
       <div>
         <div className="container mx-auto max-w-7xl px-4 pb-4 pt-10 md:pb-4 md:pt-16">
+          <h1 className="text-slate-950 mb-6" style={{ fontSize: "2.5rem", fontWeight: 600 }}>
+            Policies
+          </h1>
           <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-4">
             {/* Total amount of vehicles */}
             <div

@@ -29,7 +29,7 @@ export function ChartHorizontalBar() {
         <CardTitle>Vehicles by Risk Category</CardTitle>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig} className="min-h-[200px] max-h-[300px] w-full">
+        <ChartContainer config={chartConfig} className="min-h-[200px] max-h-[400px] w-full">
           <BarChart
             data={chartData}
             layout="vertical"

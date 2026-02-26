@@ -40,8 +40,8 @@ export function ChartRiskScoreTrend() {
         <CardDescription>January - December 2026</CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig} className="min-h-[150px] max-h-[400px] w-full">
-          <BarChart accessibilityLayer data={chartData}>
+        <ChartContainer config={chartConfig} className="min-h-[200px] max-h-[400px] w-full">
+          <BarChart accessibilityLayer data={chartData} margin={{ left: 0, right: 0, top: 20 }}>
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="month"
@@ -50,12 +50,22 @@ export function ChartRiskScoreTrend() {
               axisLine={false}
               tickFormatter={(value) => value.slice(0, 3)}
             />
+            <YAxis
+              domain={[0, 10]}
+              hide
+            />
             <ChartTooltip
               cursor={false}
-              content={<ChartTooltipContent hideLabel />}
+              content={<ChartTooltipContent />}
             />
-            <Bar dataKey="riskScore" fill="#005055" radius={8}>
-              <LabelList position="top" offset={12} className="fill-muted-foreground" fontSize={12} />
+            <Bar dataKey="riskScore" fill="#005055" radius={4}>
+              <LabelList
+                dataKey="riskScore"
+                position="top"
+                offset={8}
+                className="fill-muted-foreground"
+                fontSize={12}
+              />
             </Bar>
           </BarChart>
         </ChartContainer>

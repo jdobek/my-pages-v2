@@ -1,7 +1,8 @@
 "use client"
 
 import Image from "next/image"
-import { Home, BarChart3 } from "lucide-react"
+import { usePathname } from "next/navigation"
+import { Home, FileText } from "lucide-react"
 
 import {
   Sidebar,
@@ -22,12 +23,14 @@ const menuItems = [
     title: "Navigation",
     items: [
       { icon: Home, label: "Dashboard", href: "/dashboard" },
-      { icon: BarChart3, label: "My Vehicles", href: "/" },
+      { icon: FileText, label: "Policies", href: "/" },
     ],
   },
 ]
 
 export function Sidebar07() {
+  const pathname = usePathname()
+
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
@@ -48,16 +51,23 @@ export function Sidebar07() {
             <SidebarGroupLabel>{group.title}</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {group.items.map((item) => (
-                  <SidebarMenuItem key={item.label}>
-                    <SidebarMenuButton asChild>
-                      <a href={item.href}>
-                        <item.icon />
-                        <span>{item.label}</span>
-                      </a>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
+                {group.items.map((item) => {
+                  const isActive = pathname === item.href
+                  return (
+                    <SidebarMenuItem key={item.label}>
+                      <SidebarMenuButton asChild>
+                        <a
+                          href={item.href}
+                          className={isActive ? "font-semibold" : ""}
+                          style={isActive ? { color: "#005055" } : {}}
+                        >
+                          <item.icon style={isActive ? { color: "#005055" } : {}} />
+                          <span>{item.label}</span>
+                        </a>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  )
+                })}
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
@@ -67,13 +77,13 @@ export function Sidebar07() {
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton>
-              <div className="flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold bg-sidebar-accent text-sidebar-accent-foreground">
+            <SidebarMenuButton className="pl-0 group-data-[collapsible=icon]:!px-0 group-data-[collapsible=icon]:!py-2">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold bg-gray-300 text-black">
                 JD
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">John Doe</span>
-                <span className="truncate text-xs">john@example.com</span>
+                <span className="truncate font-semibold">Jakub Dobek</span>
+                <span className="truncate text-xs">jakub.dobek@abax.com</span>
               </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
