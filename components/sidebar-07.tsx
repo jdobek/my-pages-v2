@@ -22,8 +22,8 @@ const menuItems = [
   {
     title: "Navigation",
     items: [
-      { icon: Home, label: "Dashboard", href: "/dashboard" },
-      { icon: FileText, label: "Policies", href: "/" },
+      { icon: Home, label: "Dashboard", href: "/" },
+      { icon: FileText, label: "Policies", href: "/policies" },
     ],
   },
 ]
