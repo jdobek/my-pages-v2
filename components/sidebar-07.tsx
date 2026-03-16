@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import { usePathname } from "next/navigation"
-import { Home, FileText } from "lucide-react"
+import { Home, FileText, FileSpreadsheet } from "lucide-react"
 
 import {
   Sidebar,
@@ -24,6 +24,7 @@ const menuItems = [
     items: [
       { icon: Home, label: "Dashboard", href: "/" },
       { icon: FileText, label: "Policies", href: "/policies" },
+      { icon: FileSpreadsheet, label: "Invoices", href: "/invoices" },
     ],
   },
 ]
