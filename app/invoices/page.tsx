@@ -235,7 +235,7 @@ export default function InvoicesPage() {
                   marginBottom: "16px",
                 }}
               >
-                We're here to help you.
+                We&apos;re here to help you.
               </p>
               <button
                 style={{
