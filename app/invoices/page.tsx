@@ -99,6 +99,20 @@ export default function InvoicesPage() {
     }).format(amount).replace(',', '.').replace(/\s/g, ' ')
   }
 
+  const calculateDaysLeft = (dueDate: string, status: string) => {
+    if (status === "paid") return null
+
+    const [day, month, year] = dueDate.split('.')
+    const due = new Date(parseInt(year), parseInt(month) - 1, parseInt(day))
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+
+    const diffTime = due.getTime() - today.getTime()
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+
+    return diffDays
+  }
+
   return (
     <div className="w-full">
       {/* Header with Sidebar toggle */}
@@ -561,7 +575,7 @@ export default function InvoicesPage() {
                 className="w-full"
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "1fr 1fr 1fr 1.2fr 1fr 1fr 1.2fr 0.5fr",
+                  gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr",
                   gap: "0",
                   marginBottom: "8px",
                 }}
@@ -575,7 +589,7 @@ export default function InvoicesPage() {
                     color: "#0F172A",
                   }}
                 >
-                  Invoice number
+                  Invoice no.
                 </div>
                 <div
                   style={{
@@ -598,6 +612,17 @@ export default function InvoicesPage() {
                   }}
                 >
                   Due Date
+                </div>
+                <div
+                  style={{
+                    padding: "8px 8px 8px 16px",
+                    textAlign: "left",
+                    fontWeight: "600",
+                    fontSize: "14px",
+                    color: "#0F172A",
+                  }}
+                >
+                  Past due
                 </div>
                 <div
                   style={{
@@ -727,12 +752,14 @@ export default function InvoicesPage() {
                       )
                     }
 
-                    return filteredInvoices.map((invoice, index) => (
+                    return filteredInvoices.map((invoice, index) => {
+                      const daysLeft = calculateDaysLeft(invoice.dueDate, invoice.status)
+                      return (
                     <div
                       key={invoice.number}
                       style={{
                         display: "grid",
-                        gridTemplateColumns: "1fr 1fr 1fr 1.2fr 1fr 1fr 1.2fr 0.5fr",
+                        gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr",
                         gap: "0",
                         borderBottom: index < invoices.length - 1 ? "1px solid #E2E8F0" : "none",
                         alignItems: "center",
@@ -780,6 +807,26 @@ export default function InvoicesPage() {
                         }}
                       >
                         {invoice.dueDate}
+                      </div>
+                      <div
+                        style={{
+                          padding: "8px 8px 8px 16px",
+                          textAlign: "left",
+                          fontSize: "14px",
+                          color: "#0F172A",
+                        }}
+                      >
+                        {daysLeft !== null ? (
+                          <span style={{
+                            fontSize: "14px",
+                            fontWeight: "500",
+                            color: daysLeft < 0 ? "#DC2626" : "#0F172A"
+                          }}>
+                            {Math.abs(daysLeft)} days
+                          </span>
+                        ) : (
+                          <span style={{ fontSize: "14px", color: "#64748B" }}>-</span>
+                        )}
                       </div>
                       <div
                         style={{
@@ -905,6 +952,7 @@ export default function InvoicesPage() {
                           fontSize: "14px",
                           display: "flex",
                           alignItems: "center",
+                          justifyContent: "flex-end",
                           gap: "8px",
                         }}
                       >
@@ -934,7 +982,7 @@ export default function InvoicesPage() {
                                 }
                               >
                                 <svg
-                                  className="size-5"
+                                  className="size-4"
                                   viewBox="0 0 24 24"
                                   fill="none"
                                   stroke="#005055"
@@ -1009,7 +1057,7 @@ export default function InvoicesPage() {
                             }
                           >
                             <svg
-                              className="size-5"
+                              className="size-4"
                               viewBox="0 0 24 24"
                               fill="none"
                               stroke="#005055"
@@ -1025,7 +1073,8 @@ export default function InvoicesPage() {
                         )}
                       </div>
                     </div>
-                    ))
+                    )
+                    })
                   })()}
                 </div>
               </div>
