@@ -25,15 +25,26 @@ type Invoice = {
 }
 
 const invoices: Invoice[] = [
-  { number: "300675", issueDate: "12.11.2024", dueDate: "26.11.2024", price: "3 052 kr", status: "overdue", schedule: "Monthly" },
-  { number: "300674", issueDate: "12.11.2024", dueDate: "26.11.2024", price: "3 052 kr", status: "overdue", schedule: "Monthly" },
-  { number: "300673", issueDate: "12.11.2024", dueDate: "26.11.2024", price: "3 052 kr", creditAmount: "-1 243.13", status: "in_progress", schedule: "Monthly", creditNote: "300682" },
-  { number: "300672", issueDate: "12.11.2024", dueDate: "26.11.2024", price: "3 052 kr", status: "paid", schedule: "Monthly" },
-  { number: "300671", issueDate: "12.11.2024", dueDate: "26.11.2024", price: "3 052 kr", status: "paid", schedule: "Monthly" },
-  { number: "300669", issueDate: "12.11.2024", dueDate: "26.11.2024", price: "3 052 kr", status: "paid", schedule: "Monthly" },
-  { number: "300668", issueDate: "12.11.2024", dueDate: "26.11.2024", price: "3 052 kr", status: "paid", schedule: "Monthly" },
-  { number: "300667", issueDate: "12.11.2024", dueDate: "26.11.2024", price: "3 052 kr", status: "paid", schedule: "Monthly" },
-  { number: "300666", issueDate: "12.11.2024", dueDate: "26.11.2024", price: "3 052 kr", status: "paid", schedule: "Monthly" },
+  { number: "300675", issueDate: "01.03.2026", dueDate: "15.03.2026", price: "8 027,48 kr", status: "overdue", schedule: "Monthly" },
+  { number: "300674", issueDate: "01.02.2026", dueDate: "15.02.2026", price: "8 027,48 kr", status: "overdue", schedule: "Monthly" },
+  { number: "300673", issueDate: "01.01.2026", dueDate: "15.01.2026", price: "13 000 kr", creditAmount: "-1 243.13", status: "in_progress", schedule: "Monthly", creditNote: "300062" },
+  { number: "300672", issueDate: "01.12.2025", dueDate: "15.12.2025", price: "13 000 kr", status: "paid", schedule: "Monthly" },
+  { number: "300671", issueDate: "01.11.2025", dueDate: "15.11.2025", price: "13 000 kr", status: "paid", schedule: "Monthly" },
+  { number: "300669", issueDate: "01.10.2025", dueDate: "15.10.2025", price: "13 000 kr", status: "paid", schedule: "Monthly" },
+  { number: "300668", issueDate: "01.09.2025", dueDate: "15.09.2025", price: "11 400 kr", status: "paid", schedule: "Monthly" },
+  { number: "300667", issueDate: "01.08.2025", dueDate: "15.08.2025", price: "11 400 kr", status: "paid", schedule: "Monthly" },
+  { number: "300666", issueDate: "01.07.2025", dueDate: "15.07.2025", price: "11 400 kr", status: "paid", schedule: "Monthly" },
+  { number: "300665", issueDate: "01.06.2025", dueDate: "15.06.2025", price: "11 400 kr", status: "paid", schedule: "Monthly" },
+  { number: "300664", issueDate: "01.05.2025", dueDate: "15.05.2025", price: "10 600 kr", status: "paid", schedule: "Monthly" },
+  { number: "300663", issueDate: "01.04.2025", dueDate: "15.04.2025", price: "10 600 kr", status: "paid", schedule: "Monthly" },
+  { number: "300662", issueDate: "01.03.2025", dueDate: "15.03.2025", price: "10 600 kr", status: "paid", schedule: "Monthly" },
+  { number: "300661", issueDate: "01.02.2025", dueDate: "15.02.2025", price: "9 800 kr", status: "paid", schedule: "Monthly" },
+  { number: "300660", issueDate: "01.01.2025", dueDate: "15.01.2025", price: "9 800 kr", status: "paid", schedule: "Monthly" },
+  { number: "300659", issueDate: "01.12.2024", dueDate: "15.12.2024", price: "9 800 kr", status: "paid", schedule: "Monthly" },
+  { number: "300658", issueDate: "01.11.2024", dueDate: "15.11.2024", price: "9 800 kr", status: "paid", schedule: "Monthly" },
+  { number: "300657", issueDate: "01.10.2024", dueDate: "15.10.2024", price: "9 000 kr", status: "paid", schedule: "Monthly" },
+  { number: "300656", issueDate: "01.09.2024", dueDate: "15.09.2024", price: "9 000 kr", status: "paid", schedule: "Monthly" },
+  { number: "300655", issueDate: "01.08.2024", dueDate: "15.08.2024", price: "9 000 kr", status: "paid", schedule: "Monthly" },
 ]
 
 export default function InvoicesPage() {
@@ -62,6 +73,30 @@ export default function InvoicesPage() {
 
   const closeSubmitRequestModal = () => {
     setShowSubmitRequestModal(false)
+  }
+
+  // Calculate totals
+  const parsePrice = (price: string) => {
+    return parseFloat(price.replace(/\s/g, '').replace(',', '.').replace('kr', ''))
+  }
+
+  const unpaidInvoices = invoices.filter(inv => inv.status === "overdue" || inv.status === "in_progress")
+  const unpaidTotal = unpaidInvoices.reduce((sum, inv) => sum + parsePrice(inv.price), 0)
+  const unpaidCount = unpaidInvoices.length
+
+  const paidInvoices = invoices.filter(inv => inv.status === "paid")
+  const paidTotal = paidInvoices.reduce((sum, inv) => sum + parsePrice(inv.price), 0)
+  const paidCount = paidInvoices.length
+
+  const creditNotes = invoices.filter(inv => inv.creditAmount)
+  const creditTotal = creditNotes.reduce((sum, inv) => sum + (inv.creditAmount ? parseFloat(inv.creditAmount.replace(/\s/g, '').replace(',', '.')) : 0), 0)
+  const creditCount = creditNotes.length
+
+  const formatAmount = (amount: number) => {
+    return new Intl.NumberFormat('sv-SE', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(amount).replace(',', '.').replace(/\s/g, ' ')
   }
 
   return (
@@ -130,12 +165,12 @@ export default function InvoicesPage() {
                   }}
                   className="font-sans"
                 >
-                  2
+                  {unpaidCount}
                 </p>
                 <AlertCircle style={{ width: "20px", height: "20px", color: "#DC2626" }} />
               </div>
               <p style={{ color: "#64748B", fontSize: "12px" }}>
-                Total Amount: <span style={{ fontWeight: "600", color: "#334155" }}>6 246.00 kr</span>
+                Total Amount: <span style={{ fontWeight: "600", color: "#0F172A" }}>{formatAmount(unpaidTotal)} kr</span>
               </p>
             </div>
 
@@ -167,10 +202,10 @@ export default function InvoicesPage() {
                 }}
                 className="font-sans"
               >
-                9
+                {paidCount}
               </p>
               <p style={{ color: "#64748B", fontSize: "12px" }}>
-                Total Amount: <span style={{ fontWeight: "600", color: "#334155" }}>15 596.00 kr</span>
+                Total Amount: <span style={{ fontWeight: "600", color: "#0F172A" }}>{formatAmount(paidTotal)} kr</span>
               </p>
             </div>
 
@@ -202,10 +237,10 @@ export default function InvoicesPage() {
                 }}
                 className="font-sans"
               >
-                1
+                {creditCount}
               </p>
               <p style={{ color: "#64748B", fontSize: "12px" }}>
-                Total Amount: <span style={{ fontWeight: "600", color: "#334155" }}>1 243.13 kr</span>
+                Total Amount: <span style={{ fontWeight: "600", color: "#0F172A" }}>{formatAmount(Math.abs(creditTotal))} kr</span>
               </p>
             </div>
 
@@ -220,7 +255,7 @@ export default function InvoicesPage() {
             >
               <p
                 style={{
-                  color: "#334155",
+                  color: "#0F172A",
                   fontSize: "14px",
                   fontWeight: "500",
                   marginBottom: "4px",
@@ -708,7 +743,9 @@ export default function InvoicesPage() {
                         }}
                       >
                         <a
-                          href="#"
+                          href="/Invoice-301944.pdf"
+                          target="_blank"
+                          rel="noopener noreferrer"
                           style={{
                             color: "#005055",
                             fontSize: "14px",
@@ -840,7 +877,9 @@ export default function InvoicesPage() {
                       >
                         {invoice.creditNote ? (
                           <a
-                            href="#"
+                            href="/Credit-Memo-300062.pdf"
+                            target="_blank"
+                            rel="noopener noreferrer"
                             style={{
                               color: "#005055",
                               fontSize: "14px",
@@ -864,48 +903,133 @@ export default function InvoicesPage() {
                           gap: "8px",
                         }}
                       >
-                        <button
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            backgroundColor: "white",
-                            color: "#0F172A",
-                            border: "1px solid #E2E8F0",
-                            cursor: "pointer",
-                            padding: "6px 8px",
-                            borderRadius: "6px",
-                            width: "32px",
-                            height: "32px",
-                            transition: "background-color 0.2s",
-                          }}
-                          onMouseEnter={(e) =>
-                            (e.currentTarget.style.backgroundColor = "#F8FAFC")
-                          }
-                          onMouseLeave={(e) =>
-                            (e.currentTarget.style.backgroundColor = "white")
-                          }
-                        >
-                          <svg
-                            className="size-5"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="#005055"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
+                        {invoice.creditNote ? (
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <button
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  backgroundColor: "white",
+                                  color: "#0F172A",
+                                  border: "1px solid #E2E8F0",
+                                  cursor: "pointer",
+                                  padding: "6px 8px",
+                                  borderRadius: "6px",
+                                  width: "32px",
+                                  height: "32px",
+                                  transition: "background-color 0.2s",
+                                }}
+                                onMouseEnter={(e) =>
+                                  (e.currentTarget.style.backgroundColor = "#F8FAFC")
+                                }
+                                onMouseLeave={(e) =>
+                                  (e.currentTarget.style.backgroundColor = "white")
+                                }
+                              >
+                                <svg
+                                  className="size-5"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="#005055"
+                                  strokeWidth="2"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                >
+                                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                  <polyline points="7 10 12 15 17 10"></polyline>
+                                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                                </svg>
+                              </button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <a
+                                href="/Invoice-301944.pdf"
+                                download
+                                style={{
+                                  display: "block",
+                                  padding: "8px 12px",
+                                  color: "#0F172A",
+                                  fontSize: "14px",
+                                  textDecoration: "none",
+                                  cursor: "pointer",
+                                }}
+                                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#F8FAFC")}
+                                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
+                              >
+                                Invoice
+                              </a>
+                              <a
+                                href="/Credit-Memo-300062.pdf"
+                                download
+                                style={{
+                                  display: "block",
+                                  padding: "8px 12px",
+                                  color: "#0F172A",
+                                  fontSize: "14px",
+                                  textDecoration: "none",
+                                  cursor: "pointer",
+                                }}
+                                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#F8FAFC")}
+                                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
+                              >
+                                Credit Note
+                              </a>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        ) : (
+                          <a
+                            href="/Invoice-301944.pdf"
+                            download
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              backgroundColor: "white",
+                              color: "#0F172A",
+                              border: "1px solid #E2E8F0",
+                              cursor: "pointer",
+                              padding: "6px 8px",
+                              borderRadius: "6px",
+                              width: "32px",
+                              height: "32px",
+                              transition: "background-color 0.2s",
+                            }}
+                            onMouseEnter={(e) =>
+                              (e.currentTarget.style.backgroundColor = "#F8FAFC")
+                            }
+                            onMouseLeave={(e) =>
+                              (e.currentTarget.style.backgroundColor = "white")
+                            }
                           >
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                            <polyline points="7 10 12 15 17 10"></polyline>
-                            <line x1="12" y1="15" x2="12" y2="3"></line>
-                          </svg>
-                        </button>
+                            <svg
+                              className="size-5"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="#005055"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            >
+                              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                              <polyline points="7 10 12 15 17 10"></polyline>
+                              <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                          </a>
+                        )}
                       </div>
                     </div>
                     ))
                   })()}
                 </div>
               </div>
+            </div>
+
+            <div style={{ marginTop: "32px", marginBottom: "48px" }}>
+              <p style={{ fontSize: "12px", color: "#334155" }}>
+                ©2026 Fair Car Insurance
+              </p>
             </div>
         </div>
       </div>
