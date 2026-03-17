@@ -274,19 +274,24 @@ export default function InvoicesPage() {
               </p>
               <button
                 style={{
-                  backgroundColor: "#005055",
-                  color: "white",
+                  backgroundColor: "white",
+                  color: "#005055",
                   padding: "8px 20px",
                   borderRadius: "8px",
-                  border: "none",
+                  border: "1px solid #005055",
                   fontSize: "14px",
                   fontWeight: "500",
                   cursor: "pointer",
-                  transition: "opacity 0.2s",
-                  width: "100%",
+                  transition: "background-color 0.2s, color 0.2s",
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")}
-                onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = "#005055"
+                  e.currentTarget.style.color = "white"
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = "white"
+                  e.currentTarget.style.color = "#005055"
+                }}
               >
                 Get help
               </button>
