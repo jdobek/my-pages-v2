@@ -357,10 +357,10 @@ export default function IndexPage() {
                       </span>
                     )}
                     <svg
-                      className="size-4"
+                      className="size-4 opacity-50"
                       viewBox="0 0 24 24"
                       fill="none"
-                      stroke="#0F172A"
+                      stroke="currentColor"
                       strokeWidth="2"
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -456,10 +456,10 @@ export default function IndexPage() {
                       </span>
                     )}
                     <svg
-                      className="size-4"
+                      className="size-4 opacity-50"
                       viewBox="0 0 24 24"
                       fill="none"
-                      stroke="#0F172A"
+                      stroke="currentColor"
                       strokeWidth="2"
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -551,10 +551,10 @@ export default function IndexPage() {
                       </span>
                     )}
                     <svg
-                      className="size-4"
+                      className="size-4 opacity-50"
                       viewBox="0 0 24 24"
                       fill="none"
-                      stroke="#0F172A"
+                      stroke="currentColor"
                       strokeWidth="2"
                       strokeLinecap="round"
                       strokeLinejoin="round"

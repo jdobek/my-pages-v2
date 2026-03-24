@@ -50,8 +50,8 @@ export function ChartRiskRadial() {
         >
           <RadialBarChart
             data={chartData}
-            startAngle={0}
-            endAngle={250}
+            startAngle={90}
+            endAngle={-160}
             innerRadius={80}
             outerRadius={110}
             width={250}

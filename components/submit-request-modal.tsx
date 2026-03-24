@@ -3,6 +3,13 @@
 import { useState, useEffect } from "react"
 import { Vehicle } from "@/lib/data"
 import { DatePicker } from "@/components/ui/date-picker"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 const REQUEST_TYPES_GENERAL = [
   "Select a request type",
@@ -156,17 +163,20 @@ export function SubmitRequestModal({ onClose, onSubmitSuccess, vehicle, vehicles
             <label className="mb-2 block text-sm font-medium text-slate-900">
               Type
             </label>
-            <select
-              value={requestType}
-              onChange={(e) => setRequestType(e.target.value)}
-              className="w-full rounded-lg border border-slate-200 bg-white pl-3 pr-10 py-2.5 text-sm text-slate-900 placeholder:text-slate-500 focus:border-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-400"
-            >
-              {(isVehicleSpecific ? REQUEST_TYPES_VEHICLE : REQUEST_TYPES_GENERAL).map((type) => (
-                <option key={type} value={type === "Select a request type" ? "" : type}>
-                  {type}
-                </option>
-              ))}
-            </select>
+            <Select value={requestType} onValueChange={setRequestType}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select a request type" />
+              </SelectTrigger>
+              <SelectContent>
+                {(isVehicleSpecific ? REQUEST_TYPES_VEHICLE : REQUEST_TYPES_GENERAL)
+                  .filter(type => type !== "Select a request type")
+                  .map((type) => (
+                    <SelectItem key={type} value={type}>
+                      {type}
+                    </SelectItem>
+                  ))}
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Add Car Form (only for Add car) */}
@@ -190,16 +200,16 @@ export function SubmitRequestModal({ onClose, onSubmitSuccess, vehicle, vehicles
                   <label className="mb-2 block text-sm font-medium text-slate-900">
                     Cover level
                   </label>
-                  <select
-                    value={coverLevel}
-                    onChange={(e) => setCoverLevel(e.target.value)}
-                    className="w-full rounded-lg border border-slate-200 bg-white pl-3 pr-10 py-2.5 text-sm text-slate-900 placeholder:text-slate-500 focus:border-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-400"
-                  >
-                    <option value="">Select cover level</option>
-                    <option value="Ansvar">Ansvar</option>
-                    <option value="Delkasko">Delkasko</option>
-                    <option value="Kasko">Kasko</option>
-                  </select>
+                  <Select value={coverLevel} onValueChange={setCoverLevel}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select cover level" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Ansvar">Ansvar</SelectItem>
+                      <SelectItem value="Delkasko">Delkasko</SelectItem>
+                      <SelectItem value="Kasko">Kasko</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 <div>
@@ -267,18 +277,18 @@ export function SubmitRequestModal({ onClose, onSubmitSuccess, vehicle, vehicles
                   <label className="mb-2 block text-sm font-medium text-slate-900">
                     Plate number
                   </label>
-                  <select
-                    value={plateNumberOrVIN}
-                    onChange={(e) => setPlateNumberOrVIN(e.target.value)}
-                    className="w-full rounded-lg border border-slate-200 bg-white pl-3 pr-10 py-2.5 text-sm text-slate-900 placeholder:text-slate-500 focus:border-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-400"
-                  >
-                    <option value="">Select plate number</option>
-                    {vehicles.map((v) => (
-                      <option key={v.id} value={v.plateNumber}>
-                        {v.plateNumber}
-                      </option>
-                    ))}
-                  </select>
+                  <Select value={plateNumberOrVIN} onValueChange={setPlateNumberOrVIN}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select plate number" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {vehicles.map((v) => (
+                        <SelectItem key={v.id} value={v.plateNumber}>
+                          {v.plateNumber}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               )}
 
@@ -288,17 +298,16 @@ export function SubmitRequestModal({ onClose, onSubmitSuccess, vehicle, vehicles
                     <label className="mb-2 block text-sm font-medium text-slate-900">
                       Cover level
                     </label>
-                    <select
-                      value={coverLevel}
-                      onChange={(e) => setCoverLevel(e.target.value)}
-                      disabled={!plateNumberOrVIN}
-                      className="w-full rounded-lg border border-slate-200 bg-white pl-3 pr-10 py-2.5 text-sm text-slate-900 placeholder:text-slate-500 focus:border-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-400 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      <option value="">Select cover level</option>
-                      <option value="Ansvar">Ansvar</option>
-                      <option value="Delkasko">Delkasko</option>
-                      <option value="Kasko">Kasko</option>
-                    </select>
+                    <Select value={coverLevel} onValueChange={setCoverLevel} disabled={!plateNumberOrVIN}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select cover level" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Ansvar">Ansvar</SelectItem>
+                        <SelectItem value="Delkasko">Delkasko</SelectItem>
+                        <SelectItem value="Kasko">Kasko</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
 
                   <div>
@@ -319,16 +328,16 @@ export function SubmitRequestModal({ onClose, onSubmitSuccess, vehicle, vehicles
                   <label className="mb-2 block text-sm font-medium text-slate-900">
                     Cover level
                   </label>
-                  <select
-                    value={coverLevel}
-                    onChange={(e) => setCoverLevel(e.target.value)}
-                    className="w-full rounded-lg border border-slate-200 bg-white pl-3 pr-10 py-2.5 text-sm text-slate-900 placeholder:text-slate-500 focus:border-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-400"
-                  >
-                    <option value="">Select cover level</option>
-                    <option value="Ansvar">Ansvar</option>
-                    <option value="Delkasko">Delkasko</option>
-                    <option value="Kasko">Kasko</option>
-                  </select>
+                  <Select value={coverLevel} onValueChange={setCoverLevel}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select cover level" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Ansvar">Ansvar</SelectItem>
+                      <SelectItem value="Delkasko">Delkasko</SelectItem>
+                      <SelectItem value="Kasko">Kasko</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               )}
             </>
@@ -342,18 +351,18 @@ export function SubmitRequestModal({ onClose, onSubmitSuccess, vehicle, vehicles
                   <label className="mb-2 block text-sm font-medium text-slate-900">
                     Plate number
                   </label>
-                  <select
-                    value={plateNumberOrVIN}
-                    onChange={(e) => setPlateNumberOrVIN(e.target.value)}
-                    className="w-full rounded-lg border border-slate-200 bg-white pl-3 pr-10 py-2.5 text-sm text-slate-900 placeholder:text-slate-500 focus:border-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-400"
-                  >
-                    <option value="">Select plate number</option>
-                    {vehicles.map((v) => (
-                      <option key={v.id} value={v.plateNumber}>
-                        {v.plateNumber}
-                      </option>
-                    ))}
-                  </select>
+                  <Select value={plateNumberOrVIN} onValueChange={setPlateNumberOrVIN}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select plate number" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {vehicles.map((v) => (
+                        <SelectItem key={v.id} value={v.plateNumber}>
+                          {v.plateNumber}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               )}
 
@@ -417,41 +426,41 @@ export function SubmitRequestModal({ onClose, onSubmitSuccess, vehicle, vehicles
                     <label className="mb-2 block text-sm font-medium text-slate-900">
                       Plate number
                     </label>
-                    <select
-                      value={plateNumberOrVIN}
-                      onChange={(e) => setPlateNumberOrVIN(e.target.value)}
-                      className="w-full rounded-lg border border-slate-200 bg-white pl-3 pr-10 py-2.5 text-sm text-slate-900 placeholder:text-slate-500 focus:border-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-400"
-                    >
-                      <option value="">Select plate number</option>
-                      {vehicles.map((v) => (
-                        <option key={v.id} value={v.plateNumber}>
-                          {v.plateNumber}
-                        </option>
-                      ))}
-                    </select>
+                    <Select value={plateNumberOrVIN} onValueChange={setPlateNumberOrVIN}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select plate number" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {vehicles.map((v) => (
+                          <SelectItem key={v.id} value={v.plateNumber}>
+                            {v.plateNumber}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                   <div>
                     <label className="mb-2 block text-sm font-medium text-slate-900">
                       Reason
                     </label>
-                    <select
-                      value={reason}
-                      onChange={(e) => setReason(e.target.value)}
-                      className="w-full rounded-lg border border-slate-200 bg-white pl-3 pr-10 py-2.5 text-sm text-slate-900 placeholder:text-slate-500 focus:border-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-400"
-                    >
-                      <option value="">Select reason</option>
-                      <option value="too_expensive">Too expensive</option>
-                      <option value="better_offer">Better offer elsewhere</option>
-                      <option value="unclear_terms">Unclear policy terms</option>
-                      <option value="poor_service">Poor customer service</option>
-                      <option value="claim_issues">Claim issues</option>
-                      <option value="sold_car">Sold the car / no longer need insurance</option>
-                      <option value="inflexible_coverage">Inflexible coverage options</option>
-                      <option value="negative_reviews">Negative company reviews</option>
-                      <option value="changed_employer">Changed employer or leasing company</option>
-                      <option value="competitor_offers">Competitor promotions or discounts</option>
-                      <option value="other">Other</option>
-                    </select>
+                    <Select value={reason} onValueChange={setReason}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select reason" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="too_expensive">Too expensive</SelectItem>
+                        <SelectItem value="better_offer">Better offer elsewhere</SelectItem>
+                        <SelectItem value="unclear_terms">Unclear policy terms</SelectItem>
+                        <SelectItem value="poor_service">Poor customer service</SelectItem>
+                        <SelectItem value="claim_issues">Claim issues</SelectItem>
+                        <SelectItem value="sold_car">Sold the car / no longer need insurance</SelectItem>
+                        <SelectItem value="inflexible_coverage">Inflexible coverage options</SelectItem>
+                        <SelectItem value="negative_reviews">Negative company reviews</SelectItem>
+                        <SelectItem value="changed_employer">Changed employer or leasing company</SelectItem>
+                        <SelectItem value="competitor_offers">Competitor promotions or discounts</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
               )}
@@ -461,24 +470,24 @@ export function SubmitRequestModal({ onClose, onSubmitSuccess, vehicle, vehicles
                   <label className="mb-2 block text-sm font-medium text-slate-900">
                     Reason
                   </label>
-                  <select
-                    value={reason}
-                    onChange={(e) => setReason(e.target.value)}
-                    className="w-full rounded-lg border border-slate-200 bg-white pl-3 pr-10 py-2.5 text-sm text-slate-900 placeholder:text-slate-500 focus:border-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-400"
-                  >
-                    <option value="">Select reason</option>
-                    <option value="too_expensive">Too expensive</option>
-                    <option value="better_offer">Better offer elsewhere</option>
-                    <option value="unclear_terms">Unclear policy terms</option>
-                    <option value="poor_service">Poor customer service</option>
-                    <option value="claim_issues">Claim issues</option>
-                    <option value="sold_car">Sold the car / no longer need insurance</option>
-                    <option value="inflexible_coverage">Inflexible coverage options</option>
-                    <option value="negative_reviews">Negative company reviews</option>
-                    <option value="changed_employer">Changed employer or leasing company</option>
-                    <option value="competitor_offers">Competitor promotions or discounts</option>
-                    <option value="other">Other</option>
-                  </select>
+                  <Select value={reason} onValueChange={setReason}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select reason" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="too_expensive">Too expensive</SelectItem>
+                      <SelectItem value="better_offer">Better offer elsewhere</SelectItem>
+                      <SelectItem value="unclear_terms">Unclear policy terms</SelectItem>
+                      <SelectItem value="poor_service">Poor customer service</SelectItem>
+                      <SelectItem value="claim_issues">Claim issues</SelectItem>
+                      <SelectItem value="sold_car">Sold the car / no longer need insurance</SelectItem>
+                      <SelectItem value="inflexible_coverage">Inflexible coverage options</SelectItem>
+                      <SelectItem value="negative_reviews">Negative company reviews</SelectItem>
+                      <SelectItem value="changed_employer">Changed employer or leasing company</SelectItem>
+                      <SelectItem value="competitor_offers">Competitor promotions or discounts</SelectItem>
+                      <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               )}
 

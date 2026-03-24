@@ -50,6 +50,7 @@ const invoices: Invoice[] = [
 export default function InvoicesPage() {
   const [showSubmitRequestModal, setShowSubmitRequestModal] = useState(false)
   const [showSuccessAlert, setShowSuccessAlert] = useState(false)
+  const [showHelpModal, setShowHelpModal] = useState(false)
   const [searchQuery, setSearchQuery] = useState<string>("")
   const [selectedStatuses, setSelectedStatuses] = useState<string[]>([])
   const [selectedSortBy, setSelectedSortBy] = useState<string>("")
@@ -73,6 +74,14 @@ export default function InvoicesPage() {
 
   const closeSubmitRequestModal = () => {
     setShowSubmitRequestModal(false)
+  }
+
+  const openHelpModal = () => {
+    setShowHelpModal(true)
+  }
+
+  const closeHelpModal = () => {
+    setShowHelpModal(false)
   }
 
   // Calculate totals
@@ -287,6 +296,7 @@ export default function InvoicesPage() {
                 We&apos;re here to help you.
               </p>
               <button
+                onClick={openHelpModal}
                 style={{
                   backgroundColor: "white",
                   color: "#005055",
@@ -379,10 +389,10 @@ export default function InvoicesPage() {
                         </span>
                       )}
                       <svg
-                        className="size-4"
+                        className="size-4 opacity-50"
                         viewBox="0 0 24 24"
                         fill="none"
-                        stroke="#0F172A"
+                        stroke="currentColor"
                         strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -472,10 +482,10 @@ export default function InvoicesPage() {
                         </span>
                       )}
                       <svg
-                        className="size-4"
+                        className="size-4 opacity-50"
                         viewBox="0 0 24 24"
                         fill="none"
-                        stroke="#0F172A"
+                        stroke="currentColor"
                         strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -1120,6 +1130,94 @@ export default function InvoicesPage() {
               </div>
             </div>
           </Alert>
+        </div>
+      )}
+
+      {showHelpModal && (
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50"
+          onClick={closeHelpModal}
+          style={{ pointerEvents: "auto" }}
+        >
+          <div
+            className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg"
+            onClick={(e) => e.stopPropagation()}
+            style={{ pointerEvents: "auto" }}
+          >
+            {/* Header */}
+            <div className="mb-6">
+              <h2 className="text-xl font-bold text-slate-900 mb-2">
+                Get help
+              </h2>
+              <p className="text-sm text-slate-600">
+                Need assistance with your invoices? Our customer support team is here to help.
+              </p>
+            </div>
+
+            {/* Contact Information */}
+            <div className="space-y-3">
+              <div className="rounded-lg border border-slate-200 p-4">
+                <div className="flex items-start gap-3">
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-slate-900 mb-2">
+                      Customer Support
+                    </p>
+                    <a
+                      href="tel:0812334080"
+                      className="text-sm text-[#005055] hover:underline"
+                    >
+                      08-12 33 40 80
+                    </a>
+                    <p className="text-xs text-slate-600 mt-1">
+                      Monday - Friday, 9:00 - 17:00
+                    </p>
+                  </div>
+                  <svg
+                    className="size-4"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#005055"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                  </svg>
+                </div>
+              </div>
+
+              <div className="rounded-lg border border-slate-200 p-4">
+                <div className="flex items-start gap-3">
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-slate-900 mb-2">
+                      Email Support
+                    </p>
+                    <a
+                      href="mailto:support@fairinsurance.se"
+                      className="text-sm text-[#005055] hover:underline"
+                    >
+                      support@fairinsurance.se
+                    </a>
+                    <p className="text-xs text-slate-600 mt-1">
+                      We&apos;ll respond within 24 hours
+                    </p>
+                  </div>
+                  <svg
+                    className="size-4"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#005055"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>
