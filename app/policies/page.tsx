@@ -29,6 +29,7 @@ export default function IndexPage() {
   const [modal, setModal] = useState<ModalState>({ isOpen: false, vehicle: null })
   const [showSubmitRequestModal, setShowSubmitRequestModal] = useState(false)
   const [showSuccessAlert, setShowSuccessAlert] = useState(false)
+  const [showFilterModal, setShowFilterModal] = useState(false)
 
   useEffect(() => {
     if (showSuccessAlert) {
@@ -134,10 +135,10 @@ export default function IndexPage() {
       {/* Header and boxes section with light background */}
       <div>
         <div className="container mx-auto max-w-7xl px-4 pb-4 pt-10 md:pb-4 md:pt-16">
-          <h1 className="text-slate-950 mb-6" style={{ fontSize: "2.5rem", fontWeight: 600 }}>
+          <h1 className="text-slate-950 mb-6 text-3xl md:text-4xl" style={{ fontWeight: 600 }}>
             Policies
           </h1>
-          <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-4">
+          <div className="mb-8 grid grid-cols-2 gap-4 2xl:grid-cols-4">
             {/* Total amount of vehicles */}
             <div
               style={{
@@ -155,12 +156,12 @@ export default function IndexPage() {
                   marginBottom: "16px",
                 }}
               >
-                Total amount of vehicles
+                Total vehicles
               </p>
               <p
                 style={{
                   color: "#0F172A",
-                  fontSize: "32px",
+                  fontSize: "28px",
                   fontWeight: "700",
                 }}
                 className="font-sans"
@@ -193,7 +194,7 @@ export default function IndexPage() {
                     fontWeight: "500",
                   }}
                 >
-                  Total amount of premium
+                  Total premium
                 </p>
                 <svg
                   style={{ width: "16px", height: "16px", color: "#94A3B8" }}
@@ -212,7 +213,7 @@ export default function IndexPage() {
               <p
                 style={{
                   color: "#0F172A",
-                  fontSize: "32px",
+                  fontSize: "28px",
                   fontWeight: "700",
                 }}
               >
@@ -240,12 +241,12 @@ export default function IndexPage() {
                   marginBottom: "16px",
                 }}
               >
-                Avg. vehicle insurance price
+                Average premium
               </p>
               <p
                 style={{
                   color: "#0F172A",
-                  fontSize: "32px",
+                  fontSize: "28px",
                   fontWeight: "700",
                 }}
               >
@@ -279,7 +280,7 @@ export default function IndexPage() {
               <p
                 style={{
                   color: "#0F172A",
-                  fontSize: "32px",
+                  fontSize: "28px",
                   fontWeight: "700",
                 }}
               >
@@ -294,14 +295,135 @@ export default function IndexPage() {
         <div className="flex flex-col gap-6">
           <div className="flex flex-col gap-3">
             <h1
-              style={{ color: "#0F172A", fontWeight: "600", fontSize: "24px" }}
+              className="text-xl md:text-2xl"
+              style={{ color: "#0F172A", fontWeight: "600" }}
             >
               My vehicles
             </h1>
           </div>
 
-          <div className="flex flex-col items-start justify-between gap-4 lg:flex-row lg:items-center">
-            <div className="flex flex-1 items-center gap-2">
+          <div className="flex flex-col items-start justify-between gap-4 lg:flex-row lg:items-center w-full">
+            {/* Mobile/Tablet Layout (Below 1120px) */}
+            <div className="flex min-[1120px]:hidden flex-col gap-2 w-full">
+              {/* First row: Search bar full width */}
+              <input
+                type="text"
+                placeholder="Search by plate number or model"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                style={{
+                  padding: "8px 16px",
+                  borderRadius: "8px",
+                  border: "1px solid #E2E8F0",
+                  fontSize: "14px",
+                  fontFamily: "inherit",
+                  width: "100%",
+                  backgroundColor: "white",
+                  color: "#0F172A",
+                }}
+              />
+
+              {/* Second row: Filter & Sort (50%) and Download (50%) */}
+              <div className="flex gap-2 w-full">
+                <button
+                  onClick={() => setShowFilterModal(true)}
+                  style={{
+                    flex: 1,
+                    padding: "8px 16px",
+                    borderRadius: "8px",
+                    border: "1px solid #E2E8F0",
+                    fontSize: "14px",
+                    backgroundColor: "white",
+                    cursor: "pointer",
+                    color: "#0F172A",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "8px",
+                  }}
+                >
+                  <svg
+                    className="size-4"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                  </svg>
+                  Filter & Sort
+                  {(selectedCoverLevels.length > 0 || selectedAddOns.length > 0 || selectedSortBy) && (
+                    <span
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        width: "20px",
+                        height: "20px",
+                        borderRadius: "50%",
+                        backgroundColor: "#005055",
+                        fontSize: "11px",
+                        fontWeight: "600",
+                        color: "white",
+                      }}
+                    >
+                      {selectedCoverLevels.length + selectedAddOns.length + (selectedSortBy ? 1 : 0)}
+                    </span>
+                  )}
+                </button>
+
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      style={{
+                        flex: 1,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: "8px",
+                        backgroundColor: "white",
+                        color: "#0F172A",
+                        padding: "8px 16px",
+                        borderRadius: "8px",
+                        border: "1px solid #E2E8F0",
+                        fontSize: "14px",
+                        fontWeight: "500",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <svg
+                        className="size-5"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#005055"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                      </svg>
+                      Download
+                      <ChevronDown className="size-4" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={downloadAllInsuranceLetters}>
+                      All Insurance Letters
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={downloadExcel}>
+                      Excel File
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            </div>
+
+            {/* Desktop Layout (1120px and above) */}
+            <div className="hidden min-[1120px]:flex flex-wrap items-center gap-2 w-full lg:w-auto lg:flex-1 lg:min-w-0">
               <input
                 type="text"
                 placeholder="Search by plate number or model"
@@ -656,68 +778,313 @@ export default function IndexPage() {
                   Clear all
                 </button>
               )}
+
+              {/* Download Button */}
+              <div className="ml-auto">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                        backgroundColor: "white",
+                        color: "#0F172A",
+                        padding: "8px 16px 8px 16px",
+                        borderRadius: "8px",
+                        border: "1px solid #E2E8F0",
+                        fontSize: "14px",
+                        fontWeight: "500",
+                        cursor: "pointer",
+                        transition: "background-color 0.2s",
+                        whiteSpace: "nowrap",
+                      }}
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.backgroundColor = "#F8FAFC")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.backgroundColor = "white")
+                      }
+                    >
+                      <svg
+                        className="size-5"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#005055"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                      </svg>
+                      Download
+                      <ChevronDown className="size-4" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={downloadAllInsuranceLetters}>
+                      All Insurance Letters
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={downloadExcel}>
+                      Excel File
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-8">
+            {/* Mobile/Tablet Card View - Hidden on Large Desktop */}
+            <div className="block 2xl:hidden space-y-4">
+              {(() => {
+                const filteredVehicles = currentUser.vehicles.filter((vehicle) => {
+                  const query = searchQuery.toLowerCase()
+                  const matchesSearch =
+                    vehicle.plateNumber.toLowerCase().includes(query) ||
+                    vehicle.model.toLowerCase().includes(query)
+                  const matchesCoverLevel =
+                    selectedCoverLevels.length === 0 ||
+                    selectedCoverLevels.includes(vehicle.coverLevel)
+                  const matchesAddOns =
+                    selectedAddOns.length === 0 ||
+                    selectedAddOns.every((addon) => vehicle.addOns.includes(addon))
+                  return matchesSearch && matchesCoverLevel && matchesAddOns
+                }).sort((a, b) => {
+                  switch (selectedSortBy) {
+                    case "price_asc":
+                      return a.price - b.price
+                    case "price_desc":
+                      return b.price - a.price
+                    case "startDate_desc":
+                      return new Date(b.startDate).getTime() - new Date(a.startDate).getTime()
+                    case "age_desc":
+                      return b.age - a.age
+                    default:
+                      return 0
+                  }
+                })
+
+                if (filteredVehicles.length === 0 && (searchQuery || selectedCoverLevels.length > 0 || selectedAddOns.length > 0)) {
+                  return (
+                    <div style={{ padding: "32px 16px", textAlign: "center" }}>
+                      <svg
+                        className="size-12"
+                        style={{ margin: "0 auto 16px", color: "#94A3B8" }}
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                      </svg>
+                      <p style={{ fontSize: "16px", fontWeight: "500", color: "#0F172A", marginBottom: "8px" }}>
+                        No vehicles found
+                      </p>
+                      <p style={{ fontSize: "14px", color: "#334155" }}>
+                        Try adjusting your search or filter criteria to find matching vehicles.
+                      </p>
+                    </div>
+                  )
+                }
+
+                return filteredVehicles.map((vehicle) => (
+                  <div
+                    key={vehicle.id}
+                    style={{
+                      border: "1px solid #E2E8F0",
+                      borderRadius: "8px",
+                      padding: "16px",
+                      backgroundColor: "white",
+                    }}
+                  >
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+                      <button
+                        type="button"
+                        onClick={() => openModal(vehicle)}
+                        style={{
+                          textDecoration: "underline",
+                          color: "#005055",
+                          fontWeight: "600",
+                          fontSize: "20px",
+                          background: "none",
+                          border: "none",
+                          cursor: "pointer",
+                          padding: 0,
+                        }}
+                      >
+                        {vehicle.plateNumber}
+                      </button>
+                      <div style={{ display: "flex", gap: "8px" }}>
+                        <button
+                          onClick={() => openSubmitRequestModalForVehicle(vehicle)}
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "8px",
+                            backgroundColor: "white",
+                            color: "#0F172A",
+                            border: "1px solid #E2E8F0",
+                            cursor: "pointer",
+                            fontSize: "14px",
+                            fontWeight: "500",
+                            padding: "6px 12px",
+                            borderRadius: "6px",
+                            whiteSpace: "nowrap",
+                            height: "32px",
+                            transition: "background-color 0.2s",
+                          }}
+                          onMouseEnter={(e) =>
+                            (e.currentTarget.style.backgroundColor = "#F8FAFC")
+                          }
+                          onMouseLeave={(e) =>
+                            (e.currentTarget.style.backgroundColor = "white")
+                          }
+                        >
+                          Submit a request
+                        </button>
+                        <button
+                          onClick={downloadSingleInsuranceLetter}
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            backgroundColor: "white",
+                            color: "#005055",
+                            border: "1px solid #E2E8F0",
+                            cursor: "pointer",
+                            padding: "6px 8px",
+                            borderRadius: "6px",
+                            width: "32px",
+                            height: "32px",
+                            transition: "background-color 0.2s",
+                          }}
+                          onMouseEnter={(e) =>
+                            (e.currentTarget.style.backgroundColor = "#F8FAFC")
+                          }
+                          onMouseLeave={(e) =>
+                            (e.currentTarget.style.backgroundColor = "white")
+                          }
+                        >
+                          <svg
+                            className="size-4"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                    {/* Mobile Layout - Below md */}
+                    <div className="block md:hidden" style={{ fontSize: "14px" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "12px", paddingBottom: "12px", borderBottom: "1px solid #E2E8F0" }}>
+                        <span style={{ color: "#0F172A", fontWeight: "500" }}>Model</span>
+                        <span style={{ color: "#0F172A" }}>{vehicle.model}</span>
+                      </div>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "12px", paddingBottom: "12px", borderBottom: "1px solid #E2E8F0" }}>
+                        <span style={{ color: "#0F172A", fontWeight: "500" }}>Age</span>
+                        <span style={{ color: "#0F172A" }}>{vehicle.age} yo</span>
+                      </div>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "12px", paddingBottom: "12px", borderBottom: "1px solid #E2E8F0" }}>
+                        <span style={{ color: "#0F172A", fontWeight: "500" }}>Price</span>
+                        <span style={{ color: "#0F172A" }}>{vehicle.price.toLocaleString("sv-SE")} kr</span>
+                      </div>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "12px", paddingBottom: "12px", borderBottom: "1px solid #E2E8F0" }}>
+                        <span style={{ color: "#0F172A", fontWeight: "500" }}>Price (TFA)</span>
+                        <span style={{ color: "#0F172A" }}>{vehicle.priceWithTFA.toLocaleString("sv-SE")} kr</span>
+                      </div>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "12px", paddingBottom: "12px", borderBottom: "1px solid #E2E8F0" }}>
+                        <span style={{ color: "#0F172A", fontWeight: "500" }}>Cover lvl</span>
+                        <span style={{ color: "#0F172A" }}>{vehicle.coverLevel}</span>
+                      </div>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "12px", paddingBottom: "12px", borderBottom: "1px solid #E2E8F0" }}>
+                        <span style={{ color: "#0F172A", fontWeight: "500" }}>Add-ons</span>
+                        <span style={{ color: "#0F172A" }}>{vehicle.addOns.length}</span>
+                      </div>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "12px", paddingBottom: "12px", borderBottom: "1px solid #E2E8F0" }}>
+                        <span style={{ color: "#0F172A", fontWeight: "500" }}>Start Date</span>
+                        <span style={{ color: "#0F172A" }}>
+                          {new Date(vehicle.startDate).toLocaleDateString("sv-SE", { year: "numeric", month: "2-digit", day: "2-digit" })}
+                        </span>
+                      </div>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "12px", paddingBottom: "12px" }}>
+                        <span style={{ color: "#0F172A", fontWeight: "500" }}>Renewal Date</span>
+                        <span style={{ color: "#0F172A" }}>
+                          {new Date(vehicle.renewalDate).toLocaleDateString("sv-SE", { year: "numeric", month: "2-digit", day: "2-digit" })}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Tablet Layout - md and above */}
+                    <div className="hidden md:grid" style={{ gridTemplateColumns: "1fr auto 1fr auto 1fr auto 1fr", gap: "16px 0", fontSize: "14px", paddingTop: "12px" }}>
+                      <div style={{ paddingRight: "8px" }}>
+                        <span style={{ color: "#0F172A", display: "block", marginBottom: "1px", fontWeight: "500" }}>Model</span>
+                        <span style={{ color: "#0F172A" }}>{vehicle.model}</span>
+                      </div>
+                      <div style={{ width: "1px", backgroundColor: "#E2E8F0", marginRight: "16px" }}></div>
+                      <div style={{ paddingRight: "8px" }}>
+                        <span style={{ color: "#0F172A", display: "block", marginBottom: "1px", fontWeight: "500" }}>Age</span>
+                        <span style={{ color: "#0F172A" }}>{vehicle.age} yo</span>
+                      </div>
+                      <div style={{ width: "1px", backgroundColor: "#E2E8F0", marginRight: "16px" }}></div>
+                      <div style={{ paddingRight: "8px" }}>
+                        <span style={{ color: "#0F172A", display: "block", marginBottom: "1px", fontWeight: "500" }}>Price</span>
+                        <span style={{ color: "#0F172A" }}>{vehicle.price.toLocaleString("sv-SE")} kr</span>
+                      </div>
+                      <div style={{ width: "1px", backgroundColor: "#E2E8F0", marginRight: "16px" }}></div>
+                      <div>
+                        <span style={{ color: "#0F172A", display: "block", marginBottom: "1px", fontWeight: "500" }}>Price (TFA)</span>
+                        <span style={{ color: "#0F172A" }}>{vehicle.priceWithTFA.toLocaleString("sv-SE")} kr</span>
+                      </div>
+                      <div style={{ paddingRight: "8px" }}>
+                        <span style={{ color: "#0F172A", display: "block", marginBottom: "1px", fontWeight: "500" }}>Cover lvl</span>
+                        <span style={{ color: "#0F172A" }}>{vehicle.coverLevel}</span>
+                      </div>
+                      <div style={{ width: "1px", backgroundColor: "#E2E8F0", marginRight: "16px" }}></div>
+                      <div style={{ paddingRight: "8px" }}>
+                        <span style={{ color: "#0F172A", display: "block", marginBottom: "1px", fontWeight: "500" }}>Add-ons</span>
+                        <span style={{ color: "#0F172A" }}>{vehicle.addOns.length}</span>
+                      </div>
+                      <div style={{ width: "1px", backgroundColor: "#E2E8F0", marginRight: "16px" }}></div>
+                      <div style={{ paddingRight: "8px" }}>
+                        <span style={{ color: "#0F172A", display: "block", marginBottom: "1px", fontWeight: "500" }}>Start Date</span>
+                        <span style={{ color: "#0F172A" }}>
+                          {new Date(vehicle.startDate).toLocaleDateString("sv-SE", { year: "numeric", month: "2-digit", day: "2-digit" })}
+                        </span>
+                      </div>
+                      <div style={{ width: "1px", backgroundColor: "#E2E8F0", marginRight: "16px" }}></div>
+                      <div>
+                        <span style={{ color: "#0F172A", display: "block", marginBottom: "1px", fontWeight: "500" }}>Renewal Date</span>
+                        <span style={{ color: "#0F172A" }}>
+                          {new Date(vehicle.renewalDate).toLocaleDateString("sv-SE", { year: "numeric", month: "2-digit", day: "2-digit" })}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              })()}
             </div>
 
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    backgroundColor: "white",
-                    color: "#0F172A",
-                    padding: "8px 16px 8px 16px",
-                    borderRadius: "8px",
-                    border: "1px solid #E2E8F0",
-                    fontSize: "14px",
-                    fontWeight: "500",
-                    cursor: "pointer",
-                    transition: "background-color 0.2s",
-                    whiteSpace: "nowrap",
-                  }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.backgroundColor = "#F8FAFC")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.backgroundColor = "white")
-                  }
-                >
-                  <svg
-                    className="size-5"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#005055"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                    <polyline points="7 10 12 15 17 10"></polyline>
-                    <line x1="12" y1="15" x2="12" y2="3"></line>
-                  </svg>
-                  Download
-                  <ChevronDown className="size-4" />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={downloadAllInsuranceLetters}>
-                  All Insurance Letters
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={downloadExcel}>
-                  Excel File
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-
-          <div className="mt-8">
+            {/* Desktop Table View - Hidden on Mobile/Tablet */}
+            <div className="hidden 2xl:block">
             <div
-              className="w-full"
               style={{
                 display: "grid",
                 gridTemplateColumns:
-                  "1fr 1.8fr 0.8fr 1fr 1fr 1fr 1fr 1.2fr 1fr 2.2fr",
+                  "minmax(100px, 1fr) minmax(180px, 2fr) minmax(80px, 0.8fr) minmax(100px, 1fr) minmax(110px, 1.1fr) minmax(100px, 1fr) minmax(90px, 0.9fr) minmax(120px, 1.2fr) minmax(120px, 1.2fr) minmax(220px, 2fr)",
                 gap: "0",
                 marginBottom: "8px",
               }}
@@ -729,6 +1096,7 @@ export default function IndexPage() {
                   fontWeight: "600",
                   fontSize: "14px",
                   color: "#0F172A",
+                  whiteSpace: "nowrap",
                 }}
               >
                 Plate no.
@@ -740,6 +1108,7 @@ export default function IndexPage() {
                   fontWeight: "600",
                   fontSize: "14px",
                   color: "#0F172A",
+                  whiteSpace: "nowrap",
                 }}
               >
                 Model
@@ -751,6 +1120,7 @@ export default function IndexPage() {
                   fontWeight: "600",
                   fontSize: "14px",
                   color: "#0F172A",
+                  whiteSpace: "nowrap",
                 }}
               >
                 Age
@@ -762,6 +1132,7 @@ export default function IndexPage() {
                   fontWeight: "600",
                   fontSize: "14px",
                   color: "#0F172A",
+                  whiteSpace: "nowrap",
                 }}
               >
                 Price
@@ -773,6 +1144,7 @@ export default function IndexPage() {
                   fontWeight: "600",
                   fontSize: "14px",
                   color: "#0F172A",
+                  whiteSpace: "nowrap",
                 }}
               >
                 Price (TFA)
@@ -784,6 +1156,7 @@ export default function IndexPage() {
                   fontWeight: "600",
                   fontSize: "14px",
                   color: "#0F172A",
+                  whiteSpace: "nowrap",
                 }}
               >
                 Cover lvl
@@ -795,6 +1168,7 @@ export default function IndexPage() {
                   fontWeight: "600",
                   fontSize: "14px",
                   color: "#0F172A",
+                  whiteSpace: "nowrap",
                 }}
               >
                 Add-ons
@@ -806,6 +1180,7 @@ export default function IndexPage() {
                   fontWeight: "600",
                   fontSize: "14px",
                   color: "#0F172A",
+                  whiteSpace: "nowrap",
                 }}
               >
                 Start Date
@@ -817,20 +1192,26 @@ export default function IndexPage() {
                   fontWeight: "600",
                   fontSize: "14px",
                   color: "#0F172A",
+                  whiteSpace: "nowrap",
                 }}
               >
                 End Date
               </div>
               <div
                 style={{
-                  padding: "8px 8px 8px 40px",
-                  textAlign: "left",
+                  paddingTop: "8px",
+                  paddingBottom: "8px",
+                  paddingLeft: "32px",
+                  paddingRight: "8px",
                   fontWeight: "600",
                   fontSize: "14px",
                   color: "#0F172A",
+                  whiteSpace: "nowrap",
+                  display: "flex",
+                  justifyContent: "flex-start",
                 }}
               >
-                Action
+                <span>Action</span>
               </div>
             </div>
 
@@ -918,7 +1299,7 @@ export default function IndexPage() {
                       style={{
                         display: "grid",
                         gridTemplateColumns:
-                          "1fr 1.8fr 0.8fr 1fr 1fr 1fr 1fr 1.2fr 1fr 2.2fr",
+                          "minmax(100px, 1fr) minmax(180px, 2fr) minmax(80px, 0.8fr) minmax(100px, 1fr) minmax(110px, 1.1fr) minmax(100px, 1fr) minmax(90px, 0.9fr) minmax(120px, 1.2fr) minmax(120px, 1.2fr) minmax(220px, 2fr)",
                         gap: "0",
                         borderBottom:
                           index < filteredVehicles.length - 1
@@ -933,6 +1314,7 @@ export default function IndexPage() {
                           textAlign: "left",
                           fontSize: "14px",
                           color: "#005055",
+                          whiteSpace: "nowrap",
                         }}
                       >
                         <button
@@ -946,6 +1328,7 @@ export default function IndexPage() {
                             border: "none",
                             cursor: "pointer",
                             padding: 0,
+                            whiteSpace: "nowrap",
                           }}
                         >
                           {vehicle.plateNumber}
@@ -957,6 +1340,9 @@ export default function IndexPage() {
                           textAlign: "left",
                           fontSize: "14px",
                           color: "#0F172A",
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
                         }}
                       >
                         {vehicle.model}
@@ -967,6 +1353,7 @@ export default function IndexPage() {
                           textAlign: "left",
                           fontSize: "14px",
                           color: "#0F172A",
+                          whiteSpace: "nowrap",
                         }}
                       >
                         {vehicle.age} yo
@@ -977,6 +1364,7 @@ export default function IndexPage() {
                           textAlign: "left",
                           fontSize: "14px",
                           color: "#0F172A",
+                          whiteSpace: "nowrap",
                         }}
                       >
                         {vehicle.price.toLocaleString("sv-SE")} kr
@@ -987,6 +1375,7 @@ export default function IndexPage() {
                           textAlign: "left",
                           fontSize: "14px",
                           color: "#0F172A",
+                          whiteSpace: "nowrap",
                         }}
                       >
                         {vehicle.priceWithTFA.toLocaleString("sv-SE")} kr
@@ -997,6 +1386,7 @@ export default function IndexPage() {
                           textAlign: "left",
                           fontSize: "14px",
                           color: "#0F172A",
+                          whiteSpace: "nowrap",
                         }}
                       >
                         {vehicle.coverLevel}
@@ -1007,6 +1397,7 @@ export default function IndexPage() {
                           textAlign: "left",
                           fontSize: "14px",
                           color: "#0F172A",
+                          whiteSpace: "nowrap",
                         }}
                       >
                         {vehicle.addOns.length}
@@ -1041,12 +1432,17 @@ export default function IndexPage() {
                       </div>
                       <div
                         style={{
-                          padding: "8px 8px 8px 40px",
-                          textAlign: "left",
+                          paddingTop: "8px",
+                          paddingBottom: "8px",
+                          paddingLeft: "16px",
+                          paddingRight: "8px",
+                          textAlign: "right",
                           fontSize: "14px",
                           display: "flex",
                           alignItems: "center",
+                          justifyContent: "flex-end",
                           gap: "8px",
+                          whiteSpace: "nowrap",
                         }}
                       >
                         <button
@@ -1082,7 +1478,7 @@ export default function IndexPage() {
                             alignItems: "center",
                             justifyContent: "center",
                             backgroundColor: "white",
-                            color: "#0F172A",
+                            color: "#005055",
                             border: "1px solid #E2E8F0",
                             cursor: "pointer",
                             padding: "6px 8px",
@@ -1102,7 +1498,7 @@ export default function IndexPage() {
                             className="size-4"
                             viewBox="0 0 24 24"
                             fill="none"
-                            stroke="#005055"
+                            stroke="currentColor"
                             strokeWidth="2"
                             strokeLinecap="round"
                             strokeLinejoin="round"
@@ -1360,6 +1756,189 @@ export default function IndexPage() {
           </Alert>
         </div>
       )}
+
+      {/* Filter & Sort Modal */}
+      {showFilterModal && (
+        <div
+          className="fixed inset-0 z-50 bg-white"
+          style={{ overflowY: "auto" }}
+        >
+          <div style={{ height: "100vh", display: "flex", flexDirection: "column" }}>
+            {/* Header */}
+            <div style={{
+              padding: "16px",
+              borderBottom: "1px solid #E2E8F0",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center"
+            }}>
+              <h2 style={{ fontSize: "20px", fontWeight: "600", color: "#0F172A" }}>Filter & Sort</h2>
+              <button
+                onClick={() => setShowFilterModal(false)}
+                style={{
+                  padding: "8px",
+                  border: "none",
+                  background: "none",
+                  cursor: "pointer",
+                  color: "#0F172A"
+                }}
+              >
+                <svg
+                  className="size-6"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+
+            {/* Content */}
+            <div style={{ flex: 1, overflowY: "auto", padding: "16px" }}>
+              {/* Cover Level Section */}
+              <div style={{ marginBottom: "32px" }}>
+                <h3 style={{ fontSize: "16px", fontWeight: "600", color: "#0F172A", marginBottom: "12px" }}>Cover Level</h3>
+                {["Ansvar", "Kasko", "Delkasko"].map((level) => (
+                  <label
+                    key={level}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      padding: "12px 0",
+                      cursor: "pointer"
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={selectedCoverLevels.includes(level)}
+                      onChange={(e) => {
+                        setSelectedCoverLevels(
+                          e.target.checked
+                            ? [...selectedCoverLevels, level]
+                            : selectedCoverLevels.filter((item) => item !== level)
+                        )
+                      }}
+                      style={{ width: "20px", height: "20px", marginRight: "12px", cursor: "pointer" }}
+                    />
+                    <span style={{ fontSize: "14px", color: "#0F172A" }}>{level}</span>
+                  </label>
+                ))}
+              </div>
+
+              {/* Add-ons Section */}
+              <div style={{ marginBottom: "32px" }}>
+                <h3 style={{ fontSize: "16px", fontWeight: "600", color: "#0F172A", marginBottom: "12px" }}>Add-ons</h3>
+                {["Rental car", "Tools", "Maskinskade"].map((addon) => (
+                  <label
+                    key={addon}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      padding: "12px 0",
+                      cursor: "pointer"
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={selectedAddOns.includes(addon)}
+                      onChange={(e) => {
+                        setSelectedAddOns(
+                          e.target.checked
+                            ? [...selectedAddOns, addon]
+                            : selectedAddOns.filter((item) => item !== addon)
+                        )
+                      }}
+                      style={{ width: "20px", height: "20px", marginRight: "12px", cursor: "pointer" }}
+                    />
+                    <span style={{ fontSize: "14px", color: "#0F172A" }}>{addon}</span>
+                  </label>
+                ))}
+              </div>
+
+              {/* Sort By Section */}
+              <div style={{ marginBottom: "32px" }}>
+                <h3 style={{ fontSize: "16px", fontWeight: "600", color: "#0F172A", marginBottom: "12px" }}>Sort By</h3>
+                {[
+                  { value: "price_asc", label: "Price ascending" },
+                  { value: "price_desc", label: "Price descending" },
+                  { value: "startDate_desc", label: "Start date descending" },
+                  { value: "age_desc", label: "Age descending" }
+                ].map((option) => (
+                  <label
+                    key={option.value}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      padding: "12px 0",
+                      cursor: "pointer"
+                    }}
+                  >
+                    <input
+                      type="radio"
+                      checked={selectedSortBy === option.value}
+                      onChange={() => setSelectedSortBy(option.value)}
+                      style={{ width: "20px", height: "20px", marginRight: "12px", cursor: "pointer" }}
+                    />
+                    <span style={{ fontSize: "14px", color: "#0F172A" }}>{option.label}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div style={{
+              padding: "16px",
+              borderTop: "1px solid #E2E8F0",
+              display: "flex",
+              gap: "12px"
+            }}>
+              <button
+                onClick={() => {
+                  setSelectedCoverLevels([])
+                  setSelectedAddOns([])
+                  setSelectedSortBy("")
+                }}
+                style={{
+                  flex: 1,
+                  padding: "12px",
+                  borderRadius: "8px",
+                  border: "1px solid #E2E8F0",
+                  backgroundColor: "white",
+                  color: "#0F172A",
+                  fontSize: "14px",
+                  fontWeight: "500",
+                  cursor: "pointer"
+                }}
+              >
+                Clear All
+              </button>
+              <button
+                onClick={() => setShowFilterModal(false)}
+                style={{
+                  flex: 1,
+                  padding: "12px",
+                  borderRadius: "8px",
+                  border: "none",
+                  backgroundColor: "#005055",
+                  color: "white",
+                  fontSize: "14px",
+                  fontWeight: "500",
+                  cursor: "pointer"
+                }}
+              >
+                Apply
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   )
 }
+
+
