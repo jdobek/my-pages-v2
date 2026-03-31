@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { Search } from "lucide-react"
 import { currentUser, Vehicle } from "@/lib/data"
 import { SubmitRequestModal } from "@/components/submit-request-modal"
 import { VehicleDetailsModal } from "@/components/vehicle-details-modal"
@@ -10,6 +11,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Input } from "@/components/ui/input"
 
 export default function MyPagesPage() {
   const [detailsModal, setDetailsModal] = useState<Vehicle | null>(null)
@@ -50,13 +52,16 @@ export default function MyPagesPage() {
 
           {/* Filter Controls */}
           <div className="flex flex-wrap gap-2">
-            <input
-              type="text"
-              placeholder="Search by plate number or model"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder:text-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-            />
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                type="text"
+                placeholder="Search by plate number or model"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-9"
+              />
+            </div>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

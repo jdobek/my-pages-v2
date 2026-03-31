@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import * as XLSX from "xlsx"
-import { ChevronDown } from "lucide-react"
+import { ChevronDown, Search } from "lucide-react"
 
 import { currentUser, Vehicle } from "@/lib/data"
 import { SubmitRequestModal } from "@/components/submit-request-modal"
@@ -16,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Checkbox } from "@/components/ui/checkbox"
+import { Input } from "@/components/ui/input"
 
 type ModalState = {
   isOpen: boolean
@@ -307,22 +308,16 @@ export default function IndexPage() {
             {/* Mobile/Tablet Layout (Below 1120px) */}
             <div className="flex min-[1120px]:hidden flex-col gap-2 w-full">
               {/* First row: Search bar full width */}
-              <input
-                type="text"
-                placeholder="Search by plate number or model"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                style={{
-                  padding: "8px 16px",
-                  borderRadius: "8px",
-                  border: "1px solid #E2E8F0",
-                  fontSize: "14px",
-                  fontFamily: "inherit",
-                  width: "100%",
-                  backgroundColor: "white",
-                  color: "#0F172A",
-                }}
-              />
+              <div className="relative w-full">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  type="text"
+                  placeholder="Search by plate number or model"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-9"
+                />
+              </div>
 
               {/* Second row: Filter & Sort (50%) and Download (50%) */}
               <div className="flex gap-2 w-full">
@@ -425,22 +420,16 @@ export default function IndexPage() {
 
             {/* Desktop Layout (1120px and above) */}
             <div className="hidden min-[1120px]:flex flex-wrap items-center gap-2 w-full lg:w-auto lg:flex-1 lg:min-w-0">
-              <input
-                type="text"
-                placeholder="Search by plate number or model"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                style={{
-                  padding: "8px 16px",
-                  borderRadius: "8px",
-                  border: "1px solid #E2E8F0",
-                  fontSize: "14px",
-                  fontFamily: "inherit",
-                  width: "300px",
-                  backgroundColor: "white",
-                  color: "#0F172A",
-                }}
-              />
+              <div className="relative w-[300px]">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  type="text"
+                  placeholder="Search by plate number or model"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-9"
+                />
+              </div>
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
