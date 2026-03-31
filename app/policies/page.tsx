@@ -15,6 +15,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Checkbox } from "@/components/ui/checkbox"
 
 type ModalState = {
   isOpen: boolean
@@ -135,7 +136,7 @@ export default function IndexPage() {
       {/* Header and boxes section with light background */}
       <div>
         <div className="container mx-auto max-w-7xl px-4 pb-4 pt-10 md:pb-4 md:pt-16">
-          <h1 className="text-slate-950 mb-6 text-3xl md:text-4xl" style={{ fontWeight: 600 }}>
+          <h1 className="text-slate-950 mb-6" style={{ fontWeight: 600, fontSize: "2.5rem" }}>
             Policies
           </h1>
           <div className="mb-8 grid grid-cols-2 gap-4 2xl:grid-cols-4">
@@ -1804,29 +1805,30 @@ export default function IndexPage() {
               <div style={{ marginBottom: "32px" }}>
                 <h3 style={{ fontSize: "16px", fontWeight: "600", color: "#0F172A", marginBottom: "12px" }}>Cover Level</h3>
                 {["Ansvar", "Kasko", "Delkasko"].map((level) => (
-                  <label
+                  <div
                     key={level}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      padding: "12px 0",
-                      cursor: "pointer"
+                    className="flex items-center py-2 cursor-pointer"
+                    onClick={() => {
+                      setSelectedCoverLevels(
+                        selectedCoverLevels.includes(level)
+                          ? selectedCoverLevels.filter((item) => item !== level)
+                          : [...selectedCoverLevels, level]
+                      )
                     }}
                   >
-                    <input
-                      type="checkbox"
+                    <Checkbox
                       checked={selectedCoverLevels.includes(level)}
-                      onChange={(e) => {
+                      onCheckedChange={(checked) => {
                         setSelectedCoverLevels(
-                          e.target.checked
+                          checked
                             ? [...selectedCoverLevels, level]
                             : selectedCoverLevels.filter((item) => item !== level)
                         )
                       }}
-                      style={{ width: "20px", height: "20px", marginRight: "12px", cursor: "pointer" }}
+                      className="h-5 w-5 mr-3 border-slate-300 data-[state=checked]:bg-[#005055] data-[state=checked]:border-[#005055]"
                     />
                     <span style={{ fontSize: "14px", color: "#0F172A" }}>{level}</span>
-                  </label>
+                  </div>
                 ))}
               </div>
 
@@ -1834,29 +1836,30 @@ export default function IndexPage() {
               <div style={{ marginBottom: "32px" }}>
                 <h3 style={{ fontSize: "16px", fontWeight: "600", color: "#0F172A", marginBottom: "12px" }}>Add-ons</h3>
                 {["Rental car", "Tools", "Maskinskade"].map((addon) => (
-                  <label
+                  <div
                     key={addon}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      padding: "12px 0",
-                      cursor: "pointer"
+                    className="flex items-center py-2 cursor-pointer"
+                    onClick={() => {
+                      setSelectedAddOns(
+                        selectedAddOns.includes(addon)
+                          ? selectedAddOns.filter((item) => item !== addon)
+                          : [...selectedAddOns, addon]
+                      )
                     }}
                   >
-                    <input
-                      type="checkbox"
+                    <Checkbox
                       checked={selectedAddOns.includes(addon)}
-                      onChange={(e) => {
+                      onCheckedChange={(checked) => {
                         setSelectedAddOns(
-                          e.target.checked
+                          checked
                             ? [...selectedAddOns, addon]
                             : selectedAddOns.filter((item) => item !== addon)
                         )
                       }}
-                      style={{ width: "20px", height: "20px", marginRight: "12px", cursor: "pointer" }}
+                      className="h-5 w-5 mr-3 border-slate-300 data-[state=checked]:bg-[#005055] data-[state=checked]:border-[#005055]"
                     />
                     <span style={{ fontSize: "14px", color: "#0F172A" }}>{addon}</span>
-                  </label>
+                  </div>
                 ))}
               </div>
 
@@ -1871,18 +1874,14 @@ export default function IndexPage() {
                 ].map((option) => (
                   <label
                     key={option.value}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      padding: "12px 0",
-                      cursor: "pointer"
-                    }}
+                    className="flex items-center py-2 cursor-pointer"
                   >
                     <input
                       type="radio"
+                      name="sortByPolicies"
                       checked={selectedSortBy === option.value}
                       onChange={() => setSelectedSortBy(option.value)}
-                      style={{ width: "20px", height: "20px", marginRight: "12px", cursor: "pointer" }}
+                      className="h-5 w-5 mr-3 cursor-pointer accent-[#005055]"
                     />
                     <span style={{ fontSize: "14px", color: "#0F172A" }}>{option.label}</span>
                   </label>

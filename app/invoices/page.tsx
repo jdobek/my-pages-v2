@@ -12,6 +12,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Checkbox } from "@/components/ui/checkbox"
 
 type Invoice = {
   number: string
@@ -54,6 +55,7 @@ export default function InvoicesPage() {
   const [searchQuery, setSearchQuery] = useState<string>("")
   const [selectedStatuses, setSelectedStatuses] = useState<string[]>([])
   const [selectedSortBy, setSelectedSortBy] = useState<string>("")
+  const [showFilterModal, setShowFilterModal] = useState(false)
 
   useEffect(() => {
     if (showSuccessAlert) {
@@ -158,7 +160,7 @@ export default function InvoicesPage() {
           <h1 className="text-slate-950 mb-6" style={{ fontSize: "2.5rem", fontWeight: 600 }}>
             Invoices
           </h1>
-          <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-4">
+          <div className="mb-8 grid grid-cols-2 gap-4 2xl:grid-cols-4">
             {/* Unpaid Invoices */}
             <div
               style={{
@@ -327,29 +329,106 @@ export default function InvoicesPage() {
       <div className="container mx-auto max-w-7xl px-4 pb-4 pt-10 md:pb-4 md:pt-16">
         <div className="flex flex-col gap-6">
           <div className="flex flex-col gap-3">
-            <h1 style={{ color: "#0F172A", fontWeight: "600", fontSize: "24px" }}>
+            <h1
+              className="text-xl md:text-2xl"
+              style={{ color: "#0F172A", fontWeight: "600" }}
+            >
               All Invoices
             </h1>
           </div>
 
-            <div className="flex flex-col items-start justify-between gap-4 lg:flex-row lg:items-center">
-              <div className="flex flex-1 items-center gap-2">
-                <input
-                  type="text"
-                  placeholder="Search by invoice number"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+            <div className="flex flex-col items-start justify-between gap-4 lg:flex-row lg:items-center w-full">
+            {/* Mobile/Tablet Layout (Below 1120px) */}
+            <div className="flex min-[1120px]:hidden flex-col gap-2 w-full">
+              {/* First row: Search bar full width */}
+              <input
+                type="text"
+                placeholder="Search by invoice number"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                style={{
+                  padding: "8px 16px",
+                  borderRadius: "8px",
+                  border: "1px solid #E2E8F0",
+                  fontSize: "14px",
+                  fontFamily: "inherit",
+                  width: "100%",
+                  backgroundColor: "white",
+                  color: "#0F172A",
+                }}
+              />
+
+              {/* Second row: Filter & Sort button */}
+              <div className="flex gap-2 w-full">
+                <button
+                  onClick={() => setShowFilterModal(true)}
                   style={{
+                    flex: 1,
                     padding: "8px 16px",
                     borderRadius: "8px",
                     border: "1px solid #E2E8F0",
                     fontSize: "14px",
-                    fontFamily: "inherit",
-                    width: "300px",
                     backgroundColor: "white",
+                    cursor: "pointer",
                     color: "#0F172A",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "8px",
                   }}
-                />
+                >
+                  <svg
+                    className="size-4"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                  </svg>
+                  Filter & Sort
+                  {(selectedStatuses.length > 0 || selectedSortBy) && (
+                    <span
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        width: "20px",
+                        height: "20px",
+                        borderRadius: "50%",
+                        backgroundColor: "#005055",
+                        fontSize: "11px",
+                        fontWeight: "600",
+                        color: "white",
+                      }}
+                    >
+                      {selectedStatuses.length + (selectedSortBy ? 1 : 0)}
+                    </span>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* Desktop Layout (1120px and above) */}
+            <div className="hidden min-[1120px]:flex flex-wrap items-center gap-2 w-full lg:w-auto lg:flex-1 lg:min-w-0">
+              <input
+                type="text"
+                placeholder="Search by invoice number"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                style={{
+                  padding: "8px 16px",
+                  borderRadius: "8px",
+                  border: "1px solid #E2E8F0",
+                  fontSize: "14px",
+                  fontFamily: "inherit",
+                  width: "300px",
+                  backgroundColor: "white",
+                  color: "#0F172A",
+                }}
+              />
 
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -579,8 +658,318 @@ export default function InvoicesPage() {
                 )}
               </div>
             </div>
+          </div>
 
             <div className="mt-8">
+            {/* Mobile/Tablet Card View - Hidden on Large Desktop */}
+            <div className="block 2xl:hidden space-y-4">
+              {(() => {
+                const filteredInvoices = invoices
+                  .filter((invoice) => {
+                    const query = searchQuery.toLowerCase()
+                    const matchesSearch = invoice.number.toLowerCase().includes(query)
+                    const matchesStatus =
+                      selectedStatuses.length === 0 ||
+                      selectedStatuses.includes(invoice.status)
+                    return matchesSearch && matchesStatus
+                  })
+                  .sort((a, b) => {
+                    switch (selectedSortBy) {
+                      case "dueDate_asc":
+                        return new Date(a.dueDate.split('.').reverse().join('-')).getTime() -
+                               new Date(b.dueDate.split('.').reverse().join('-')).getTime()
+                      case "dueDate_desc":
+                        return new Date(b.dueDate.split('.').reverse().join('-')).getTime() -
+                               new Date(a.dueDate.split('.').reverse().join('-')).getTime()
+                      case "issueDate_desc":
+                        return new Date(b.issueDate.split('.').reverse().join('-')).getTime() -
+                               new Date(a.issueDate.split('.').reverse().join('-')).getTime()
+                      default:
+                        return 0
+                    }
+                  })
+
+                if (filteredInvoices.length === 0 && (searchQuery || selectedStatuses.length > 0)) {
+                  return (
+                    <div style={{ padding: "32px 16px", textAlign: "center" }}>
+                      <svg
+                        className="size-12"
+                        style={{ margin: "0 auto 16px", color: "#94A3B8" }}
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                      </svg>
+                      <p style={{ fontSize: "16px", fontWeight: "500", color: "#0F172A", marginBottom: "8px" }}>
+                        No invoices found
+                      </p>
+                      <p style={{ fontSize: "14px", color: "#334155" }}>
+                        Try adjusting your search or filter criteria to find matching invoices.
+                      </p>
+                    </div>
+                  )
+                }
+
+                return filteredInvoices.map((invoice) => {
+                  const daysLeft = calculateDaysLeft(invoice.dueDate, invoice.status)
+                  return (
+                    <div
+                      key={invoice.number}
+                      style={{
+                        border: "1px solid #E2E8F0",
+                        borderRadius: "8px",
+                        padding: "16px",
+                        backgroundColor: "white",
+                      }}
+                    >
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "16px" }}>
+                        <div>
+                          <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: invoice.creditNote ? "8px" : "0" }}>
+                            <a
+                              href="/Invoice-301944.pdf"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              style={{
+                                textDecoration: "underline",
+                                color: "#005055",
+                                fontWeight: "600",
+                                fontSize: "20px",
+                              }}
+                            >
+                              #{invoice.number}
+                            </a>
+                            {invoice.status === "overdue" ? (
+                            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                              <span
+                                style={{
+                                  display: "inline-flex",
+                                  alignItems: "center",
+                                  gap: "4px",
+                                  padding: "1px 8px",
+                                  borderRadius: "16px",
+                                  backgroundColor: "white",
+                                  border: "1px solid #DC2626",
+                                  color: "#DC2626",
+                                  fontSize: "12px",
+                                  fontWeight: "500",
+                                }}
+                              >
+                                <X style={{ width: "12px", height: "12px" }} />
+                                Overdue
+                              </span>
+                              {daysLeft !== null && (
+                                <span style={{ fontSize: "12px", fontWeight: "500", color: "#DC2626" }}>
+                                  {Math.abs(daysLeft)} days
+                                </span>
+                              )}
+                            </div>
+                          ) : invoice.status === "in_progress" ? (
+                            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                              <span
+                                style={{
+                                  display: "inline-flex",
+                                  alignItems: "center",
+                                  gap: "4px",
+                                  padding: "1px 8px",
+                                  borderRadius: "16px",
+                                  backgroundColor: "#FAFAFA",
+                                  border: "1px solid #9CA3AF",
+                                  color: "#0F172A",
+                                  fontSize: "12px",
+                                  fontWeight: "500",
+                                }}
+                              >
+                                <Clock style={{ width: "12px", height: "12px" }} />
+                                In progress
+                              </span>
+                              {daysLeft !== null && (
+                                <span style={{ fontSize: "12px", fontWeight: "500", color: "#DC2626" }}>
+                                  {Math.abs(daysLeft)} days
+                                </span>
+                              )}
+                            </div>
+                          ) : (
+                            <span
+                              style={{
+                                display: "inline-flex",
+                                alignItems: "center",
+                                gap: "4px",
+                                padding: "1px 8px",
+                                borderRadius: "16px",
+                                backgroundColor: "white",
+                                border: "1px solid #005055",
+                                color: "#005055",
+                                fontSize: "12px",
+                                fontWeight: "500",
+                              }}
+                            >
+                              <Check style={{ width: "12px", height: "12px" }} />
+                              Paid
+                            </span>
+                          )}
+                          </div>
+                          {invoice.creditNote && (
+                            <div style={{ fontSize: "12px", color: "#64748B" }}>
+                              Credit Note: <a
+                                href="/Credit-Memo-300062.pdf"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                  color: "#005055",
+                                  fontWeight: "500",
+                                  textDecoration: "underline",
+                                }}
+                              >
+                                {invoice.creditNote}
+                              </a>
+                            </div>
+                          )}
+                        </div>
+                        <a
+                          href="/Invoice-301944.pdf"
+                          download
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            backgroundColor: "white",
+                            color: "#0F172A",
+                            border: "1px solid #E2E8F0",
+                            cursor: "pointer",
+                            padding: "6px 8px",
+                            borderRadius: "6px",
+                            width: "32px",
+                            height: "32px",
+                            transition: "background-color 0.2s",
+                          }}
+                        >
+                          <svg
+                            className="size-4"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="#005055"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                          </svg>
+                        </a>
+                      </div>
+                      {/* Mobile Layout - Below md */}
+                      <div className="block md:hidden" style={{ fontSize: "14px" }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "12px", paddingBottom: "12px", borderBottom: "1px solid #E2E8F0" }}>
+                          <span style={{ color: "#0F172A", fontWeight: "500" }}>Issue date</span>
+                          <span style={{ color: "#0F172A" }}>{invoice.issueDate}</span>
+                        </div>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "12px", paddingBottom: "12px", borderBottom: "1px solid #E2E8F0" }}>
+                          <span style={{ color: "#0F172A", fontWeight: "500" }}>Due date</span>
+                          <span style={{ color: "#0F172A" }}>{invoice.dueDate}</span>
+                        </div>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "12px", paddingBottom: "12px", borderBottom: "1px solid #E2E8F0" }}>
+                          <span style={{ color: "#0F172A", fontWeight: "500" }}>Price</span>
+                          <div style={{ textAlign: "right" }}>
+                            <span style={{ color: "#334155", fontWeight: "500" }}>{invoice.price}</span>
+                            {invoice.creditAmount && (
+                              <p style={{ fontSize: "11px", color: "#005055", marginTop: "0px", fontWeight: "500" }}>
+                                {invoice.creditAmount}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "12px", paddingBottom: "12px", borderBottom: invoice.creditNote ? "1px solid #E2E8F0" : "none" }}>
+                          <span style={{ color: "#0F172A", fontWeight: "500" }}>Schedule</span>
+                          <span style={{ color: "#0F172A" }}>{invoice.schedule}</span>
+                        </div>
+                        {invoice.creditNote && (
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "12px", paddingBottom: "12px" }}>
+                            <span style={{ color: "#0F172A", fontWeight: "500" }}>Credit Note</span>
+                            <a
+                              href="/Credit-Memo-300062.pdf"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              style={{
+                                color: "#005055",
+                                fontSize: "14px",
+                                fontWeight: "500",
+                                textDecoration: "underline",
+                              }}
+                            >
+                              {invoice.creditNote}
+                            </a>
+                          </div>
+                        )}
+                      </div>
+                      {/* Tablet Layout - md and above */}
+                      <div className="hidden md:block" style={{ fontSize: "14px" }}>
+                        {invoice.status === "paid" ? (
+                          /* Paid invoices - single row layout */
+                          <div style={{ display: "grid", gridTemplateColumns: "1fr auto 1fr auto 1fr auto 1fr", gap: "16px 0", paddingTop: "12px" }}>
+                            <div style={{ paddingRight: "8px" }}>
+                              <span style={{ color: "#64748B", fontSize: "12px", display: "block", marginBottom: "4px" }}>Issue date</span>
+                              <span style={{ color: "#0F172A", fontWeight: "500" }}>{invoice.issueDate}</span>
+                            </div>
+                            <div style={{ width: "1px", backgroundColor: "#E2E8F0", marginRight: "16px" }}></div>
+                            <div style={{ paddingRight: "8px" }}>
+                              <span style={{ color: "#64748B", fontSize: "12px", display: "block", marginBottom: "4px" }}>Due date</span>
+                              <span style={{ color: "#0F172A", fontWeight: "500" }}>{invoice.dueDate}</span>
+                            </div>
+                            <div style={{ width: "1px", backgroundColor: "#E2E8F0", marginRight: "16px" }}></div>
+                            <div style={{ paddingRight: "8px" }}>
+                              <span style={{ color: "#64748B", fontSize: "12px", display: "block", marginBottom: "4px" }}>Price</span>
+                              <span style={{ color: "#334155", fontWeight: "500" }}>{invoice.price}</span>
+                            </div>
+                            <div style={{ width: "1px", backgroundColor: "#E2E8F0", marginRight: "16px" }}></div>
+                            <div>
+                              <span style={{ color: "#64748B", fontSize: "12px", display: "block", marginBottom: "4px" }}>Schedule</span>
+                              <span style={{ color: "#0F172A", fontWeight: "500" }}>{invoice.schedule}</span>
+                            </div>
+                          </div>
+                        ) : (
+                          /* Overdue/In progress invoices - single row layout */
+                          <div style={{ display: "grid", gridTemplateColumns: "1fr auto 1fr auto 1fr auto 1fr", gap: "16px 0", paddingTop: "12px" }}>
+                            <div style={{ paddingRight: "8px" }}>
+                              <span style={{ color: "#64748B", fontSize: "12px", display: "block", marginBottom: "4px" }}>Issue date</span>
+                              <span style={{ color: "#0F172A", fontWeight: "500" }}>{invoice.issueDate}</span>
+                            </div>
+                            <div style={{ width: "1px", backgroundColor: "#E2E8F0", marginRight: "16px" }}></div>
+                            <div style={{ paddingRight: "8px" }}>
+                              <span style={{ color: "#64748B", fontSize: "12px", display: "block", marginBottom: "4px" }}>Due date</span>
+                              <span style={{ color: "#0F172A", fontWeight: "500" }}>{invoice.dueDate}</span>
+                            </div>
+                            <div style={{ width: "1px", backgroundColor: "#E2E8F0", marginRight: "16px" }}></div>
+                            <div style={{ paddingRight: "8px" }}>
+                              <span style={{ color: "#64748B", fontSize: "12px", display: "block", marginBottom: "4px" }}>Price</span>
+                              <span style={{ color: "#334155", fontWeight: "500", display: "block" }}>{invoice.price}</span>
+                              {invoice.creditAmount && (
+                                <span style={{ fontSize: "11px", color: "#005055", fontWeight: "500", display: "block" }}>
+                                  {invoice.creditAmount}
+                                </span>
+                              )}
+                            </div>
+                            <div style={{ width: "1px", backgroundColor: "#E2E8F0", marginRight: "16px" }}></div>
+                            <div>
+                              <span style={{ color: "#64748B", fontSize: "12px", display: "block", marginBottom: "4px" }}>Schedule</span>
+                              <span style={{ color: "#0F172A", fontWeight: "500" }}>{invoice.schedule}</span>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )
+                })
+              })()}
+            </div>
+
+            {/* Desktop Table View - Hidden on Mobile/Tablet */}
+            <div className="hidden 2xl:block">
               <div
                 className="w-full"
                 style={{
@@ -1216,6 +1605,156 @@ export default function InvoicesPage() {
                   </svg>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Filter & Sort Full Screen */}
+      {showFilterModal && (
+        <div
+          className="fixed inset-0 z-50 bg-white"
+          style={{ overflowY: "auto" }}
+        >
+          <div style={{ height: "100vh", display: "flex", flexDirection: "column" }}>
+            {/* Header */}
+            <div style={{
+              padding: "16px",
+              borderBottom: "1px solid #E2E8F0",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center"
+            }}>
+              <h2 style={{ fontSize: "20px", fontWeight: "600", color: "#0F172A" }}>Filter & Sort</h2>
+              <button
+                onClick={() => setShowFilterModal(false)}
+                style={{
+                  padding: "8px",
+                  border: "none",
+                  background: "none",
+                  cursor: "pointer",
+                  color: "#0F172A"
+                }}
+              >
+                <svg
+                  className="size-6"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+
+            {/* Content */}
+            <div style={{ flex: 1, overflowY: "auto", padding: "16px" }}>
+              {/* Status Section */}
+              <div style={{ marginBottom: "32px" }}>
+                <h3 style={{ fontSize: "16px", fontWeight: "600", color: "#0F172A", marginBottom: "12px" }}>Status</h3>
+                {[
+                  { value: "paid", label: "Paid" },
+                  { value: "in_progress", label: "In progress" },
+                  { value: "overdue", label: "Overdue" }
+                ].map((status) => (
+                  <div
+                    key={status.value}
+                    className="flex items-center py-2 cursor-pointer"
+                    onClick={() => {
+                      setSelectedStatuses(
+                        selectedStatuses.includes(status.value)
+                          ? selectedStatuses.filter((item) => item !== status.value)
+                          : [...selectedStatuses, status.value]
+                      )
+                    }}
+                  >
+                    <Checkbox
+                      checked={selectedStatuses.includes(status.value)}
+                      onCheckedChange={(checked) => {
+                        setSelectedStatuses(
+                          checked
+                            ? [...selectedStatuses, status.value]
+                            : selectedStatuses.filter((item) => item !== status.value)
+                        )
+                      }}
+                      className="h-5 w-5 mr-3 border-slate-300 data-[state=checked]:bg-[#005055] data-[state=checked]:border-[#005055]"
+                    />
+                    <span style={{ fontSize: "14px", color: "#0F172A" }}>{status.label}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Sort By Section */}
+              <div style={{ marginBottom: "32px" }}>
+                <h3 style={{ fontSize: "16px", fontWeight: "600", color: "#0F172A", marginBottom: "12px" }}>Sort By</h3>
+                {[
+                  { value: "dueDate_asc", label: "Due date ascending" },
+                  { value: "dueDate_desc", label: "Due date descending" },
+                  { value: "issueDate_desc", label: "Issue date descending" }
+                ].map((option) => (
+                  <label
+                    key={option.value}
+                    className="flex items-center py-2 cursor-pointer"
+                  >
+                    <input
+                      type="radio"
+                      name="sortBy"
+                      checked={selectedSortBy === option.value}
+                      onChange={() => setSelectedSortBy(option.value)}
+                      className="h-5 w-5 mr-3 cursor-pointer accent-[#005055]"
+                    />
+                    <span style={{ fontSize: "14px", color: "#0F172A" }}>{option.label}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div style={{
+              padding: "16px",
+              borderTop: "1px solid #E2E8F0",
+              display: "flex",
+              gap: "12px"
+            }}>
+              <button
+                onClick={() => {
+                  setSelectedStatuses([])
+                  setSelectedSortBy("")
+                }}
+                style={{
+                  flex: 1,
+                  padding: "12px",
+                  borderRadius: "8px",
+                  border: "1px solid #E2E8F0",
+                  backgroundColor: "white",
+                  color: "#0F172A",
+                  fontSize: "14px",
+                  fontWeight: "500",
+                  cursor: "pointer"
+                }}
+              >
+                Clear All
+              </button>
+              <button
+                onClick={() => setShowFilterModal(false)}
+                style={{
+                  flex: 1,
+                  padding: "12px",
+                  borderRadius: "8px",
+                  border: "none",
+                  backgroundColor: "#005055",
+                  color: "white",
+                  fontSize: "14px",
+                  fontWeight: "500",
+                  cursor: "pointer"
+                }}
+              >
+                Apply
+              </button>
             </div>
           </div>
         </div>
