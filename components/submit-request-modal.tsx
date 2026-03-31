@@ -135,15 +135,35 @@ export function SubmitRequestModal({ onClose, onSubmitSuccess, vehicle, vehicles
 
   return (
     <div
-      className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50"
+      className="fixed inset-0 z-[60] md:flex md:items-center md:justify-center bg-black/0 md:bg-black/50"
       onClick={handleBackdropClick}
       style={{ pointerEvents: "auto" }}
     >
       <div
-        className="w-full max-w-xl rounded-lg bg-white p-6 shadow-lg"
+        className="relative h-full w-full md:h-auto md:max-w-xl md:rounded-lg bg-white p-6 shadow-lg overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
         style={{ pointerEvents: "auto" }}
       >
+        {/* Close button for mobile */}
+        <button
+          onClick={onClose}
+          className="md:hidden absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600"
+        >
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+
         {/* Header */}
         <div className="mb-6">
           <h2 className="mb-3 text-xl font-bold text-slate-900">
