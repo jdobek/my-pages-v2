@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input"
 
 export default function MyPagesPage() {
   const [detailsModal, setDetailsModal] = useState<Vehicle | null>(null)
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false)
   const [submitModal, setSubmitModal] = useState<Vehicle | null>(null)
   const [searchQuery, setSearchQuery] = useState<string>("")
   const [selectedCoverLevels, setSelectedCoverLevels] = useState<string[]>([])
@@ -24,9 +25,13 @@ export default function MyPagesPage() {
   const openDetailsModal = (vehicle: Vehicle) => {
     console.log('Opening details modal for:', vehicle.plateNumber)
     setDetailsModal(vehicle)
+    if (!isDetailsOpen) {
+      setIsDetailsOpen(true)
+    }
   }
 
   const closeDetailsModal = () => {
+    setIsDetailsOpen(false)
     setDetailsModal(null)
     setSubmitModal(null)
   }
@@ -38,6 +43,12 @@ export default function MyPagesPage() {
 
   const closeSubmitModal = () => {
     setSubmitModal(null)
+  }
+
+  const handleBackToDetails = () => {
+    const vehicle = submitModal
+    setSubmitModal(null)
+    setDetailsModal(vehicle)
   }
 
   return (
@@ -353,22 +364,21 @@ export default function MyPagesPage() {
         </div>
       </section>
 
-      {detailsModal && (
-        <VehicleDetailsModal
-          vehicle={detailsModal}
-          onClose={closeDetailsModal}
-          onSubmitRequest={openSubmitModal}
-        />
-      )}
+      <VehicleDetailsModal
+        vehicle={detailsModal}
+        isOpen={isDetailsOpen}
+        onClose={closeDetailsModal}
+        onSubmitRequest={openSubmitModal}
+      />
 
-      {submitModal && (
-        <SubmitRequestModal
-          onClose={closeSubmitModal}
-          onSubmitSuccess={closeSubmitModal}
-          vehicle={submitModal}
-          vehicles={currentUser.vehicles}
-        />
-      )}
+      <SubmitRequestModal
+        vehicle={submitModal}
+        isOpen={!!submitModal}
+        onClose={closeSubmitModal}
+        onSubmitSuccess={closeSubmitModal}
+        onBack={submitModal ? handleBackToDetails : undefined}
+        vehicles={currentUser.vehicles}
+      />
     </>
   )
 }

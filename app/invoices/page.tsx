@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { SidebarTrigger } from "@/components/ui/sidebar"
 import { SubmitRequestModal } from "@/components/submit-request-modal"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { currentUser } from "@/lib/data"
@@ -127,40 +126,35 @@ export default function InvoicesPage() {
 
   return (
     <div className="w-full">
-      {/* Header with Sidebar toggle */}
-      <div className="sticky top-0 z-50 border-b border-gray-200 bg-white">
-        <div className="container mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
-          <SidebarTrigger />
-          <button
-            onClick={openSubmitRequestModal}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              backgroundColor: "#005055",
-              color: "white",
-              padding: "8px 20px",
-              borderRadius: "8px",
-              border: "none",
-              fontSize: "14px",
-              fontWeight: "500",
-              cursor: "pointer",
-              transition: "opacity 0.2s",
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")}
-            onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
-          >
-            Submit a request
-          </button>
-        </div>
-      </div>
-
       {/* Header and boxes section */}
       <div>
         <div className="container mx-auto max-w-7xl px-4 pb-4 pt-10 md:pb-4 md:pt-16">
-          <h1 className="text-slate-950 mb-6" style={{ fontSize: "2.5rem", fontWeight: 600 }}>
-            Invoices
-          </h1>
+          <div className="flex items-center justify-between mb-6">
+            <h1 className="text-slate-950" style={{ fontSize: "2.5rem", fontWeight: 600 }}>
+              Invoices
+            </h1>
+            <button
+              onClick={openSubmitRequestModal}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                backgroundColor: "#005055",
+                color: "white",
+                padding: "8px 20px",
+                borderRadius: "8px",
+                border: "none",
+                fontSize: "14px",
+                fontWeight: "500",
+                cursor: "pointer",
+                transition: "opacity 0.2s",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")}
+              onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+            >
+              Submit a request
+            </button>
+          </div>
           <div className="mb-8 grid grid-cols-2 gap-4 2xl:grid-cols-4">
             {/* Unpaid Invoices */}
             <div
@@ -349,7 +343,7 @@ export default function InvoicesPage() {
                   placeholder="Search by invoice number"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-9"
+                  className="pl-9 bg-white"
                 />
               </div>
 
@@ -415,7 +409,7 @@ export default function InvoicesPage() {
                   placeholder="Search by invoice number"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-9"
+                  className="pl-9 bg-white"
                 />
               </div>
 
@@ -651,7 +645,7 @@ export default function InvoicesPage() {
 
             <div className="mt-8">
             {/* Mobile/Tablet Card View - Hidden on Large Desktop */}
-            <div className="block 2xl:hidden space-y-4">
+            <div className="block 2xl:hidden space-y-4 bg-white p-4 rounded-lg border border-[#E2E8F0]">
               {(() => {
                 const filteredInvoices = invoices
                   .filter((invoice) => {
@@ -1073,6 +1067,7 @@ export default function InvoicesPage() {
                   borderRadius: "6px",
                   overflow: "hidden",
                   border: "1px solid #E2E8F0",
+                  backgroundColor: "white",
                 }}
               >
                 <div className="w-full">
@@ -1476,13 +1471,13 @@ export default function InvoicesPage() {
         </div>
       </div>
 
-      {showSubmitRequestModal && (
-        <SubmitRequestModal
-          onClose={closeSubmitRequestModal}
-          onSubmitSuccess={handleSubmitSuccess}
-          vehicles={currentUser.vehicles}
-        />
-      )}
+      <SubmitRequestModal
+        vehicle={undefined}
+        isOpen={showSubmitRequestModal}
+        onClose={closeSubmitRequestModal}
+        onSubmitSuccess={handleSubmitSuccess}
+        vehicles={currentUser.vehicles}
+      />
 
       {showSuccessAlert && (
         <div className="fixed bottom-4 left-1/2 -translate-x-1/2 max-w-2xl z-50">

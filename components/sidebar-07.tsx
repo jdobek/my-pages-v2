@@ -16,7 +16,9 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
+  useSidebar,
 } from "@/components/ui/sidebar"
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -36,21 +38,80 @@ const menuItems = [
   },
 ]
 
+function SidebarToggleButton() {
+  const { toggleSidebar, state } = useSidebar()
+
+  return (
+    <Button
+      variant="outline"
+      size="icon"
+      onClick={toggleSidebar}
+      className="h-8 w-8 rounded-md border border-gray-300 bg-white"
+    >
+      {state === "expanded" ? (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <rect width="18" height="18" x="3" y="3" rx="2" />
+          <path d="M15 3v18" />
+          <path d="m10 15-3-3 3-3" />
+        </svg>
+      ) : (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <rect width="18" height="18" x="3" y="3" rx="2" />
+          <path d="M9 3v18" />
+          <path d="m14 9 3 3-3 3" />
+        </svg>
+      )}
+      <span className="sr-only">Toggle Sidebar</span>
+    </Button>
+  )
+}
+
+function SidebarHeaderContent() {
+  const { state } = useSidebar()
+
+  return (
+    <div className={`flex items-center py-4 ${state === "collapsed" ? "justify-center px-1" : "justify-between px-2"}`}>
+      {state === "expanded" && (
+        <Image
+          src="/fair-logo.svg"
+          alt="Fair Logo"
+          width={88}
+          height={40}
+          className="h-8 w-auto"
+        />
+      )}
+      <SidebarToggleButton />
+    </div>
+  )
+}
+
 export function Sidebar07() {
   const pathname = usePathname()
 
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
-        <div className="flex items-center px-2 py-4">
-          <Image
-            src="/fair-logo.svg"
-            alt="Fair Logo"
-            width={88}
-            height={40}
-            className="h-10 w-auto"
-          />
-        </div>
+        <SidebarHeaderContent />
       </SidebarHeader>
 
       <SidebarContent>
@@ -63,13 +124,12 @@ export function Sidebar07() {
                   const isActive = pathname === item.href
                   return (
                     <SidebarMenuItem key={item.label}>
-                      <SidebarMenuButton asChild>
+                      <SidebarMenuButton asChild isActive={isActive} className="data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground">
                         <a
                           href={item.href}
-                          className={isActive ? "font-semibold" : ""}
-                          style={isActive ? { color: "#005055" } : {}}
+                          style={{ fontWeight: 600 }}
                         >
-                          <item.icon style={isActive ? { color: "#005055" } : {}} />
+                          <item.icon />
                           <span>{item.label}</span>
                         </a>
                       </SidebarMenuButton>
@@ -88,7 +148,7 @@ export function Sidebar07() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton size="lg" className="pl-2 group-data-[collapsible=icon]:!px-0 group-data-[collapsible=icon]:!py-2 cursor-pointer">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold bg-gray-300 text-black">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center text-sm font-semibold" style={{ backgroundColor: "#E4E4E7", color: "#1C1917", borderRadius: "8px" }}>
                     JD
                   </div>
                   <div className="grid flex-1 text-left text-sm leading-tight">

@@ -6,8 +6,8 @@ import { ChevronDown, Search } from "lucide-react"
 
 import { currentUser, Vehicle } from "@/lib/data"
 import { SubmitRequestModal } from "@/components/submit-request-modal"
+import { VehicleDetailsModal } from "@/components/vehicle-details-modal"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { SidebarTrigger } from "@/components/ui/sidebar"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -47,7 +47,11 @@ export default function IndexPage() {
   }
 
   const openModal = (vehicle: Vehicle) => {
-    setModal({ isOpen: true, vehicle })
+    setModal(prev =>
+      prev.isOpen
+        ? { ...prev, vehicle }  // If already open, only update vehicle
+        : { isOpen: true, vehicle }  // If closed, open it with vehicle
+    )
   }
 
   const closeModal = () => {
@@ -66,6 +70,11 @@ export default function IndexPage() {
   const openSubmitRequestModalForVehicle = (vehicle: Vehicle) => {
     setModal({ isOpen: false, vehicle })
     setShowSubmitRequestModal(true)
+  }
+
+  const handleBackToVehicleDetails = () => {
+    setShowSubmitRequestModal(false)
+    setModal({ isOpen: true, vehicle: modal.vehicle })
   }
 
   const downloadExcel = () => {
@@ -106,40 +115,35 @@ export default function IndexPage() {
   }
   return (
     <section className="w-full">
-      {/* Header with Sidebar toggle and Submit button */}
-      <div className="sticky top-0 z-50 border-b border-gray-200 bg-white">
-        <div className="container mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
-          <SidebarTrigger />
-          <button
-            onClick={openSubmitRequestModal}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              backgroundColor: "#005055",
-              color: "white",
-              padding: "8px 20px",
-              borderRadius: "8px",
-              border: "none",
-              fontSize: "14px",
-              fontWeight: "500",
-              cursor: "pointer",
-              transition: "opacity 0.2s",
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")}
-            onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
-          >
-            Submit a request
-          </button>
-        </div>
-      </div>
-
       {/* Header and boxes section with light background */}
       <div>
         <div className="container mx-auto max-w-7xl px-4 pb-4 pt-10 md:pb-4 md:pt-16">
-          <h1 className="text-slate-950 mb-6" style={{ fontWeight: 600, fontSize: "2.5rem" }}>
-            Policies
-          </h1>
+          <div className="flex items-center justify-between mb-6">
+            <h1 className="text-slate-950" style={{ fontWeight: 600, fontSize: "2.5rem" }}>
+              Policies
+            </h1>
+            <button
+              onClick={openSubmitRequestModal}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                backgroundColor: "#005055",
+                color: "white",
+                padding: "8px 20px",
+                borderRadius: "8px",
+                border: "none",
+                fontSize: "14px",
+                fontWeight: "500",
+                cursor: "pointer",
+                transition: "opacity 0.2s",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")}
+              onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+            >
+              Submit a request
+            </button>
+          </div>
           <div className="mb-8 grid grid-cols-2 gap-4 2xl:grid-cols-4">
             {/* Total amount of vehicles */}
             <div
@@ -315,7 +319,7 @@ export default function IndexPage() {
                   placeholder="Search by plate number or model"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-9"
+                  className="pl-9 bg-white"
                 />
               </div>
 
@@ -427,7 +431,7 @@ export default function IndexPage() {
                   placeholder="Search by plate number or model"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-9"
+                  className="pl-9 bg-white"
                 />
               </div>
 
@@ -829,7 +833,7 @@ export default function IndexPage() {
 
         <div className="mt-8">
             {/* Mobile/Tablet Card View - Hidden on Large Desktop */}
-            <div className="block 2xl:hidden space-y-4">
+            <div className="block 2xl:hidden space-y-4 bg-white p-4 rounded-lg border border-[#E2E8F0]">
               {(() => {
                 const filteredVehicles = currentUser.vehicles.filter((vehicle) => {
                   const query = searchQuery.toLowerCase()
@@ -1210,6 +1214,7 @@ export default function IndexPage() {
                 borderRadius: "6px",
                 overflow: "hidden",
                 border: "1px solid #E2E8F0",
+                backgroundColor: "white",
               }}
             >
               <div className="w-full">
@@ -1514,211 +1519,21 @@ export default function IndexPage() {
         </div>
       </div>
 
-      {modal.isOpen && modal.vehicle && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              closeModal()
-            }
-          }}
-        >
-          <div
-            className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-white p-8 shadow-lg"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Header with Policy Number and Download Button */}
-            <div className="mb-4 flex items-center justify-between">
-              <div style={{ marginTop: "14px" }}>
-                <div className="mb-4 flex items-baseline gap-1">
-                  <span style={{ fontFamily: "Inter", fontSize: "14px", color: "#334155", fontWeight: "400" }}>Policy number:</span>
-                  <span style={{ fontFamily: "Inter", fontSize: "14px", color: "#334155", fontWeight: "400" }}>
-                    {Math.floor(Math.random() * 10000000).toString().padStart(7, "0")}
-                  </span>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={downloadSingleInsuranceLetter}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  backgroundColor: "white",
-                  color: "black",
-                  padding: "8px 12px",
-                  borderRadius: "6px",
-                  border: "1px solid #E2E8F0",
-                  fontSize: "14px",
-                  fontWeight: "500",
-                  cursor: "pointer",
-                }}
-              >
-                <svg
-                  style={{ width: "16px", height: "16px", stroke: "#005055" }}
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  strokeWidth="2"
-                >
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                  <polyline points="7 10 12 15 17 10"></polyline>
-                  <line x1="12" y1="15" x2="12" y2="3"></line>
-                </svg>
-                Download insurance letter
-              </button>
-            </div>
+      <VehicleDetailsModal
+        vehicle={modal.vehicle}
+        isOpen={modal.isOpen}
+        onClose={closeModal}
+        onSubmitRequest={openSubmitRequestModalForVehicle}
+      />
 
-            {/* Vehicle Info Section */}
-            <div style={{
-              backgroundColor: "#FBFBFB",
-              border: "1px solid #E2E8F0",
-              borderRadius: "8px",
-              padding: "16px",
-              marginBottom: "24px",
-            }}>
-              <h2 style={{ color: "#0F172A", fontWeight: "700", fontSize: "28px", marginBottom: "4px" }}>
-                {modal.vehicle.model}
-              </h2>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                  <span style={{ fontFamily: "Inter", fontSize: "16px", color: "black", fontWeight: "400" }}>
-                    {modal.vehicle.plateNumber}
-                  </span>
-                  <span style={{
-                    fontFamily: "Inter",
-                    fontSize: "14px",
-                    color: "black",
-                    fontWeight: "500",
-                    backgroundColor: "white",
-                    border: "1px solid #CBD5E1",
-                    padding: "2px 10px 4px 10px",
-                    borderRadius: "40px",
-                  }}>
-                    {modal.vehicle.coverLevel}
-                  </span>
-                </div>
-                <span style={{ fontFamily: "Inter", fontSize: "14px", fontWeight: "400", color: "#334155" }}>
-                  {modal.vehicle.age} {modal.vehicle.age === 1 ? "year" : "years"} old
-                </span>
-              </div>
-            </div>
-
-            {/* Dates Section */}
-            <div style={{ marginBottom: "24px" }}>
-              <h3 style={{ color: "#0F172A", fontWeight: "600", fontSize: "14px", marginBottom: "4px" }}>
-                Dates
-              </h3>
-              <div style={{ border: "1px solid #E2E8F0", borderRadius: "8px", overflow: "hidden" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", padding: "12px 16px", borderBottom: "1px solid #E2E8F0" }}>
-                  <span style={{ color: "#334155", fontSize: "14px" }}>Start Date</span>
-                  <span style={{ color: "#0F172A", fontWeight: "500", fontSize: "14px" }}>
-                    {new Date(modal.vehicle.startDate).toLocaleDateString("sv-SE")}
-                  </span>
-                </div>
-                <div style={{ display: "flex", justifyContent: "space-between", padding: "12px 16px" }}>
-                  <span style={{ color: "#334155", fontSize: "14px" }}>Renewal Date</span>
-                  <span style={{ color: "#0F172A", fontWeight: "500", fontSize: "14px" }}>
-                    {new Date(modal.vehicle.renewalDate).toLocaleDateString("sv-SE")}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Price Section */}
-            <div style={{ marginBottom: "24px" }}>
-              <h3 style={{ color: "#0F172A", fontWeight: "600", fontSize: "14px", marginBottom: "4px" }}>
-                Price
-              </h3>
-              <div style={{ border: "1px solid #E2E8F0", borderRadius: "8px", overflow: "hidden" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", padding: "12px 16px", borderBottom: "1px solid #E2E8F0" }}>
-                  <span style={{ color: "#334155", fontSize: "14px" }}>Price without TFA</span>
-                  <span style={{ color: "#0F172A", fontWeight: "500", fontSize: "14px" }}>
-                    {new Intl.NumberFormat("sv-SE").format(modal.vehicle.price)} kr
-                  </span>
-                </div>
-                <div style={{ display: "flex", justifyContent: "space-between", padding: "12px 16px" }}>
-                  <span style={{ color: "#334155", fontSize: "14px" }}>Price with TFA</span>
-                  <span style={{ color: "#0F172A", fontWeight: "500", fontSize: "14px" }}>
-                    {new Intl.NumberFormat("sv-SE").format(modal.vehicle.priceWithTFA)} kr
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Add-ons Section */}
-            <div style={{ marginBottom: "8px" }}>
-              <h3 style={{ color: "#0F172A", fontWeight: "600", fontSize: "14px", marginBottom: "4px" }}>
-                Add-ons
-              </h3>
-              <div style={{ border: "1px solid #E2E8F0", borderRadius: "8px", overflow: "hidden" }}>
-                {["Rental car", "Tools", "Maskinskade"].map((addon, index) => {
-                  const hasAddon = modal.vehicle?.addOns.includes(addon)
-                  const isLast = index === 2
-                  return (
-                    <div key={addon} style={{ display: "flex", justifyContent: "space-between", padding: "12px 16px", borderBottom: isLast ? "none" : "1px solid #E2E8F0" }}>
-                      <span style={{ color: "#334155", fontSize: "14px" }}>{addon}</span>
-                      {hasAddon ? (
-                        <img src="/icons/check-ic.svg" alt="checked" style={{ width: "24px", height: "24px" }} />
-                      ) : (
-                        <img src="/icons/failed-ic.svg" alt="unchecked" style={{ width: "24px", height: "24px" }} />
-                      )}
-                    </div>
-                  )
-                })}
-              </div>
-            </div>
-
-            {/* Action Buttons */}
-            <div style={{ display: "flex", justifyContent: "flex-end", gap: "12px", paddingTop: "24px" }}>
-              <button
-                onClick={closeModal}
-                style={{
-                  padding: "10px 20px",
-                  borderRadius: "6px",
-                  border: "1px solid #E2E8F0",
-                  backgroundColor: "white",
-                  color: "#0F172A",
-                  fontSize: "14px",
-                  fontWeight: "500",
-                  cursor: "pointer",
-                  transition: "background-color 0.2s",
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#F8FAFC")}
-                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "white")}
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => modal.vehicle && openSubmitRequestModalForVehicle(modal.vehicle)}
-                style={{
-                  padding: "10px 20px",
-                  borderRadius: "6px",
-                  backgroundColor: "#005055",
-                  color: "white",
-                  fontSize: "14px",
-                  fontWeight: "500",
-                  cursor: "pointer",
-                  border: "none",
-                  transition: "opacity 0.2s",
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")}
-                onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
-              >
-                Submit a request
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {showSubmitRequestModal && (
-        <SubmitRequestModal
-          onClose={closeSubmitRequestModal}
-          onSubmitSuccess={handleSubmitSuccess}
-          vehicle={modal.vehicle || undefined}
-          vehicles={currentUser.vehicles}
-        />
-      )}
+      <SubmitRequestModal
+        vehicle={modal.vehicle || undefined}
+        isOpen={showSubmitRequestModal}
+        onClose={closeSubmitRequestModal}
+        onSubmitSuccess={handleSubmitSuccess}
+        onBack={modal.vehicle ? handleBackToVehicleDetails : undefined}
+        vehicles={currentUser.vehicles}
+      />
 
       {showSuccessAlert && (
         <div className="fixed bottom-4 left-1/2 -translate-x-1/2 max-w-2xl z-50">

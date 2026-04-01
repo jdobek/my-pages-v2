@@ -10,6 +10,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+} from "@/components/ui/sheet"
+import { Button } from "@/components/ui/button"
 
 const REQUEST_TYPES_GENERAL = [
   "Select a request type",
@@ -31,13 +37,15 @@ const REQUEST_TYPES_VEHICLE = [
 interface SubmitRequestModalProps {
   onClose: () => void
   onSubmitSuccess: () => void
-  vehicle?: Vehicle
+  vehicle?: Vehicle | null
   vehicles?: Vehicle[]
+  isOpen: boolean
+  onBack?: () => void
 }
 
 const AVAILABLE_ADDONS = ["Rental car", "Tools", "Maskinskade"]
 
-export function SubmitRequestModal({ onClose, onSubmitSuccess, vehicle, vehicles = [] }: SubmitRequestModalProps) {
+export function SubmitRequestModal({ onClose, onSubmitSuccess, vehicle, vehicles = [], isOpen, onBack }: SubmitRequestModalProps) {
   const [requestType, setRequestType] = useState("")
   const [reason, setReason] = useState("")
   const [customReason, setCustomReason] = useState("")
@@ -81,12 +89,6 @@ export function SubmitRequestModal({ onClose, onSubmitSuccess, vehicle, vehicles
       setSelectedAddOns(vehicle.addOns)
     }
   }, [requestType, vehicle, isVehicleSpecific])
-
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      onClose()
-    }
-  }
 
   const handleSubmit = () => {
     console.log("Submitting request:", {
@@ -134,47 +136,42 @@ export function SubmitRequestModal({ onClose, onSubmitSuccess, vehicle, vehicles
     (requestType === "Adjust add-ons" && selectedAddOns.length === 0)
 
   return (
-    <div
-      className="fixed inset-0 z-[60] md:flex md:items-center md:justify-center bg-black/0 md:bg-black/50"
-      onClick={handleBackdropClick}
-      style={{ pointerEvents: "auto" }}
-    >
-      <div
-        className="relative h-full w-full md:h-auto md:max-w-xl md:rounded-lg bg-white p-6 shadow-lg overflow-y-auto"
-        onClick={(e) => e.stopPropagation()}
-        style={{ pointerEvents: "auto" }}
-      >
-        {/* Close button for mobile */}
-        <button
-          onClick={onClose}
-          className="md:hidden absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600"
-        >
-          <svg
-            className="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </button>
-
-        {/* Header */}
-        <div className="mb-6">
-          <h2 className="mb-3 text-xl font-bold text-slate-900">
-            {isVehicleSpecific ? `Request for ${vehicle.plateNumber}` : "Submit a request"}
-          </h2>
-          <p className="text-sm text-slate-600">
-            {isVehicleSpecific
-              ? "Submit a request to our support team if you'd like to make any changes to the selected vehicle."
-              : "Submit a request to our support team if you'd like to make any changes."}
-          </p>
-        </div>
+    <Sheet open={isOpen} onOpenChange={onClose} modal={false}>
+      <SheetContent side="right" className="w-full sm:max-w-lg overflow-y-auto">
+        <SheetHeader>
+          <div className="mb-6">
+            {isVehicleSpecific && onBack && (
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={onBack}
+                className="h-8 w-8 rounded-md border border-gray-300 bg-white mb-4"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M19 12H5M12 19l-7-7 7-7" />
+                </svg>
+              </Button>
+            )}
+            <h2 className="mb-3 text-xl font-bold text-slate-900">
+              {isVehicleSpecific ? `Request for ${vehicle.plateNumber}` : "Submit a request"}
+            </h2>
+            <p className="text-sm text-slate-600">
+              {isVehicleSpecific
+                ? "Submit a request to our support team if you'd like to make any changes to the selected vehicle."
+                : "Submit a request to our support team if you'd like to make any changes."}
+            </p>
+          </div>
+        </SheetHeader>
 
         {/* Form Fields */}
         <div className="space-y-5 mb-6">
@@ -564,7 +561,7 @@ export function SubmitRequestModal({ onClose, onSubmitSuccess, vehicle, vehicles
             Submit
           </button>
         </div>
-      </div>
-    </div>
+      </SheetContent>
+    </Sheet>
   )
 }

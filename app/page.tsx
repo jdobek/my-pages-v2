@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { SidebarTrigger } from "@/components/ui/sidebar"
 import { ChartRiskRadial } from "@/components/chart-risk-radial"
 import { ChartRiskScoreTrend } from "@/components/chart-risk-score-trend"
 import { ChartHorizontalBar } from "@/components/chart-horizontal-bar"
@@ -38,39 +37,32 @@ export default function DashboardPage() {
 
   return (
     <div className="w-full">
-      {/* Header with Sidebar toggle */}
-      <div className="sticky top-0 z-50 border-b border-gray-200 bg-white">
-        <div className="container mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
-          <SidebarTrigger />
-          <button
-            onClick={openSubmitRequestModal}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              backgroundColor: "#005055",
-              color: "white",
-              padding: "8px 20px",
-              borderRadius: "8px",
-              border: "none",
-              fontSize: "14px",
-              fontWeight: "500",
-              cursor: "pointer",
-              transition: "opacity 0.2s",
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")}
-            onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
-          >
-            Submit a request
-          </button>
-        </div>
-      </div>
-
       {/* Dashboard Content */}
       <div className="container mx-auto max-w-7xl px-4 pb-4 pt-10 md:pb-4 md:pt-16">
         <div className="flex flex-col gap-6">
-          <div className="flex flex-col gap-2">
+          <div className="flex items-center justify-between">
             <h1 className="text-slate-950" style={{ fontSize: "2.5rem", fontWeight: 600 }}>Dashboard</h1>
+            <button
+              onClick={openSubmitRequestModal}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                backgroundColor: "#005055",
+                color: "white",
+                padding: "8px 20px",
+                borderRadius: "8px",
+                border: "none",
+                fontSize: "14px",
+                fontWeight: "500",
+                cursor: "pointer",
+                transition: "opacity 0.2s",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")}
+              onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+            >
+              Submit a request
+            </button>
           </div>
 
           {/* Cards and Chart Section */}
@@ -104,13 +96,13 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {showSubmitRequestModal && (
-        <SubmitRequestModal
-          onClose={closeSubmitRequestModal}
-          onSubmitSuccess={handleSubmitSuccess}
-          vehicles={currentUser.vehicles}
-        />
-      )}
+      <SubmitRequestModal
+        vehicle={undefined}
+        isOpen={showSubmitRequestModal}
+        onClose={closeSubmitRequestModal}
+        onSubmitSuccess={handleSubmitSuccess}
+        vehicles={currentUser.vehicles}
+      />
 
       {showSuccessAlert && (
         <div className="fixed bottom-4 left-1/2 -translate-x-1/2 max-w-2xl z-50">
