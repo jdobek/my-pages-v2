@@ -6,6 +6,8 @@ import { fontSans } from "@/lib/fonts"
 import { cn } from "@/lib/utils"
 import { LayoutProvider } from "@/components/layout-provider"
 import { ThemeProvider } from "@/components/theme-provider"
+import { DevProvider } from "@/lib/contexts/dev-context"
+import { DevToolbar } from "@/components/dev-toolbar"
 
 export const metadata: Metadata = {
   title: {
@@ -37,7 +39,10 @@ export default function RootLayout({ children }: RootLayoutProps) {
           )}
         >
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-            <LayoutProvider>{children}</LayoutProvider>
+            <DevProvider>
+              <LayoutProvider>{children}</LayoutProvider>
+              <DevToolbar />
+            </DevProvider>
           </ThemeProvider>
         </body>
       </html>

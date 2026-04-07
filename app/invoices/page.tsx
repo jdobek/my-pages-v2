@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
+import { useDevSettings } from "@/lib/contexts/dev-context"
 
 type Invoice = {
   number: string
@@ -25,7 +26,7 @@ type Invoice = {
   creditNote?: string
 }
 
-const invoices: Invoice[] = [
+const baseInvoices: Invoice[] = [
   { number: "300675", issueDate: "01.03.2026", dueDate: "15.03.2026", price: "8 027,48 kr", status: "overdue", schedule: "Monthly" },
   { number: "300674", issueDate: "01.02.2026", dueDate: "15.02.2026", price: "8 027,48 kr", status: "overdue", schedule: "Monthly" },
   { number: "300673", issueDate: "01.01.2026", dueDate: "15.01.2026", price: "13 000 kr", creditAmount: "-1 243.13", status: "in_progress", schedule: "Monthly", creditNote: "300062" },
@@ -49,6 +50,7 @@ const invoices: Invoice[] = [
 ]
 
 export default function InvoicesPage() {
+  const { settings } = useDevSettings()
   const [showSubmitRequestModal, setShowSubmitRequestModal] = useState(false)
   const [showSuccessAlert, setShowSuccessAlert] = useState(false)
   const [showHelpModal, setShowHelpModal] = useState(false)
@@ -56,6 +58,14 @@ export default function InvoicesPage() {
   const [selectedStatuses, setSelectedStatuses] = useState<string[]>([])
   const [selectedSortBy, setSelectedSortBy] = useState<string>("")
   const [showFilterModal, setShowFilterModal] = useState(false)
+
+  // Transform invoices based on dev settings
+  const invoices = settings.showOverdueInvoices
+    ? baseInvoices
+    : baseInvoices.map((invoice) => {
+        // Change all invoices to "paid" status
+        return { ...invoice, status: "paid" as const }
+      })
 
   useEffect(() => {
     if (showSuccessAlert) {
@@ -179,7 +189,7 @@ export default function InvoicesPage() {
               <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}>
                 <p
                   style={{
-                    color: "#DC2626",
+                    color: unpaidCount > 0 ? "#DC2626" : "#0F172A",
                     fontSize: "32px",
                     fontWeight: "700",
                   }}
@@ -187,7 +197,9 @@ export default function InvoicesPage() {
                 >
                   {unpaidCount}
                 </p>
-                <AlertCircle style={{ width: "20px", height: "20px", color: "#DC2626" }} />
+                {unpaidCount > 0 && (
+                  <AlertCircle style={{ width: "20px", height: "20px", color: "#DC2626" }} />
+                )}
               </div>
               <p style={{ color: "#64748B", fontSize: "12px" }}>
                 Total Amount: <span style={{ fontWeight: "600", color: "#0F172A" }}>{formatAmount(unpaidTotal)} kr</span>
