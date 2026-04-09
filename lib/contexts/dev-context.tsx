@@ -1,6 +1,6 @@
 "use client"
 
-import React, { createContext, useContext, useState, ReactNode } from "react"
+import React, { createContext, useContext, useState, useEffect, ReactNode } from "react"
 
 interface DevSettings {
   user: string
@@ -10,6 +10,7 @@ interface DevSettings {
   buyMoreButton: string
   showBanner: boolean
   showOverdueInvoices: boolean
+  dashboardVersion: "current" | "new"
 }
 
 interface DevContextType {
@@ -26,12 +27,37 @@ const defaultSettings: DevSettings = {
   buyMoreButton: "sidebar",
   showBanner: false,
   showOverdueInvoices: true,
+  dashboardVersion: "current",
 }
+
+const STORAGE_KEY = "dev-settings"
 
 const DevContext = createContext<DevContextType | undefined>(undefined)
 
 export function DevProvider({ children }: { children: ReactNode }) {
   const [settings, setSettings] = useState<DevSettings>(defaultSettings)
+  const [isHydrated, setIsHydrated] = useState(false)
+
+  // Load settings from localStorage on mount
+  useEffect(() => {
+    const stored = localStorage.getItem(STORAGE_KEY)
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored)
+        setSettings({ ...defaultSettings, ...parsed })
+      } catch {
+        // Invalid JSON, use defaults
+      }
+    }
+    setIsHydrated(true)
+  }, [])
+
+  // Save settings to localStorage when they change
+  useEffect(() => {
+    if (isHydrated) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(settings))
+    }
+  }, [settings, isHydrated])
 
   const updateSettings = (updates: Partial<DevSettings>) => {
     setSettings((prev) => ({ ...prev, ...updates }))
@@ -39,6 +65,7 @@ export function DevProvider({ children }: { children: ReactNode }) {
 
   const resetSettings = () => {
     setSettings(defaultSettings)
+    localStorage.removeItem(STORAGE_KEY)
   }
 
   return (

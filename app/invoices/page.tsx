@@ -166,6 +166,41 @@ export default function InvoicesPage() {
             </button>
           </div>
           <div className="mb-8 grid grid-cols-2 gap-4 2xl:grid-cols-4">
+            {/* Paid Invoices */}
+            <div
+              style={{
+                border: "1px solid #E2E8F0",
+                borderRadius: "8px",
+                padding: "24px",
+                backgroundColor: "#FFFFFF",
+              }}
+            >
+              <p
+                style={{
+                  color: "#334155",
+                  fontSize: "14px",
+                  fontWeight: "500",
+                  marginBottom: "4px",
+                }}
+              >
+                Paid Invoices
+              </p>
+              <p
+                style={{
+                  color: "#0F172A",
+                  fontSize: "32px",
+                  fontWeight: "700",
+                  marginBottom: "8px",
+                }}
+                className="font-sans"
+              >
+                {paidCount}
+              </p>
+              <p style={{ color: "#64748B", fontSize: "12px" }}>
+                Total Amount: <span style={{ fontWeight: "600", color: "#0F172A" }}>{formatAmount(paidTotal)} kr</span>
+              </p>
+            </div>
+
             {/* Unpaid Invoices */}
             <div
               style={{
@@ -203,41 +238,6 @@ export default function InvoicesPage() {
               </div>
               <p style={{ color: "#64748B", fontSize: "12px" }}>
                 Total Amount: <span style={{ fontWeight: "600", color: "#0F172A" }}>{formatAmount(unpaidTotal)} kr</span>
-              </p>
-            </div>
-
-            {/* Paid Invoices */}
-            <div
-              style={{
-                border: "1px solid #E2E8F0",
-                borderRadius: "8px",
-                padding: "24px",
-                backgroundColor: "#FFFFFF",
-              }}
-            >
-              <p
-                style={{
-                  color: "#334155",
-                  fontSize: "14px",
-                  fontWeight: "500",
-                  marginBottom: "4px",
-                }}
-              >
-                Paid Invoices
-              </p>
-              <p
-                style={{
-                  color: "#0F172A",
-                  fontSize: "32px",
-                  fontWeight: "700",
-                  marginBottom: "8px",
-                }}
-                className="font-sans"
-              >
-                {paidCount}
-              </p>
-              <p style={{ color: "#64748B", fontSize: "12px" }}>
-                Total Amount: <span style={{ fontWeight: "600", color: "#0F172A" }}>{formatAmount(paidTotal)} kr</span>
               </p>
             </div>
 

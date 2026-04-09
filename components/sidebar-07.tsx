@@ -43,7 +43,9 @@ function SidebarToggleButton() {
 
   return (
     <Button
-      variant="outline"
+
+
+    variant="outline"
       size="icon"
       onClick={toggleSidebar}
       className="h-8 w-8 rounded-md border border-gray-300 bg-white"
