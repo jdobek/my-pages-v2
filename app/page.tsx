@@ -42,7 +42,7 @@ export default function DashboardPage() {
   if (settings.dashboardVersion === "new") {
     return (
       <>
-        <DashboardNew />
+        <DashboardNew onSubmitRequest={openSubmitRequestModal} />
 
         <SubmitRequestModal
           vehicle={undefined}
