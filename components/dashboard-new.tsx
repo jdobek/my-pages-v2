@@ -7,6 +7,8 @@ import { Calendar } from "@/components/ui/calendar"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { currentUser } from "@/lib/data"
 import { cn } from "@/lib/utils"
+import { Label, Pie, PieChart } from "recharts"
+import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart"
 
 // Mock data for the dashboard
 const dashboardData = {
@@ -65,6 +67,44 @@ const fleetOverviewData = {
 
 // Y-axis values for the chart
 const yAxisValues = [20, 15, 10, 5, 0]
+
+// Calculate age distribution from vehicles
+const ageDistribution = currentUser.vehicles.reduce((acc, vehicle) => {
+  if (vehicle.age <= 2) {
+    acc["1-2 years"] = (acc["1-2 years"] || 0) + 1
+  } else if (vehicle.age <= 4) {
+    acc["3-4 years"] = (acc["3-4 years"] || 0) + 1
+  } else {
+    acc["5+ years"] = (acc["5+ years"] || 0) + 1
+  }
+  return acc
+}, {} as Record<string, number>)
+
+// Age pie chart data
+const agePieData = [
+  { name: "1-2 yo", value: ageDistribution["1-2 years"] || 0, fill: "#034F54" },
+  { name: "3-4 yo", value: ageDistribution["3-4 years"] || 0, fill: "#22C55E" },
+  { name: "5+ yo", value: ageDistribution["5+ years"] || 0, fill: "#F59E0B" },
+]
+
+// Chart config for age pie chart
+const ageChartConfig = {
+  value: {
+    label: "Vehicles",
+  },
+  "1-2 yo": {
+    label: "1-2 yo",
+    color: "#034F54",
+  },
+  "3-4 yo": {
+    label: "3-4 yo",
+    color: "#22C55E",
+  },
+  "5+ yo": {
+    label: "5+ yo",
+    color: "#F59E0B",
+  },
+} satisfies ChartConfig
 
 
 // Dates with events for calendar
@@ -215,7 +255,7 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
                   <h3 className="text-xl font-semibold text-[#0A0A0A] mb-4" style={{ letterSpacing: "-0.4px" }}>Task</h3>
                   <div className="space-y-0">
                     {tasksData.map((task, index) => (
-                      <div key={index} className="flex items-center gap-4 py-3 border-b border-slate-100 last:border-0">
+                      <div key={index} className="flex items-center gap-4 py-2 border-b border-slate-100 last:border-0">
                         <div className="flex flex-col items-center justify-center min-w-[48px] h-12 bg-[#F4F4F5] rounded-lg">
                           <span className="text-sm font-normal text-[#0A0A0A] text-center">{task.day}</span>
                           <span className="text-xs text-[#71717A] uppercase text-center">{task.month}</span>
@@ -238,8 +278,8 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
             </Card>
 
             {/* Fleet Overview */}
-            <Card className="p-0 rounded-[10px] shadow-sm border border-[#E5E5E5] bg-white h-full">
-              <CardContent className="p-6 flex flex-col h-full">
+            <Card className="p-0 rounded-[10px] shadow-sm border border-[#E5E5E5] bg-white h-full min-w-0 overflow-hidden">
+              <CardContent className="p-6 flex flex-col h-full min-w-0">
                 <h3 className="text-xl font-semibold text-[#0A0A0A] mb-4" style={{ letterSpacing: "-0.4px" }}>Fleet overview</h3>
                 {/* Tabs */}
                 <div className="flex gap-1 mb-6 bg-[#F4F4F5] p-1 rounded-lg">
@@ -278,51 +318,157 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
                   </button>
                 </div>
 
-                {/* Bar Chart with Y-Axis */}
-                <div className="flex-1 flex gap-3 pb-2">
-                  {/* Y-Axis */}
-                  <div className="flex flex-col justify-between h-[300px] pr-2">
-                    {yAxisValues.map((value) => (
-                      <span key={value} className="text-xs text-[#71717A] text-right">{value}</span>
-                    ))}
-                  </div>
+                {/* Chart Area - Fixed height to prevent jumping */}
+                <div className="h-[280px] w-full min-w-0">
+                {activeFleetTab === "age" ? (
+                  /* Age Donut Chart - Same structure as bar chart */
+                  <div className="flex gap-3 h-full w-full pt-4">
 
-                  {/* Chart Area */}
-                  <div className="flex-1 relative">
-                    {/* Horizontal grid lines */}
-                    <div className="absolute inset-0 flex flex-col justify-between h-[300px]">
-                      {yAxisValues.map((_, i) => (
-                        <div key={i} className="border-t border-[#E5E5E5]" />
-                      ))}
-                    </div>
-
-                    {/* Bars */}
-                    <div className="flex items-end justify-center gap-8 h-[300px] relative z-10">
-                      {fleetData.map((item, index) => {
-                        const barHeight = (item.value / 20) * 300
-                        return (
-                          <div key={index} className="flex flex-col items-center">
-                            <span className="text-xs text-[#71717A] mb-1">{item.value}</span>
-                            <div
-                              className="w-[100px] bg-[#034F54] rounded-t-md"
-                              style={{ height: `${barHeight}px` }}
+                    {/* Chart Area */}
+                    <div className="flex-1 flex flex-col items-start h-full min-w-0">
+                      <div className="flex items-center justify-center w-full">
+                        <ChartContainer
+                          config={ageChartConfig}
+                          className="aspect-square h-[200px]"
+                        >
+                        <PieChart>
+                          <ChartTooltip
+                            cursor={false}
+                            content={<ChartTooltipContent hideLabel />}
+                          />
+                          <Pie
+                            data={agePieData}
+                            dataKey="value"
+                            nameKey="name"
+                            innerRadius={55}
+                            outerRadius={85}
+                            strokeWidth={2}
+                            stroke="#fff"
+                          >
+                            <Label
+                              content={({ viewBox }) => {
+                                if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                                  const totalVehicles = agePieData.reduce((sum, entry) => sum + entry.value, 0)
+                                  return (
+                                    <text
+                                      x={viewBox.cx}
+                                      y={viewBox.cy}
+                                      textAnchor="middle"
+                                      dominantBaseline="middle"
+                                    >
+                                      <tspan
+                                        x={viewBox.cx}
+                                        y={(viewBox.cy || 0) - 4}
+                                        className="fill-foreground text-2xl font-bold"
+                                      >
+                                        {totalVehicles}
+                                      </tspan>
+                                      <tspan
+                                        x={viewBox.cx}
+                                        y={(viewBox.cy || 0) + 16}
+                                        className="fill-muted-foreground text-xs"
+                                      >
+                                        Vehicles
+                                      </tspan>
+                                    </text>
+                                  )
+                                }
+                              }}
                             />
+                          </Pie>
+                        </PieChart>
+                        </ChartContainer>
+                      </div>
+                      {/* Legend - horizontal below chart */}
+                      <div className="flex items-center justify-center w-full mt-8">
+                        {agePieData.map((item, index) => (
+                          <div key={index} className="flex items-left">
+                            <div className={`flex items-center gap-2 whitespace-nowrap ${index === 0 ? 'pr-4' : 'px-4'}`}>
+                              <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: item.fill }} />
+                              <span className="text-sm text-[#71717A]">{item.name}</span>
+                              <span className="text-sm font-semibold text-[#0A0A0A]">{item.value}</span>
+                            </div>
+                            {index < agePieData.length - 1 && (
+                              <div className="w-px h-4 bg-[#E5E5E5]" />
+                            )}
                           </div>
-                        )
-                      })}
-                    </div>
-
-                    {/* X-Axis Labels */}
-                    <div className="flex justify-center gap-8 mt-2">
-                      {fleetData.map((item, index) => (
-                        <span key={index} className="text-xs text-[#71717A] text-center w-[100px]">{item.label}</span>
-                      ))}
+                        ))}
+                      </div>
                     </div>
                   </div>
+                ) : (
+                  /* Bar Chart with Y-Axis */
+                  <div className="flex gap-3 h-full w-full">
+                    {/* Y-Axis */}
+                    <div className="flex flex-col justify-between h-[200px] w-[30px] shrink-0 mt-6">
+                      {yAxisValues.map((value) => (
+                        <span key={value} className="text-xs text-[#71717A] text-right leading-none -translate-y-[3px]">{value}</span>
+                      ))}
+                    </div>
+
+                    {/* Chart Area */}
+                    <div className="flex-1 flex flex-col min-w-0">
+                      <style>{`
+                        @keyframes barGrow {
+                          from { transform: scaleY(0); }
+                          to { transform: scaleY(1); }
+                        }
+                        @keyframes fadeIn {
+                          from { opacity: 0; }
+                          to { opacity: 1; }
+                        }
+                      `}</style>
+                      {/* Chart with grid lines and bars */}
+                      <div className="relative h-[200px] mt-6">
+                        {/* Horizontal grid lines */}
+                        <div className="absolute inset-0 flex flex-col justify-between">
+                          {yAxisValues.map((_, i) => (
+                            <div key={i} className="border-t border-[#E5E5E5]" />
+                          ))}
+                        </div>
+
+                        {/* Bars */}
+                        <div className="absolute inset-0 flex items-end justify-center gap-4">
+                          {fleetData.map((item, index) => {
+                            const barHeight = (item.value / 20) * 200
+                            return (
+                              <div key={`${activeFleetTab}-${index}`} className="flex flex-col items-center">
+                                <span
+                                  className="text-xs font-semibold text-[#0A0A0A] mb-1"
+                                  style={{
+                                    opacity: 0,
+                                    animation: `fadeIn 0.3s ease-out ${600 + index * 150}ms forwards`,
+                                  }}
+                                >
+                                  {item.value}
+                                </span>
+                                <div
+                                  className="w-[80px] bg-[#034F54] rounded-t-md origin-bottom"
+                                  style={{
+                                    height: `${barHeight}px`,
+                                    animation: `barGrow 0.6s ease-out ${index * 150}ms forwards`,
+                                    transform: 'scaleY(0)',
+                                  }}
+                                />
+                              </div>
+                            )
+                          })}
+                        </div>
+                      </div>
+
+                      {/* X-Axis Labels */}
+                      <div className="flex justify-center gap-4 mt-2">
+                        {fleetData.map((item, index) => (
+                          <span key={`${activeFleetTab}-label-${index}`} className="text-xs text-[#71717A] text-center w-[80px]">{item.label}</span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
                 </div>
 
                 {/* Chart Summary */}
-                <p className="text-sm text-[#71717A] mt-6">
+                <p className="text-sm text-[#71717A] mt-4">
                   Distribution of {dashboardData.totalVehicles} vehicles across your fleet based on {activeFleetTab === "coverLevel" ? "coverage level" : activeFleetTab === "addOns" ? "add-on options" : "vehicle age"}.
                 </p>
 
@@ -338,7 +484,6 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
                 {/* Header */}
                 <div className="mb-6">
                   <h3 className="text-xl font-semibold text-[#0A0A0A]" style={{ letterSpacing: "-0.4px" }}>Submited requests</h3>
-                  <p className="text-sm text-[#71717A] mt-1">January - June 2024</p>
                 </div>
                 {/* Table */}
                 <table className="w-full">
@@ -363,10 +508,6 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
                     ))}
                   </tbody>
                 </table>
-                {/* Footer */}
-                <p className="text-sm text-[#727272] mt-4 pt-4 border-t border-[#E5E5E5]">
-                  Showing total visitors for the last 6 months
-                </p>
               </CardContent>
             </Card>
 
@@ -376,7 +517,6 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
                 {/* Header */}
                 <div className="mb-6">
                   <h3 className="text-xl font-semibold text-[#0A0A0A]" style={{ letterSpacing: "-0.4px" }}>Claims</h3>
-                  <p className="text-sm text-[#71717A] mt-1">January - June 2024</p>
                 </div>
                 {/* Table */}
                 <table className="w-full">
@@ -403,10 +543,6 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
                     ))}
                   </tbody>
                 </table>
-                {/* Footer */}
-                <p className="text-sm text-[#727272] mt-4 pt-4 border-t border-[#E5E5E5]">
-                  Showing total visitors for the last 6 months
-                </p>
               </CardContent>
             </Card>
           </div>
