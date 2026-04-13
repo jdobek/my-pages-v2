@@ -4,14 +4,13 @@ import { useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
-import { ChevronLeft, ChevronRight, TrendingUp } from "lucide-react"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 import { currentUser } from "@/lib/data"
 import { cn } from "@/lib/utils"
 
 // Mock data for the dashboard
 const dashboardData = {
-  riskScore: 8,
-  riskScoreChange: "+1 this month",
+  riskScore: 3,
   totalVehicles: currentUser.totalVehicles,
   totalPremium: "146 498,13 kr",
   averagePremium: "6 104,08 kr",
@@ -48,38 +47,25 @@ const claimsData = [
 // Fleet overview data for bar chart
 const fleetOverviewData = {
   coverLevel: [
-    { label: "Ansvar", value: 99 },
-    { label: "Kasko", value: 210 },
-    { label: "Delkasko", value: 120 },
+    { label: "Ansvar", value: 6 },
+    { label: "Kasko", value: 10 },
+    { label: "Delkasko", value: 8 },
   ],
   addOns: [
-    { label: "Rental car", value: 180 },
-    { label: "Tools", value: 150 },
-    { label: "Maskinskade", value: 95 },
+    { label: "Rental car", value: 14 },
+    { label: "Tools", value: 12 },
+    { label: "Maskinskade", value: 10 },
   ],
   age: [
-    { label: "1-2 years", value: 85 },
-    { label: "3-4 years", value: 165 },
-    { label: "5+ years", value: 130 },
-  ],
-  profiles: [
-    { label: "Standard", value: 220 },
-    { label: "Premium", value: 145 },
-    { label: "Basic", value: 75 },
+    { label: "1-2 years", value: 5 },
+    { label: "3-4 years", value: 11 },
+    { label: "5+ years", value: 8 },
   ],
 }
 
 // Y-axis values for the chart
-const yAxisValues = [400, 300, 200, 100, 0]
+const yAxisValues = [20, 15, 10, 5, 0]
 
-// Legend items
-const legendItems = [
-  { label: "Item 1", color: "#034F54" },
-  { label: "Item 2", color: "#22C55E" },
-  { label: "Item 3", color: "#F59E0B" },
-  { label: "Item 4", color: "#3B82F6" },
-  { label: "Item 5", color: "#8B5CF6" },
-]
 
 // Dates with events for calendar
 const eventDates = [
@@ -114,7 +100,7 @@ interface DashboardNewProps {
 export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date(2026, 3, 10))
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date(2026, 3, 1))
-  const [activeFleetTab, setActiveFleetTab] = useState<"coverLevel" | "addOns" | "age" | "profiles">("coverLevel")
+  const [activeFleetTab, setActiveFleetTab] = useState<"coverLevel" | "addOns" | "age">("coverLevel")
 
   const handlePreviousMonth = () => {
     setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1))
@@ -151,10 +137,6 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
               <div className="flex items-baseline gap-2">
                 <span className="text-2xl font-semibold text-[#0F172A]" style={{ letterSpacing: "-0.18px" }}>{dashboardData.riskScore}</span>
                 <span className="text-base font-semibold text-[#B7B7B7]">/10</span>
-                <span className="inline-flex items-center gap-1 rounded-full bg-[#DCF0F0] px-2 py-0.5 text-xs font-semibold text-[#034F54]">
-                  {dashboardData.riskScoreChange}
-                  <TrendingUp className="h-3 w-3" />
-                </span>
               </div>
             </div>
 
@@ -294,23 +276,12 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
                   >
                     Age
                   </button>
-                  <button
-                    onClick={() => setActiveFleetTab("profiles")}
-                    className={cn(
-                      "flex-1 px-3 py-1.5 rounded-md text-sm font-medium transition-colors",
-                      activeFleetTab === "profiles"
-                        ? "bg-white text-[#0A0A0A] shadow-sm"
-                        : "text-[#71717A] hover:bg-white/50"
-                    )}
-                  >
-                    Profiles
-                  </button>
                 </div>
 
                 {/* Bar Chart with Y-Axis */}
-                <div className="flex-1 flex gap-3">
+                <div className="flex-1 flex gap-3 pb-2">
                   {/* Y-Axis */}
-                  <div className="flex flex-col justify-between h-[210px] pr-2">
+                  <div className="flex flex-col justify-between h-[300px] pr-2">
                     {yAxisValues.map((value) => (
                       <span key={value} className="text-xs text-[#71717A] text-right">{value}</span>
                     ))}
@@ -319,21 +290,21 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
                   {/* Chart Area */}
                   <div className="flex-1 relative">
                     {/* Horizontal grid lines */}
-                    <div className="absolute inset-0 flex flex-col justify-between h-[210px]">
+                    <div className="absolute inset-0 flex flex-col justify-between h-[300px]">
                       {yAxisValues.map((_, i) => (
                         <div key={i} className="border-t border-[#E5E5E5]" />
                       ))}
                     </div>
 
                     {/* Bars */}
-                    <div className="flex items-end justify-around h-[210px] relative z-10">
+                    <div className="flex items-end justify-center gap-8 h-[300px] relative z-10">
                       {fleetData.map((item, index) => {
-                        const barHeight = (item.value / 400) * 210
+                        const barHeight = (item.value / 20) * 300
                         return (
                           <div key={index} className="flex flex-col items-center">
                             <span className="text-xs text-[#71717A] mb-1">{item.value}</span>
                             <div
-                              className="w-[70px] bg-[#034F54] rounded-t-md"
+                              className="w-[100px] bg-[#034F54] rounded-t-md"
                               style={{ height: `${barHeight}px` }}
                             />
                           </div>
@@ -342,23 +313,19 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
                     </div>
 
                     {/* X-Axis Labels */}
-                    <div className="flex justify-around mt-2">
+                    <div className="flex justify-center gap-8 mt-2">
                       {fleetData.map((item, index) => (
-                        <span key={index} className="text-xs text-[#71717A] text-center w-[70px]">{item.label}</span>
+                        <span key={index} className="text-xs text-[#71717A] text-center w-[100px]">{item.label}</span>
                       ))}
                     </div>
                   </div>
                 </div>
 
-                {/* Legend */}
-                <div className="flex flex-wrap gap-4 mt-4 pt-4 border-t border-[#E5E5E5]">
-                  {legendItems.map((item, index) => (
-                    <div key={index} className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: item.color }} />
-                      <span className="text-xs text-[#71717A]">{item.label}</span>
-                    </div>
-                  ))}
-                </div>
+                {/* Chart Summary */}
+                <p className="text-sm text-[#71717A] mt-6">
+                  Distribution of {dashboardData.totalVehicles} vehicles across your fleet based on {activeFleetTab === "coverLevel" ? "coverage level" : activeFleetTab === "addOns" ? "add-on options" : "vehicle age"}.
+                </p>
+
               </CardContent>
             </Card>
           </div>

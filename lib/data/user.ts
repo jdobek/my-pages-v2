@@ -8,7 +8,7 @@ export const currentUser: User = {
   totalPremium: 217618.00,
   totalPremiumWithoutTFA: 146498.00,
   avgVehicleInsurancePrice: 6104.08,
-  riskScore: 7,
+  riskScore: 3,
   vehicles: [
     {
       id: "vehicle-001",
