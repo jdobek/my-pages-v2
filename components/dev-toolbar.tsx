@@ -45,33 +45,6 @@ export function DevToolbar() {
               <span className="text-xs text-muted-foreground">Gallery</span>
             </div>
 
-            {/* Dashboard Version Toggle */}
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Dashboard version</label>
-              <div className="flex gap-2">
-                <Button
-                  size="sm"
-                  variant={settings.dashboardVersion === "current" ? "default" : "outline"}
-                  onClick={() => updateSettings({ dashboardVersion: "current" })}
-                  className={
-                    settings.dashboardVersion === "current" ? "bg-[#005055] hover:bg-[#003c3f]" : ""
-                  }
-                >
-                  Current
-                </Button>
-                <Button
-                  size="sm"
-                  variant={settings.dashboardVersion === "new" ? "default" : "outline"}
-                  onClick={() => updateSettings({ dashboardVersion: "new" })}
-                  className={
-                    settings.dashboardVersion === "new" ? "bg-[#005055] hover:bg-[#003c3f]" : ""
-                  }
-                >
-                  New
-                </Button>
-              </div>
-            </div>
-
             {/* Show Overdue Invoices Toggle */}
             <div className="space-y-2">
               <label className="text-sm font-medium">Show overdue invoices</label>

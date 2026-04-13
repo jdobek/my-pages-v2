@@ -10,7 +10,6 @@ interface DevSettings {
   buyMoreButton: string
   showBanner: boolean
   showOverdueInvoices: boolean
-  dashboardVersion: "current" | "new"
 }
 
 interface DevContextType {
@@ -27,7 +26,6 @@ const defaultSettings: DevSettings = {
   buyMoreButton: "sidebar",
   showBanner: false,
   showOverdueInvoices: true,
-  dashboardVersion: "current",
 }
 
 const STORAGE_KEY = "dev-settings"

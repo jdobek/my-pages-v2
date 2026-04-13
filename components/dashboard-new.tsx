@@ -172,11 +172,17 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
           {/* Stats Row */}
           <div className="flex items-center gap-6 bg-white rounded-lg border border-[#E3E8F0] p-4">
             {/* Risk Score */}
-            <div className="flex flex-col gap-1.5 flex-1">
+            <div className="group flex flex-col gap-1.5 flex-1 -m-3 p-3 rounded-lg hover:bg-[#F5F5F5] cursor-pointer transition-colors">
               <span className="text-sm font-semibold text-[#727272]">Risk score</span>
-              <div className="flex items-baseline gap-2">
-                <span className="text-2xl font-semibold text-[#0F172A]" style={{ letterSpacing: "-0.18px" }}>{dashboardData.riskScore}</span>
-                <span className="text-base font-semibold text-[#B7B7B7]">/10</span>
+              <div className="flex items-end justify-between">
+                <div className="flex items-baseline gap-2">
+                  <span className="text-2xl font-semibold text-[#0F172A]" style={{ letterSpacing: "-0.18px" }}>{dashboardData.riskScore}</span>
+                  <span className="text-base font-semibold text-[#B7B7B7]">/10</span>
+                </div>
+                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <span className="text-sm font-medium text-[#005055]">Check analytics</span>
+                  <ChevronRight className="h-4 w-4 text-[#005055]" />
+                </div>
               </div>
             </div>
 
@@ -214,16 +220,16 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
             <Card className="p-0 rounded-[10px] shadow-sm border border-[#E5E5E5] bg-white overflow-hidden">
               <div className="flex h-full">
                 {/* Left: Upcoming Events - Calendar */}
-                <div className="p-6 w-[280px] flex-shrink-0">
-                  <h3 className="text-xl font-semibold text-[#0A0A0A] mb-4" style={{ letterSpacing: "-0.4px" }}>Upcoming Events</h3>
-                  <div className="flex items-center justify-between mb-2">
-                    <button onClick={handlePreviousMonth} className="p-1 hover:bg-slate-100 rounded">
+                <div className="p-6 w-[280px] flex-shrink-0 flex flex-col">
+                  <h3 className="text-xl font-semibold text-[#0A0A0A] mb-9" style={{ letterSpacing: "-0.4px" }}>Upcoming Events</h3>
+                  <div className="flex items-center justify-between mb-3">
+                    <button onClick={handlePreviousMonth} className="p-1 hover:bg-slate-100 rounded border border-[#E5E5E5]">
                       <ChevronLeft className="h-4 w-4 text-slate-600" />
                     </button>
                     <span className="text-sm font-medium text-slate-900">
                       {currentMonth.toLocaleDateString("en-US", { month: "long", year: "numeric" })}
                     </span>
-                    <button onClick={handleNextMonth} className="p-1 hover:bg-slate-100 rounded">
+                    <button onClick={handleNextMonth} className="p-1 hover:bg-slate-100 rounded border border-[#E5E5E5]">
                       <ChevronRight className="h-4 w-4 text-slate-600" />
                     </button>
                   </div>
@@ -233,18 +239,26 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
                     onSelect={setSelectedDate}
                     month={currentMonth}
                     onMonthChange={setCurrentMonth}
-                    className="w-full"
+                    className="w-full -ml-2"
                     modifiers={{
                       event: eventDates,
                     }}
                     modifiersClassNames={{
-                      event: "relative after:absolute after:bottom-1 after:left-1/2 after:-translate-x-1/2 after:h-1 after:w-1 after:rounded-full after:bg-[#005055]",
+                      event: "relative after:absolute after:bottom-0.5 after:left-1/2 after:-translate-x-1/2 after:h-1 after:w-1 after:rounded-full after:bg-[#005055]",
                     }}
                     classNames={{
                       nav: "hidden",
                       month_caption: "hidden",
+                      week: "mt-1 flex w-full",
+                      outside: "text-[#D4D4D4] opacity-50",
                     }}
                   />
+                  <Button
+                    variant="outline"
+                    className="w-full mt-auto border-[#E5E5E5] text-[#0A0A0A] bg-transparent hover:bg-transparent"
+                  >
+                    View all
+                  </Button>
                 </div>
 
                 {/* Vertical Divider */}
@@ -256,16 +270,16 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
                   <div className="space-y-0">
                     {tasksData.map((task, index) => (
                       <div key={index} className="flex items-center gap-4 py-2 border-b border-slate-100 last:border-0">
-                        <div className="flex flex-col items-center justify-center min-w-[48px] h-12 bg-[#F4F4F5] rounded-lg">
-                          <span className="text-sm font-normal text-[#0A0A0A] text-center">{task.day}</span>
-                          <span className="text-xs text-[#71717A] uppercase text-center">{task.month}</span>
+                        <div className="flex flex-col items-center justify-center min-w-[48px] h-12 bg-[#FAFAFA] rounded-lg border border-[#E5E5E5]">
+                          <span className="text-base font-semibold text-[#1E293B] text-center leading-tight">{task.day}</span>
+                          <span className="text-[10px] font-medium text-[#9CA3AF] uppercase text-center leading-tight">{task.month}</span>
                         </div>
-                        <div className="flex-1 text-sm text-[#3F3F46]">{task.title}</div>
+                        <div className="flex-1 text-sm font-medium text-[#0A0A0A]">{task.title}</div>
                         {task.action && (
                           <Button
                             variant="outline"
                             size="sm"
-                            className="h-8 px-3 text-sm font-medium border-slate-200 text-[#0F172A]"
+                            className="h-8 px-3 text-sm font-medium border-slate-200 text-[#0F172A] bg-transparent hover:bg-transparent"
                           >
                             {task.action}
                           </Button>
