@@ -90,22 +90,22 @@ function isSameDay(date1: Date, date2: Date): boolean {
   )
 }
 
-// Submitted requests data
+// Submitted requests data (using real vehicle plate numbers)
 const submittedRequestsData = [
-  { requestNo: "fair-10001", vehicle: "MDF01M", requestType: "Add car", status: "Pending" },
-  { requestNo: "fair-10001", vehicle: "MDF01M", requestType: "Remove car", status: "Closed" },
-  { requestNo: "fair-10001", vehicle: "MDF01M", requestType: "Change cover level", status: "Pending" },
-  { requestNo: "fair-10001", vehicle: "MDF01M", requestType: "Adjust add-ons", status: "Closed" },
-  { requestNo: "fair-10001", vehicle: "MDF01M", requestType: "Add car", status: "Closed" },
+  { requestNo: "10001", vehicle: "AR77550", requestType: "Add car", status: "Pending" },
+  { requestNo: "10002", vehicle: "BX24189", requestType: "Remove car", status: "Closed" },
+  { requestNo: "10003", vehicle: "CY88421", requestType: "Change cover level", status: "Pending" },
+  { requestNo: "10004", vehicle: "DZ56734", requestType: "Adjust add-ons", status: "Closed" },
+  { requestNo: "10005", vehicle: "EA45892", requestType: "Add car", status: "Closed" },
 ]
 
-// Claims data
+// Claims data (using real vehicle plate numbers)
 const claimsData = [
-  { caseNo: "fair-10001", vehicle: "MDF01M", claimType: "Motor Glass Replacement", totalCost: "16246,00 kr", status: "Pending" },
-  { caseNo: "fair-10001", vehicle: "MDF01M", claimType: "Motor Glass Replacement", totalCost: "16246,00 kr", status: "Closed" },
-  { caseNo: "fair-10001", vehicle: "MDF01M", claimType: "Motor Glass Replacement", totalCost: "16246,00 kr", status: "Pending" },
-  { caseNo: "fair-10001", vehicle: "MDF01M", claimType: "Motor Glass Replacement", totalCost: "16246,00 kr", status: "Closed" },
-  { caseNo: "fair-10001", vehicle: "MDF01M", claimType: "Motor Glass Replacement", totalCost: "16246,00 kr", status: "Closed" },
+  { caseNo: "20001", vehicle: "GC72948", claimType: "Motor Glass Replacement", totalCost: "16 246,00 kr", status: "Pending" },
+  { caseNo: "20002", vehicle: "HD81657", claimType: "Motor Glass Replacement", totalCost: "12 500,00 kr", status: "Closed" },
+  { caseNo: "20003", vehicle: "IE34792", claimType: "Motor Glass Replacement", totalCost: "8 750,00 kr", status: "Pending" },
+  { caseNo: "20004", vehicle: "JF29563", claimType: "Motor Glass Replacement", totalCost: "14 200,00 kr", status: "Closed" },
+  { caseNo: "20005", vehicle: "KG58401", claimType: "Motor Glass Replacement", totalCost: "9 800,00 kr", status: "Closed" },
 ]
 
 // Fleet overview data for bar chart
@@ -530,6 +530,8 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
                             outerRadius={85}
                             strokeWidth={2}
                             stroke="#fff"
+                            animationBegin={0}
+                            animationDuration={900}
                           >
                             <Label
                               content={({ viewBox }) => {
@@ -675,8 +677,8 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
                 <table className="w-full">
                   <thead>
                     <tr className="border-b border-[#E5E5E5]">
-                      <th className="pb-3 text-left text-sm font-semibold text-[#0A0A0A]">Request no.</th>
-                      <th className="pb-3 text-left text-sm font-semibold text-[#0A0A0A]">Vehicle</th>
+                      <th className="pb-3 text-left text-sm font-semibold text-[#0A0A0A] w-[100px]">Request no.</th>
+                      <th className="pb-3 text-left text-sm font-semibold text-[#0A0A0A] w-[90px]">Vehicle</th>
                       <th className="pb-3 text-left text-sm font-semibold text-[#0A0A0A]">Request Type</th>
                       <th className="pb-3 text-right text-sm font-semibold text-[#0A0A0A] pr-6">Status</th>
                     </tr>
@@ -684,8 +686,8 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
                   <tbody>
                     {submittedRequestsData.map((request, index) => (
                       <tr key={index} className="border-b border-[#E5E5E5] last:border-0">
-                        <td className="py-3 text-sm text-[#0A0A0A]">{request.requestNo}</td>
-                        <td className="py-3 text-sm text-[#0A0A0A]">{request.vehicle}</td>
+                        <td className="py-3 text-sm text-[#0A0A0A] w-[100px]">{request.requestNo}</td>
+                        <td className="py-3 text-sm text-[#0A0A0A] w-[90px]">{request.vehicle}</td>
                         <td className="py-3 text-sm text-[#0A0A0A]">{request.requestType}</td>
                         <td className="py-3 text-right">
                           <StatusBadge status={request.status} />
@@ -731,6 +733,12 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
                 </table>
               </CardContent>
             </Card>
+          </div>
+
+          <div style={{ marginTop: "32px", marginBottom: "48px" }}>
+            <p style={{ fontSize: "12px", color: "#334155" }}>
+              ©2026 Fair Car Insurance
+            </p>
           </div>
         </div>
       </div>
