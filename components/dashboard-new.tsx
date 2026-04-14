@@ -345,30 +345,30 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
                 <div className="w-px bg-[#E5E5E5] self-stretch" />
 
                 {/* Right: Tasks */}
-                <div className="p-6 flex-1 flex flex-col min-h-0">
-                  {/* Selected Date Tasks */}
-                  {selectedDateTasks.length === 0 ? (
-                    <>
-                      {/* Title */}
-                      <h3 className="text-xl font-semibold text-[#0A0A0A] mb-4 shrink-0" style={{ letterSpacing: "-0.4px" }}>
-                        {isToday ? "Today" : selectedDate.toLocaleDateString("en-US", { month: "long", day: "numeric" })}
-                      </h3>
-                      {/* Empty state banner */}
-                      <div className="mb-6 shrink-0">
-                        <div className="flex items-center gap-3 px-4 py-2 h-12 bg-[#E6F4F4] rounded-lg border-b border-slate-100">
-                          <CalendarDays className="h-5 w-5 text-[#005055]" />
-                          <span className="text-sm font-medium text-[#005055]">
-                            There are no events on your calendar for {dateLabel}
-                          </span>
+                <div className="flex-1 relative min-h-0">
+                  <div className="absolute inset-0 overflow-y-auto p-6 pb-8">
+                    {/* Selected Date Tasks */}
+                    {selectedDateTasks.length === 0 ? (
+                      <>
+                        {/* Title */}
+                        <h3 className="text-xl font-semibold text-[#0A0A0A] mb-4" style={{ letterSpacing: "-0.4px" }}>
+                          {isToday ? "Today" : selectedDate.toLocaleDateString("en-US", { month: "long", day: "numeric" })}
+                        </h3>
+                        {/* Empty state banner */}
+                        <div className="mb-6">
+                          <div className="flex items-center gap-3 px-4 py-2 h-12 bg-[#E6F4F4] rounded-lg border-b border-slate-100">
+                            <CalendarDays className="h-5 w-5 text-[#005055]" />
+                            <span className="text-sm font-medium text-[#005055]">
+                              There are no events on your calendar for {dateLabel}
+                            </span>
+                          </div>
                         </div>
-                      </div>
 
-                      {/* Show upcoming tasks directly */}
-                      {upcomingTasks.length > 0 && (
-                        <div className="flex-1 flex flex-col min-h-0">
-                          <div className="border-t border-[#E5E5E5] mb-4 shrink-0" />
-                          <h3 className="text-xl font-semibold text-[#0A0A0A] mb-2 shrink-0" style={{ letterSpacing: "-0.4px" }}>Upcoming events</h3>
-                          <div className="flex-1 overflow-y-auto min-h-0">
+                        {/* Show upcoming tasks directly */}
+                        {upcomingTasks.length > 0 && (
+                          <>
+                            <div className="border-t border-[#E5E5E5] mb-4" />
+                            <h3 className="text-xl font-semibold text-[#0A0A0A] mb-2" style={{ letterSpacing: "-0.4px" }}>Upcoming events</h3>
                             {upcomingTasks.map((task, index) => (
                               <div key={index} className="flex items-center gap-4 py-2 border-b border-slate-100 last:border-0">
                                 <div className="flex flex-col items-center justify-center min-w-[48px] h-12 bg-[#FAFAFA] rounded-lg border border-[#E5E5E5]">
@@ -391,46 +391,46 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
                                 )}
                               </div>
                             ))}
-                          </div>
-                        </div>
-                      )}
-                    </>
-                  ) : (
-                    <>
-                      {/* Title */}
-                      <h3 className="text-xl font-semibold text-[#0A0A0A] mb-2 shrink-0" style={{ letterSpacing: "-0.4px" }}>
-                        {isToday ? "Today" : selectedDate.toLocaleDateString("en-US", { month: "long", day: "numeric" })}
-                      </h3>
-                      {/* Selected date tasks with date badges */}
-                      <div className="mb-4 shrink-0">
-                        {selectedDateTasks.map((task, index) => (
-                          <div key={index} className="flex items-center gap-4 py-2 border-b border-slate-100 last:border-0">
-                            <div className="flex flex-col items-center justify-center min-w-[48px] h-12 bg-[#FAFAFA] rounded-lg border border-[#E5E5E5]">
-                              <span className="text-base font-semibold text-[#1E293B] text-center leading-tight">
-                                {task.date.getDate()}
-                              </span>
-                              <span className="text-[10px] font-medium text-[#9CA3AF] uppercase text-center leading-tight">
-                                {task.date.toLocaleDateString("en-US", { month: "short" }).toUpperCase()}
-                              </span>
+                          </>
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        {/* Title */}
+                        <h3 className="text-xl font-semibold text-[#0A0A0A] mb-2" style={{ letterSpacing: "-0.4px" }}>
+                          {isToday ? "Today" : selectedDate.toLocaleDateString("en-US", { month: "long", day: "numeric" })}
+                        </h3>
+                        {/* Selected date tasks with date badges */}
+                        <div className="mb-4">
+                          {selectedDateTasks.map((task, index) => (
+                            <div key={index} className="flex items-center gap-4 py-2 border-b border-slate-100 last:border-0">
+                              <div className="flex flex-col items-center justify-center min-w-[48px] h-12 bg-[#FAFAFA] rounded-lg border border-[#E5E5E5]">
+                                <span className="text-base font-semibold text-[#1E293B] text-center leading-tight">
+                                  {task.date.getDate()}
+                                </span>
+                                <span className="text-[10px] font-medium text-[#9CA3AF] uppercase text-center leading-tight">
+                                  {task.date.toLocaleDateString("en-US", { month: "short" }).toUpperCase()}
+                                </span>
+                              </div>
+                              <div className="flex-1 text-sm font-medium text-[#0A0A0A]">{task.title}</div>
+                              {task.action && (
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="h-8 px-3 text-sm font-medium border-slate-200 text-[#0F172A] bg-transparent hover:bg-transparent"
+                                >
+                                  {task.action}
+                                </Button>
+                              )}
                             </div>
-                            <div className="flex-1 text-sm font-medium text-[#0A0A0A]">{task.title}</div>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="h-8 px-3 text-sm font-medium border-slate-200 text-[#0F172A] bg-transparent hover:bg-transparent"
-                            >
-                              {task.action || "Mark as done"}
-                            </Button>
-                          </div>
-                        ))}
-                      </div>
+                          ))}
+                        </div>
 
-                      {/* Upcoming section */}
-                      {upcomingTasks.length > 0 && (
-                        <div className="flex-1 flex flex-col min-h-0">
-                          <div className="border-t border-[#E5E5E5] mb-4 shrink-0" />
-                          <h3 className="text-xl font-semibold text-[#0A0A0A] mb-2 shrink-0" style={{ letterSpacing: "-0.4px" }}>Upcoming</h3>
-                          <div className="flex-1 overflow-y-auto pr-1 min-h-0">
+                        {/* Upcoming section */}
+                        {upcomingTasks.length > 0 && (
+                          <>
+                            <div className="border-t border-[#E5E5E5] mb-4" />
+                            <h3 className="text-xl font-semibold text-[#0A0A0A] mb-2" style={{ letterSpacing: "-0.4px" }}>Upcoming</h3>
                             {upcomingTasks.map((task, index) => (
                               <div key={index} className="flex items-center gap-4 py-2 border-b border-slate-100 last:border-0">
                                 <div className="flex flex-col items-center justify-center min-w-[48px] h-12 bg-[#FAFAFA] rounded-lg border border-[#E5E5E5]">
@@ -453,11 +453,12 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
                                 )}
                               </div>
                             ))}
-                          </div>
-                        </div>
-                      )}
-                    </>
-                  )}
+                          </>
+                        )}
+                      </>
+                    )}
+                  </div>
+                  <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white to-transparent pointer-events-none" />
                 </div>
               </div>
             </Card>
