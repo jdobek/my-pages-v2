@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
@@ -122,7 +123,7 @@ function StatusBadge({ status }: { status: string }) {
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold",
+        "inline-flex items-center justify-center rounded-full py-0.5 text-xs font-semibold w-[70px]",
         isPending
           ? "bg-slate-100 text-slate-700"
           : "bg-[#E6F4F4] text-[#034F54]"
@@ -138,6 +139,7 @@ interface DashboardNewProps {
 }
 
 export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
+  const router = useRouter()
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date(2026, 3, 10))
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date(2026, 3, 1))
   const [activeFleetTab, setActiveFleetTab] = useState<"coverLevel" | "addOns" | "age">("coverLevel")
@@ -172,7 +174,10 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
           {/* Stats Row */}
           <div className="flex items-center gap-6 bg-white rounded-lg border border-[#E3E8F0] p-4">
             {/* Risk Score */}
-            <div className="group flex flex-col gap-1.5 flex-1 -m-3 p-3 rounded-lg hover:bg-[#F5F5F5] cursor-pointer transition-colors">
+            <div
+              className="group flex flex-col gap-1.5 flex-1 -m-3 p-3 rounded-lg hover:bg-[#F5F5F5] cursor-pointer transition-colors"
+              onClick={() => router.push("/risk-score")}
+            >
               <span className="text-sm font-semibold text-[#727272]">Risk score</span>
               <div className="flex items-end justify-between">
                 <div className="flex items-baseline gap-2">
@@ -256,6 +261,7 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
                   <Button
                     variant="outline"
                     className="w-full mt-auto border-[#E5E5E5] text-[#0A0A0A] bg-transparent hover:bg-transparent"
+                    onClick={() => router.push("/events")}
                   >
                     View all
                   </Button>
@@ -279,7 +285,7 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
                           <Button
                             variant="outline"
                             size="sm"
-                            className="h-8 px-3 text-sm font-medium border-slate-200 text-[#0F172A] bg-transparent hover:bg-transparent"
+                            className="h-8 w-[84px] text-sm font-medium border-slate-200 text-[#0F172A] bg-transparent hover:bg-transparent"
                           >
                             {task.action}
                           </Button>
@@ -506,7 +512,7 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
                       <th className="pb-3 text-left text-sm font-semibold text-[#0A0A0A]">Request no.</th>
                       <th className="pb-3 text-left text-sm font-semibold text-[#0A0A0A]">Vehicle</th>
                       <th className="pb-3 text-left text-sm font-semibold text-[#0A0A0A]">Request Type</th>
-                      <th className="pb-3 text-right text-sm font-semibold text-[#0A0A0A]">Status</th>
+                      <th className="pb-3 text-right text-sm font-semibold text-[#0A0A0A] pr-6">Status</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -540,7 +546,7 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
                       <th className="pb-3 text-left text-sm font-semibold text-[#0A0A0A]">Vehicle</th>
                       <th className="pb-3 text-left text-sm font-semibold text-[#0A0A0A]">Claim Type</th>
                       <th className="pb-3 text-left text-sm font-semibold text-[#0A0A0A]">Total Cost</th>
-                      <th className="pb-3 text-right text-sm font-semibold text-[#0A0A0A]">Status</th>
+                      <th className="pb-3 text-right text-sm font-semibold text-[#0A0A0A] pr-6">Status</th>
                     </tr>
                   </thead>
                   <tbody>

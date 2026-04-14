@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import { usePathname } from "next/navigation"
-import { Home, FileText, FileSpreadsheet, ChevronsUpDown, LogOut, FileText as TermsIcon } from "lucide-react"
+import { Home, FileText, FileSpreadsheet, ChevronsUpDown, LogOut, FileText as TermsIcon, BarChart3 } from "lucide-react"
 
 import {
   Sidebar,
@@ -32,6 +32,7 @@ const menuItems = [
     title: "Navigation",
     items: [
       { icon: Home, label: "Dashboard", href: "/" },
+      { icon: BarChart3, label: "Risk Score", href: "/risk-score" },
       { icon: FileText, label: "Policies", href: "/policies" },
       { icon: FileSpreadsheet, label: "Invoices", href: "/invoices" },
     ],
