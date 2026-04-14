@@ -1,11 +1,11 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import { ChevronLeft, ChevronRight, ChevronDown, CalendarDays } from "lucide-react"
 import { currentUser } from "@/lib/data"
 import { cn } from "@/lib/utils"
 import { Label, Pie, PieChart } from "recharts"
@@ -19,15 +19,76 @@ const dashboardData = {
   averagePremium: "6 104,08 kr",
 }
 
-// Tasks data
+// Tasks data with Date objects
+// Note: April 14 (today) has no tasks, so user sees "no events" message on entry
+// Request/Claim events only appear for today and past dates, not future
 const tasksData = [
-  { day: "13", month: "APR", title: "April Recurring Invoice", action: "Pay now", actionType: "pay" },
-  { day: "16", month: "APR", title: "Automatic Policy Renewal: GDA32100", action: null, actionType: null },
-  { day: "19", month: "APR", title: "Automatic Policy Renewal: WA65400", action: null, actionType: null },
-  { day: "22", month: "APR", title: "Claim fair-10002 has been closed", action: "View", actionType: "view" },
-  { day: "30", month: "APR", title: "Request fair-10001 has benn closed", action: "View", actionType: "view" },
-  { day: "01", month: "MAY", title: "May Recurring Invoice", action: "Pay now", actionType: "pay" },
+  // January 2026 (past - can have all types)
+  { date: new Date(2026, 0, 5), title: "January Recurring Invoice", action: "Pay now", actionType: "pay" },
+  { date: new Date(2026, 0, 12), title: "Automatic Policy Renewal: GDA32100", action: null, actionType: null },
+  { date: new Date(2026, 0, 23), title: "Claim fair-10002: Closed", action: "View", actionType: "view" },
+  // February 2026 (past - can have all types)
+  { date: new Date(2026, 1, 3), title: "February Recurring Invoice", action: "Pay now", actionType: "pay" },
+  { date: new Date(2026, 1, 14), title: "Request fair-10001: Closed", action: "View", actionType: "view" },
+  { date: new Date(2026, 1, 21), title: "Automatic Policy Renewal: GDA32100", action: null, actionType: null },
+  { date: new Date(2026, 1, 27), title: "Claim fair-10002: Closed", action: "View", actionType: "view" },
+  // March 2026 (past - can have all types)
+  { date: new Date(2026, 2, 2), title: "March Recurring Invoice", action: "Pay now", actionType: "pay" },
+  { date: new Date(2026, 2, 9), title: "Automatic Policy Renewal: GDA32100", action: null, actionType: null },
+  { date: new Date(2026, 2, 18), title: "Request fair-10001: Closed", action: "View", actionType: "view" },
+  { date: new Date(2026, 2, 25), title: "Claim fair-10002: Closed", action: "View", actionType: "view" },
+  // April 2026 (today is April 14 - past dates can have all types, future only Invoice/Renewal)
+  { date: new Date(2026, 3, 1), title: "April Recurring Invoice", action: "Pay now", actionType: "pay" },
+  { date: new Date(2026, 3, 7), title: "Claim fair-10002: Closed", action: "View", actionType: "view" },
+  { date: new Date(2026, 3, 10), title: "Request fair-10001: Closed", action: "View", actionType: "view" },
+  { date: new Date(2026, 3, 16), title: "Automatic Policy Renewal: GDA32100", action: null, actionType: null },
+  { date: new Date(2026, 3, 19), title: "Automatic Policy Renewal: WA65400", action: null, actionType: null },
+  { date: new Date(2026, 3, 25), title: "Automatic Policy Renewal: KLM89012", action: null, actionType: null },
+  // May 2026 (future - only Invoice and Renewal)
+  { date: new Date(2026, 4, 4), title: "May Recurring Invoice", action: "Pay now", actionType: "pay" },
+  { date: new Date(2026, 4, 11), title: "Automatic Policy Renewal: GDA32100", action: null, actionType: null },
+  { date: new Date(2026, 4, 22), title: "Automatic Policy Renewal: WA65400", action: null, actionType: null },
+  // June 2026 (future - only Invoice and Renewal)
+  { date: new Date(2026, 5, 1), title: "June Recurring Invoice", action: "Pay now", actionType: "pay" },
+  { date: new Date(2026, 5, 8), title: "Automatic Policy Renewal: GDA32100", action: null, actionType: null },
+  { date: new Date(2026, 5, 18), title: "Automatic Policy Renewal: KLM89012", action: null, actionType: null },
+  { date: new Date(2026, 5, 29), title: "Automatic Policy Renewal: WA65400", action: null, actionType: null },
+  // July 2026 (future - only Invoice and Renewal)
+  { date: new Date(2026, 6, 6), title: "July Recurring Invoice", action: "Pay now", actionType: "pay" },
+  { date: new Date(2026, 6, 14), title: "Automatic Policy Renewal: GDA32100", action: null, actionType: null },
+  { date: new Date(2026, 6, 27), title: "Automatic Policy Renewal: WA65400", action: null, actionType: null },
+  // August 2026 (future - only Invoice and Renewal)
+  { date: new Date(2026, 7, 3), title: "August Recurring Invoice", action: "Pay now", actionType: "pay" },
+  { date: new Date(2026, 7, 10), title: "Automatic Policy Renewal: GDA32100", action: null, actionType: null },
+  { date: new Date(2026, 7, 21), title: "Automatic Policy Renewal: KLM89012", action: null, actionType: null },
+  { date: new Date(2026, 7, 31), title: "Automatic Policy Renewal: WA65400", action: null, actionType: null },
+  // September 2026 (future - only Invoice and Renewal)
+  { date: new Date(2026, 8, 7), title: "September Recurring Invoice", action: "Pay now", actionType: "pay" },
+  { date: new Date(2026, 8, 15), title: "Automatic Policy Renewal: GDA32100", action: null, actionType: null },
+  { date: new Date(2026, 8, 28), title: "Automatic Policy Renewal: WA65400", action: null, actionType: null },
+  // October 2026 (future - only Invoice and Renewal)
+  { date: new Date(2026, 9, 5), title: "October Recurring Invoice", action: "Pay now", actionType: "pay" },
+  { date: new Date(2026, 9, 12), title: "Automatic Policy Renewal: GDA32100", action: null, actionType: null },
+  { date: new Date(2026, 9, 23), title: "Automatic Policy Renewal: KLM89012", action: null, actionType: null },
+  // November 2026 (future - only Invoice and Renewal)
+  { date: new Date(2026, 10, 2), title: "November Recurring Invoice", action: "Pay now", actionType: "pay" },
+  { date: new Date(2026, 10, 9), title: "Automatic Policy Renewal: GDA32100", action: null, actionType: null },
+  { date: new Date(2026, 10, 19), title: "Automatic Policy Renewal: WA65400", action: null, actionType: null },
+  { date: new Date(2026, 10, 30), title: "Automatic Policy Renewal: KLM89012", action: null, actionType: null },
+  // December 2026 (future - only Invoice and Renewal)
+  { date: new Date(2026, 11, 7), title: "December Recurring Invoice", action: "Pay now", actionType: "pay" },
+  { date: new Date(2026, 11, 14), title: "Automatic Policy Renewal: GDA32100", action: null, actionType: null },
+  { date: new Date(2026, 11, 28), title: "Automatic Policy Renewal: WA65400", action: null, actionType: null },
 ]
+
+// Helper to check if two dates are the same day
+function isSameDay(date1: Date, date2: Date): boolean {
+  return (
+    date1.getFullYear() === date2.getFullYear() &&
+    date1.getMonth() === date2.getMonth() &&
+    date1.getDate() === date2.getDate()
+  )
+}
 
 // Submitted requests data
 const submittedRequestsData = [
@@ -108,15 +169,8 @@ const ageChartConfig = {
 } satisfies ChartConfig
 
 
-// Dates with events for calendar
-const eventDates = [
-  new Date(2026, 3, 13),
-  new Date(2026, 3, 16),
-  new Date(2026, 3, 19),
-  new Date(2026, 3, 22),
-  new Date(2026, 3, 30),
-  new Date(2026, 4, 1),
-]
+// Dates with events for calendar (derived from tasksData)
+const eventDates = tasksData.map(t => new Date(t.date.getFullYear(), t.date.getMonth(), t.date.getDate()))
 
 function StatusBadge({ status }: { status: string }) {
   const isPending = status === "Pending"
@@ -140,9 +194,27 @@ interface DashboardNewProps {
 
 export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
   const router = useRouter()
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date(2026, 3, 10))
+  // Today is April 14, 2026
+  const today = new Date(2026, 3, 14)
+  const [selectedDate, setSelectedDate] = useState<Date>(today)
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date(2026, 3, 1))
   const [activeFleetTab, setActiveFleetTab] = useState<"coverLevel" | "addOns" | "age">("coverLevel")
+  const [showUpcoming, setShowUpcoming] = useState(false)
+
+  // Get tasks for selected date
+  const selectedDateTasks = useMemo(() => {
+    return tasksData.filter(task => isSameDay(task.date, selectedDate))
+  }, [selectedDate])
+
+  // Get upcoming tasks (after selected date)
+  const upcomingTasks = useMemo(() => {
+    return tasksData
+      .filter(task => task.date > selectedDate)
+      .sort((a, b) => a.date.getTime() - b.date.getTime())
+  }, [selectedDate])
+
+  const isToday = isSameDay(selectedDate, today)
+  const dateLabel = isToday ? "today" : selectedDate.toLocaleDateString("en-US", { month: "long", day: "numeric" })
 
   const handlePreviousMonth = () => {
     setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1))
@@ -222,7 +294,7 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
           {/* Middle Section - Calendar+Tasks, Fleet Overview */}
           <div className="grid grid-cols-[2fr_1fr] gap-6">
             {/* Combined Upcoming Events + Tasks Card */}
-            <Card className="p-0 rounded-[10px] shadow-sm border border-[#E5E5E5] bg-white overflow-hidden">
+            <Card className="p-0 rounded-[10px] shadow-sm border border-[#E5E5E5] bg-white overflow-hidden h-[500px]">
               <div className="flex h-full">
                 {/* Left: Upcoming Events - Calendar */}
                 <div className="p-6 w-[280px] flex-shrink-0 flex flex-col">
@@ -241,15 +313,17 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
                   <Calendar
                     mode="single"
                     selected={selectedDate}
-                    onSelect={setSelectedDate}
+                    onSelect={(date) => date && setSelectedDate(date)}
                     month={currentMonth}
                     onMonthChange={setCurrentMonth}
                     className="w-full -ml-2"
                     modifiers={{
                       event: eventDates,
+                      today: [today],
                     }}
                     modifiersClassNames={{
                       event: "relative after:absolute after:bottom-0.5 after:left-1/2 after:-translate-x-1/2 after:h-1 after:w-1 after:rounded-full after:bg-[#005055]",
+                      today: "bg-[#E4E4E7] rounded-md font-semibold",
                     }}
                     classNames={{
                       nav: "hidden",
@@ -271,34 +345,125 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
                 <div className="w-px bg-[#E5E5E5] self-stretch" />
 
                 {/* Right: Tasks */}
-                <div className="p-6 flex-1">
-                  <h3 className="text-xl font-semibold text-[#0A0A0A] mb-4" style={{ letterSpacing: "-0.4px" }}>Task</h3>
-                  <div className="space-y-0">
-                    {tasksData.map((task, index) => (
-                      <div key={index} className="flex items-center gap-4 py-2 border-b border-slate-100 last:border-0">
-                        <div className="flex flex-col items-center justify-center min-w-[48px] h-12 bg-[#FAFAFA] rounded-lg border border-[#E5E5E5]">
-                          <span className="text-base font-semibold text-[#1E293B] text-center leading-tight">{task.day}</span>
-                          <span className="text-[10px] font-medium text-[#9CA3AF] uppercase text-center leading-tight">{task.month}</span>
+                <div className="p-6 flex-1 flex flex-col min-h-0">
+                  {/* Selected Date Tasks */}
+                  {selectedDateTasks.length === 0 ? (
+                    <>
+                      {/* Title */}
+                      <h3 className="text-xl font-semibold text-[#0A0A0A] mb-4 shrink-0" style={{ letterSpacing: "-0.4px" }}>
+                        {isToday ? "Today" : selectedDate.toLocaleDateString("en-US", { month: "long", day: "numeric" })}
+                      </h3>
+                      {/* Empty state banner */}
+                      <div className="mb-6 shrink-0">
+                        <div className="flex items-center gap-3 px-4 py-2 h-12 bg-[#E6F4F4] rounded-lg border-b border-slate-100">
+                          <CalendarDays className="h-5 w-5 text-[#005055]" />
+                          <span className="text-sm font-medium text-[#005055]">
+                            There are no events on your calendar for {dateLabel}
+                          </span>
                         </div>
-                        <div className="flex-1 text-sm font-medium text-[#0A0A0A]">{task.title}</div>
-                        {task.action && (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="h-8 w-[84px] text-sm font-medium border-slate-200 text-[#0F172A] bg-transparent hover:bg-transparent"
-                          >
-                            {task.action}
-                          </Button>
-                        )}
                       </div>
-                    ))}
-                  </div>
+
+                      {/* Show upcoming tasks directly */}
+                      {upcomingTasks.length > 0 && (
+                        <div className="flex-1 flex flex-col min-h-0">
+                          <div className="border-t border-[#E5E5E5] mb-4 shrink-0" />
+                          <h3 className="text-xl font-semibold text-[#0A0A0A] mb-2 shrink-0" style={{ letterSpacing: "-0.4px" }}>Upcoming events</h3>
+                          <div className="flex-1 overflow-y-auto min-h-0">
+                            {upcomingTasks.map((task, index) => (
+                              <div key={index} className="flex items-center gap-4 py-2 border-b border-slate-100 last:border-0">
+                                <div className="flex flex-col items-center justify-center min-w-[48px] h-12 bg-[#FAFAFA] rounded-lg border border-[#E5E5E5]">
+                                  <span className="text-base font-semibold text-[#1E293B] text-center leading-tight">
+                                    {task.date.getDate()}
+                                  </span>
+                                  <span className="text-[10px] font-medium text-[#9CA3AF] uppercase text-center leading-tight">
+                                    {task.date.toLocaleDateString("en-US", { month: "short" }).toUpperCase()}
+                                  </span>
+                                </div>
+                                <div className="flex-1 text-sm font-medium text-[#0A0A0A]">{task.title}</div>
+                                {task.action && (
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="h-8 w-[84px] text-sm font-medium border-slate-200 text-[#0F172A] bg-transparent hover:bg-transparent"
+                                  >
+                                    {task.action}
+                                  </Button>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      {/* Title */}
+                      <h3 className="text-xl font-semibold text-[#0A0A0A] mb-2 shrink-0" style={{ letterSpacing: "-0.4px" }}>
+                        {isToday ? "Today" : selectedDate.toLocaleDateString("en-US", { month: "long", day: "numeric" })}
+                      </h3>
+                      {/* Selected date tasks with date badges */}
+                      <div className="mb-4 shrink-0">
+                        {selectedDateTasks.map((task, index) => (
+                          <div key={index} className="flex items-center gap-4 py-2 border-b border-slate-100 last:border-0">
+                            <div className="flex flex-col items-center justify-center min-w-[48px] h-12 bg-[#FAFAFA] rounded-lg border border-[#E5E5E5]">
+                              <span className="text-base font-semibold text-[#1E293B] text-center leading-tight">
+                                {task.date.getDate()}
+                              </span>
+                              <span className="text-[10px] font-medium text-[#9CA3AF] uppercase text-center leading-tight">
+                                {task.date.toLocaleDateString("en-US", { month: "short" }).toUpperCase()}
+                              </span>
+                            </div>
+                            <div className="flex-1 text-sm font-medium text-[#0A0A0A]">{task.title}</div>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="h-8 px-3 text-sm font-medium border-slate-200 text-[#0F172A] bg-transparent hover:bg-transparent"
+                            >
+                              {task.action || "Mark as done"}
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Upcoming section */}
+                      {upcomingTasks.length > 0 && (
+                        <div className="flex-1 flex flex-col min-h-0">
+                          <div className="border-t border-[#E5E5E5] mb-4 shrink-0" />
+                          <h3 className="text-xl font-semibold text-[#0A0A0A] mb-2 shrink-0" style={{ letterSpacing: "-0.4px" }}>Upcoming</h3>
+                          <div className="flex-1 overflow-y-auto pr-1 min-h-0">
+                            {upcomingTasks.map((task, index) => (
+                              <div key={index} className="flex items-center gap-4 py-2 border-b border-slate-100 last:border-0">
+                                <div className="flex flex-col items-center justify-center min-w-[48px] h-12 bg-[#FAFAFA] rounded-lg border border-[#E5E5E5]">
+                                  <span className="text-base font-semibold text-[#1E293B] text-center leading-tight">
+                                    {task.date.getDate()}
+                                  </span>
+                                  <span className="text-[10px] font-medium text-[#9CA3AF] uppercase text-center leading-tight">
+                                    {task.date.toLocaleDateString("en-US", { month: "short" }).toUpperCase()}
+                                  </span>
+                                </div>
+                                <div className="flex-1 text-sm font-medium text-[#0A0A0A]">{task.title}</div>
+                                {task.action && (
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="h-8 px-3 text-sm font-medium border-slate-200 text-[#0F172A] bg-transparent hover:bg-transparent"
+                                  >
+                                    {task.action}
+                                  </Button>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </>
+                  )}
                 </div>
               </div>
             </Card>
 
             {/* Fleet Overview */}
-            <Card className="p-0 rounded-[10px] shadow-sm border border-[#E5E5E5] bg-white h-full min-w-0 overflow-hidden">
+            <Card className="p-0 rounded-[10px] shadow-sm border border-[#E5E5E5] bg-white h-[500px] min-w-0 overflow-hidden">
               <CardContent className="p-6 flex flex-col h-full min-w-0">
                 <h3 className="text-xl font-semibold text-[#0A0A0A] mb-4" style={{ letterSpacing: "-0.4px" }}>Fleet overview</h3>
                 {/* Tabs */}
