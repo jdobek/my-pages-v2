@@ -72,6 +72,33 @@ export function DevToolbar() {
               </div>
             </div>
 
+            {/* Upcoming Events Version Toggle */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Upcoming events version</label>
+              <div className="flex gap-2">
+                <Button
+                  size="sm"
+                  variant={!settings.useLegacyUpcomingEvents ? "default" : "outline"}
+                  onClick={() => updateSettings({ useLegacyUpcomingEvents: false })}
+                  className={
+                    !settings.useLegacyUpcomingEvents ? "bg-[#005055] hover:bg-[#003c3f]" : ""
+                  }
+                >
+                  New
+                </Button>
+                <Button
+                  size="sm"
+                  variant={settings.useLegacyUpcomingEvents ? "default" : "outline"}
+                  onClick={() => updateSettings({ useLegacyUpcomingEvents: true })}
+                  className={
+                    settings.useLegacyUpcomingEvents ? "bg-[#005055] hover:bg-[#003c3f]" : ""
+                  }
+                >
+                  Legacy
+                </Button>
+              </div>
+            </div>
+
             {/* Reset Button */}
             <Button
               variant="outline"

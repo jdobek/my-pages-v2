@@ -5,8 +5,9 @@ import { useRouter } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
-import { ChevronLeft, ChevronRight, ChevronDown, CalendarDays } from "lucide-react"
+import { ChevronLeft, ChevronRight, ChevronDown, CalendarDays, Check, ShieldCheck } from "lucide-react"
 import { currentUser } from "@/lib/data"
+import { useDevSettings } from "@/lib/contexts/dev-context"
 import { cn } from "@/lib/utils"
 import { Label, Pie, PieChart } from "recharts"
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart"
@@ -79,6 +80,25 @@ const tasksData = [
   { date: new Date(2026, 11, 7), title: "December Recurring Invoice", action: "Pay now", actionType: "pay" },
   { date: new Date(2026, 11, 14), title: "Automatic Policy Renewal: GDA32100", action: null, actionType: null },
   { date: new Date(2026, 11, 28), title: "Automatic Policy Renewal: WA65400", action: null, actionType: null },
+]
+
+// Renewals data with vehicle details for the new version
+const renewalsData = [
+  { date: new Date(2026, 3, 16), plateNumber: "GC72948", model: "Toyota Camry", price: "7 800 kr" },
+  { date: new Date(2026, 3, 19), plateNumber: "AR77550", model: "Hyundai i30", price: "6 052 kr" },
+  { date: new Date(2026, 3, 25), plateNumber: "HD81657", model: "Toyota RAV4", price: "6 800 kr" },
+  { date: new Date(2026, 4, 11), plateNumber: "CY88421", model: "Toyota Corolla", price: "5 800 kr" },
+  { date: new Date(2026, 4, 22), plateNumber: "BX24189", model: "Volkswagen Golf", price: "6 500 kr" },
+  { date: new Date(2026, 5, 8), plateNumber: "DZ56734", model: "Ford Focus", price: "6 200 kr" },
+  { date: new Date(2026, 5, 18), plateNumber: "EA45892", model: "Mazda CX-5", price: "7 100 kr" },
+  { date: new Date(2026, 5, 29), plateNumber: "FB63215", model: "Skoda Octavia", price: "5 900 kr" },
+  { date: new Date(2026, 6, 14), plateNumber: "IE34792", model: "Honda Civic", price: "6 300 kr" },
+  { date: new Date(2026, 6, 27), plateNumber: "JF29563", model: "Nissan Qashqai", price: "7 200 kr" },
+  { date: new Date(2026, 7, 10), plateNumber: "KG58401", model: "Kia Sportage", price: "6 900 kr" },
+  { date: new Date(2026, 7, 21), plateNumber: "LH47290", model: "Audi A4", price: "8 500 kr" },
+  { date: new Date(2026, 7, 31), plateNumber: "MI36189", model: "BMW 3 Series", price: "9 200 kr" },
+  { date: new Date(2026, 8, 15), plateNumber: "NJ25078", model: "Mercedes C-Class", price: "9 800 kr" },
+  { date: new Date(2026, 8, 28), plateNumber: "OK13967", model: "Volvo XC60", price: "8 100 kr" },
 ]
 
 // Helper to check if two dates are the same day
@@ -194,6 +214,7 @@ interface DashboardNewProps {
 
 export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
   const router = useRouter()
+  const { settings } = useDevSettings()
   // Today is April 14, 2026
   const today = new Date(2026, 3, 14)
   const [selectedDate, setSelectedDate] = useState<Date>(today)
@@ -212,6 +233,20 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
       .filter(task => task.date > selectedDate)
       .sort((a, b) => a.date.getTime() - b.date.getTime())
   }, [selectedDate])
+
+  // Get upcoming invoices (for new version)
+  const upcomingInvoices = useMemo(() => {
+    return tasksData
+      .filter(task => task.date > today && task.title.includes("Invoice"))
+      .sort((a, b) => a.date.getTime() - b.date.getTime())
+  }, [today])
+
+  // Get upcoming renewals (for new version) - uses renewalsData with vehicle details
+  const upcomingRenewals = useMemo(() => {
+    return renewalsData
+      .filter(renewal => renewal.date > today)
+      .sort((a, b) => a.date.getTime() - b.date.getTime())
+  }, [today])
 
   const isToday = isSameDay(selectedDate, today)
   const dateLabel = isToday ? "today" : selectedDate.toLocaleDateString("en-US", { month: "long", day: "numeric" })
@@ -292,146 +327,123 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
           </div>
 
           {/* Middle Section - Calendar+Tasks, Fleet Overview */}
-          <div className="grid grid-cols-[2fr_1fr] gap-6">
-            {/* Combined Upcoming Events + Tasks Card */}
-            <Card className="p-0 rounded-[10px] shadow-sm border border-[#E5E5E5] bg-white overflow-hidden h-[500px]">
-              <div className="flex h-full">
-                {/* Left: Upcoming Events - Calendar */}
-                <div className="p-6 w-[280px] flex-shrink-0 flex flex-col">
-                  <h3 className="text-xl font-semibold text-[#0A0A0A] mb-9" style={{ letterSpacing: "-0.4px" }}>Upcoming Events</h3>
-                  <div className="flex items-center justify-between mb-3">
-                    <button onClick={handlePreviousMonth} className="p-1 hover:bg-slate-100 rounded border border-[#E5E5E5]">
-                      <ChevronLeft className="h-4 w-4 text-slate-600" />
-                    </button>
-                    <span className="text-sm font-medium text-slate-900">
-                      {currentMonth.toLocaleDateString("en-US", { month: "long", year: "numeric" })}
-                    </span>
-                    <button onClick={handleNextMonth} className="p-1 hover:bg-slate-100 rounded border border-[#E5E5E5]">
-                      <ChevronRight className="h-4 w-4 text-slate-600" />
-                    </button>
+          <div className={cn(
+            "grid gap-6",
+            settings.useLegacyUpcomingEvents
+              ? "grid-cols-[2fr_1fr]"
+              : "grid-cols-[1fr_1fr_1fr]"
+          )}>
+            {settings.useLegacyUpcomingEvents ? (
+              /* Legacy: Single combined card */
+              <Card className="p-0 rounded-[10px] shadow-sm border border-[#E5E5E5] bg-white overflow-hidden h-[500px]">
+                <div className="flex h-full">
+                  {/* Left: Upcoming Events - Calendar */}
+                  <div className="p-6 w-[280px] flex-shrink-0 flex flex-col">
+                    <h3 className="text-xl font-semibold text-[#0A0A0A] mb-9" style={{ letterSpacing: "-0.4px" }}>Upcoming Events</h3>
+                    <div className="flex items-center justify-between mb-3">
+                      <button onClick={handlePreviousMonth} className="p-1 hover:bg-slate-100 rounded border border-[#E5E5E5]">
+                        <ChevronLeft className="h-4 w-4 text-slate-600" />
+                      </button>
+                      <span className="text-sm font-medium text-slate-900">
+                        {currentMonth.toLocaleDateString("en-US", { month: "long", year: "numeric" })}
+                      </span>
+                      <button onClick={handleNextMonth} className="p-1 hover:bg-slate-100 rounded border border-[#E5E5E5]">
+                        <ChevronRight className="h-4 w-4 text-slate-600" />
+                      </button>
+                    </div>
+                    <Calendar
+                      mode="single"
+                      selected={selectedDate}
+                      onSelect={(date) => date && setSelectedDate(date)}
+                      month={currentMonth}
+                      onMonthChange={setCurrentMonth}
+                      className="w-full -ml-2"
+                      modifiers={{
+                        event: eventDates,
+                        today: [today],
+                      }}
+                      modifiersClassNames={{
+                        event: "relative after:absolute after:bottom-0.5 after:left-1/2 after:-translate-x-1/2 after:h-1 after:w-1 after:rounded-full after:bg-[#005055]",
+                        today: "bg-[#E4E4E7] rounded-md font-semibold",
+                      }}
+                      classNames={{
+                        nav: "hidden",
+                        month_caption: "hidden",
+                        week: "mt-1 flex w-full",
+                        outside: "text-[#D4D4D4] opacity-50",
+                      }}
+                    />
+                    <Button
+                      variant="outline"
+                      className="w-full mt-auto border-[#E5E5E5] text-[#0A0A0A] bg-transparent hover:bg-transparent"
+                      onClick={() => router.push("/events")}
+                    >
+                      View all
+                    </Button>
                   </div>
-                  <Calendar
-                    mode="single"
-                    selected={selectedDate}
-                    onSelect={(date) => date && setSelectedDate(date)}
-                    month={currentMonth}
-                    onMonthChange={setCurrentMonth}
-                    className="w-full -ml-2"
-                    modifiers={{
-                      event: eventDates,
-                      today: [today],
-                    }}
-                    modifiersClassNames={{
-                      event: "relative after:absolute after:bottom-0.5 after:left-1/2 after:-translate-x-1/2 after:h-1 after:w-1 after:rounded-full after:bg-[#005055]",
-                      today: "bg-[#E4E4E7] rounded-md font-semibold",
-                    }}
-                    classNames={{
-                      nav: "hidden",
-                      month_caption: "hidden",
-                      week: "mt-1 flex w-full",
-                      outside: "text-[#D4D4D4] opacity-50",
-                    }}
-                  />
-                  <Button
-                    variant="outline"
-                    className="w-full mt-auto border-[#E5E5E5] text-[#0A0A0A] bg-transparent hover:bg-transparent"
-                    onClick={() => router.push("/events")}
-                  >
-                    View all
-                  </Button>
-                </div>
 
-                {/* Vertical Divider */}
-                <div className="w-px bg-[#E5E5E5] self-stretch" />
+                  {/* Vertical Divider */}
+                  <div className="w-px bg-[#E5E5E5] self-stretch" />
 
-                {/* Right: Tasks */}
-                <div className="flex-1 relative min-h-0">
-                  <div className="absolute inset-0 overflow-y-auto p-6 pb-8">
-                    {/* Selected Date Tasks */}
-                    {selectedDateTasks.length === 0 ? (
-                      <>
-                        {/* Title */}
-                        <h3 className="text-xl font-semibold text-[#0A0A0A] mb-4" style={{ letterSpacing: "-0.4px" }}>
-                          {isToday ? "Today" : selectedDate.toLocaleDateString("en-US", { month: "long", day: "numeric" })}
-                        </h3>
-                        {/* Empty state banner */}
-                        <div className="mb-6">
-                          <div className="flex items-center gap-3 px-4 py-2 h-12 bg-[#E6F4F4] rounded-lg border-b border-slate-100">
-                            <CalendarDays className="h-5 w-5 text-[#005055]" />
-                            <span className="text-sm font-medium text-[#005055]">
-                              There are no events on your calendar for {dateLabel}
-                            </span>
-                          </div>
-                        </div>
-
-                        {/* Show upcoming tasks directly */}
-                        {upcomingTasks.length > 0 && (
-                          <>
-                            <div className="border-t border-[#E5E5E5] mb-4" />
-                            <h3 className="text-xl font-semibold text-[#0A0A0A] mb-2" style={{ letterSpacing: "-0.4px" }}>Upcoming events</h3>
-                            {upcomingTasks.map((task, index) => (
-                              <div key={index} className="flex items-center gap-4 py-2 border-b border-slate-100 last:border-0">
-                                <div className="flex flex-col items-center justify-center min-w-[48px] h-12 bg-[#FAFAFA] rounded-lg border border-[#E5E5E5]">
-                                  <span className="text-base font-semibold text-[#1E293B] text-center leading-tight">
-                                    {task.date.getDate()}
-                                  </span>
-                                  <span className="text-[10px] font-medium text-[#9CA3AF] uppercase text-center leading-tight">
-                                    {task.date.toLocaleDateString("en-US", { month: "short" }).toUpperCase()}
-                                  </span>
-                                </div>
-                                <div className="flex-1 text-sm font-medium text-[#0A0A0A]">{task.title}</div>
-                                {task.action && (
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    className="h-8 w-[84px] text-sm font-medium border-slate-200 text-[#0F172A] bg-transparent hover:bg-transparent"
-                                  >
-                                    {task.action}
-                                  </Button>
-                                )}
-                              </div>
-                            ))}
-                          </>
-                        )}
-                      </>
-                    ) : (
-                      <>
-                        {/* Title */}
-                        <h3 className="text-xl font-semibold text-[#0A0A0A] mb-2" style={{ letterSpacing: "-0.4px" }}>
-                          {isToday ? "Today" : selectedDate.toLocaleDateString("en-US", { month: "long", day: "numeric" })}
-                        </h3>
-                        {/* Selected date tasks with date badges */}
-                        <div className="mb-4">
-                          {selectedDateTasks.map((task, index) => (
-                            <div key={index} className="flex items-center gap-4 py-2 border-b border-slate-100 last:border-0">
-                              <div className="flex flex-col items-center justify-center min-w-[48px] h-12 bg-[#FAFAFA] rounded-lg border border-[#E5E5E5]">
-                                <span className="text-base font-semibold text-[#1E293B] text-center leading-tight">
-                                  {task.date.getDate()}
-                                </span>
-                                <span className="text-[10px] font-medium text-[#9CA3AF] uppercase text-center leading-tight">
-                                  {task.date.toLocaleDateString("en-US", { month: "short" }).toUpperCase()}
-                                </span>
-                              </div>
-                              <div className="flex-1 text-sm font-medium text-[#0A0A0A]">{task.title}</div>
-                              {task.action && (
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  className="h-8 px-3 text-sm font-medium border-slate-200 text-[#0F172A] bg-transparent hover:bg-transparent"
-                                >
-                                  {task.action}
-                                </Button>
-                              )}
+                  {/* Right: Tasks */}
+                  <div className="flex-1 relative min-h-0">
+                    <div className="absolute inset-0 overflow-y-auto p-6 pb-8">
+                      {/* Selected Date Tasks */}
+                      {selectedDateTasks.length === 0 ? (
+                        <>
+                          {/* Title */}
+                          <h3 className="text-xl font-semibold text-[#0A0A0A] mb-4" style={{ letterSpacing: "-0.4px" }}>
+                            {isToday ? "Today" : selectedDate.toLocaleDateString("en-US", { month: "long", day: "numeric" })}
+                          </h3>
+                          {/* Empty state banner */}
+                          <div className="mb-6">
+                            <div className="flex items-center gap-3 px-4 py-2 h-12 bg-[#E6F4F4] rounded-lg border-b border-slate-100">
+                              <CalendarDays className="h-5 w-5 text-[#005055]" />
+                              <span className="text-sm font-medium text-[#005055]">
+                                There are no events on your calendar for {dateLabel}
+                              </span>
                             </div>
-                          ))}
-                        </div>
+                          </div>
 
-                        {/* Upcoming section */}
-                        {upcomingTasks.length > 0 && (
-                          <>
-                            <div className="border-t border-[#E5E5E5] mb-4" />
-                            <h3 className="text-xl font-semibold text-[#0A0A0A] mb-2" style={{ letterSpacing: "-0.4px" }}>Upcoming</h3>
-                            {upcomingTasks.map((task, index) => (
+                          {/* Show upcoming tasks directly */}
+                          {upcomingTasks.length > 0 && (
+                            <>
+                              <div className="border-t border-[#E5E5E5] mb-4" />
+                              <h3 className="text-xl font-semibold text-[#0A0A0A] mb-2" style={{ letterSpacing: "-0.4px" }}>Upcoming events</h3>
+                              {upcomingTasks.map((task, index) => (
+                                <div key={index} className="flex items-center gap-4 py-2 border-b border-slate-100 last:border-0">
+                                  <div className="flex flex-col items-center justify-center min-w-[48px] h-12 bg-[#FAFAFA] rounded-lg border border-[#E5E5E5]">
+                                    <span className="text-base font-semibold text-[#1E293B] text-center leading-tight">
+                                      {task.date.getDate()}
+                                    </span>
+                                    <span className="text-[10px] font-medium text-[#9CA3AF] uppercase text-center leading-tight">
+                                      {task.date.toLocaleDateString("en-US", { month: "short" }).toUpperCase()}
+                                    </span>
+                                  </div>
+                                  <div className="flex-1 text-sm font-medium text-[#0A0A0A]">{task.title}</div>
+                                  {task.action && (
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      className="h-8 w-[84px] text-sm font-medium border-slate-200 text-[#0F172A] bg-transparent hover:bg-transparent"
+                                    >
+                                      {task.action}
+                                    </Button>
+                                  )}
+                                </div>
+                              ))}
+                            </>
+                          )}
+                        </>
+                      ) : (
+                        <>
+                          {/* Title */}
+                          <h3 className="text-xl font-semibold text-[#0A0A0A] mb-2" style={{ letterSpacing: "-0.4px" }}>
+                            {isToday ? "Today" : selectedDate.toLocaleDateString("en-US", { month: "long", day: "numeric" })}
+                          </h3>
+                          {/* Selected date tasks with date badges */}
+                          <div className="mb-4">
+                            {selectedDateTasks.map((task, index) => (
                               <div key={index} className="flex items-center gap-4 py-2 border-b border-slate-100 last:border-0">
                                 <div className="flex flex-col items-center justify-center min-w-[48px] h-12 bg-[#FAFAFA] rounded-lg border border-[#E5E5E5]">
                                   <span className="text-base font-semibold text-[#1E293B] text-center leading-tight">
@@ -453,15 +465,150 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
                                 )}
                               </div>
                             ))}
-                          </>
-                        )}
-                      </>
-                    )}
+                          </div>
+
+                          {/* Upcoming section */}
+                          {upcomingTasks.length > 0 && (
+                            <>
+                              <div className="border-t border-[#E5E5E5] mb-4" />
+                              <h3 className="text-xl font-semibold text-[#0A0A0A] mb-2" style={{ letterSpacing: "-0.4px" }}>Upcoming</h3>
+                              {upcomingTasks.map((task, index) => (
+                                <div key={index} className="flex items-center gap-4 py-2 border-b border-slate-100 last:border-0">
+                                  <div className="flex flex-col items-center justify-center min-w-[48px] h-12 bg-[#FAFAFA] rounded-lg border border-[#E5E5E5]">
+                                    <span className="text-base font-semibold text-[#1E293B] text-center leading-tight">
+                                      {task.date.getDate()}
+                                    </span>
+                                    <span className="text-[10px] font-medium text-[#9CA3AF] uppercase text-center leading-tight">
+                                      {task.date.toLocaleDateString("en-US", { month: "short" }).toUpperCase()}
+                                    </span>
+                                  </div>
+                                  <div className="flex-1 text-sm font-medium text-[#0A0A0A]">{task.title}</div>
+                                  {task.action && (
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      className="h-8 px-3 text-sm font-medium border-slate-200 text-[#0F172A] bg-transparent hover:bg-transparent"
+                                    >
+                                      {task.action}
+                                    </Button>
+                                  )}
+                                </div>
+                              ))}
+                            </>
+                          )}
+                        </>
+                      )}
+                    </div>
+                    <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white to-transparent pointer-events-none" />
                   </div>
-                  <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white to-transparent pointer-events-none" />
                 </div>
-              </div>
-            </Card>
+              </Card>
+            ) : (
+              /* New: Two separate cards for Invoices and Renewals */
+              <>
+                {/* Invoices Card */}
+                <Card className="p-0 rounded-[10px] shadow-sm border border-[#E5E5E5] bg-white overflow-hidden h-[500px]">
+                  <div className="flex flex-col h-full relative">
+                    {/* Gradient background area - extends to top */}
+                    <div className="absolute top-0 left-0 right-0 h-[220px] bg-gradient-to-b from-[#E0EEEF] to-white rounded-t-[10px]" />
+
+                    {/* Header - on top of gradient */}
+                    <div className="px-6 pt-6 relative z-10">
+                      <h3 className="text-xl font-semibold text-black leading-7" style={{ letterSpacing: "-0.4px" }}>Invoices</h3>
+                    </div>
+
+                    {/* Check icon centered in gradient area */}
+                    <div className="relative z-10 flex flex-col items-center mt-10">
+                      <div className="w-20 h-20 rounded-full bg-white flex items-center justify-center shadow-sm border border-[#E5E5E5]">
+                        <Check className="w-7 h-7 text-[#005055]" />
+                      </div>
+                    </div>
+
+                    {/* All payments up to date message */}
+                    <div className="text-center mt-4 relative z-10">
+                      <p className="text-[22px] font-medium text-black leading-[29px]">All payments up to date!</p>
+                    </div>
+
+                    {/* Coverage secure badge */}
+                    <div className="flex justify-center mt-4 relative z-10">
+                      <div className="bg-[#034F54] rounded-xl px-3 py-1 h-8 flex items-center gap-1.5">
+                        <span className="text-sm font-medium text-white leading-[7px]">Your coverage is secure</span>
+                        <ShieldCheck className="w-6 h-6 text-white" strokeWidth={1.5} />
+                      </div>
+                    </div>
+
+                    {/* Next scheduled payment section */}
+                    <div className="flex-1 flex flex-col justify-end px-6 pb-6">
+                      <div className="flex flex-col gap-2 py-2">
+                        <p className="text-xs text-[#71717A] leading-4">Your next scheduled payment is:</p>
+                        <div className="flex items-center justify-between">
+                          <p className="text-[22px] font-medium text-[#0A0A0A] leading-5">
+                            {upcomingInvoices.length > 0
+                              ? upcomingInvoices[0].date.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }).replace(",", "th,")
+                              : "No upcoming payments"
+                            }
+                          </p>
+                          {upcomingInvoices.length > 0 && (
+                            <div className="bg-[#F1F5F9] rounded-full px-2.5 h-6 flex items-center justify-center">
+                              <span className="text-xs font-semibold text-[#334155]">
+                                {Math.ceil((upcomingInvoices[0].date.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))} days left
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Payments history button */}
+                      <Button
+                        variant="outline"
+                        className="h-8 px-4 py-2 text-sm font-medium border-[#E2E8F0] text-[#0F172A] bg-white hover:bg-slate-50 w-fit mt-4"
+                        onClick={() => router.push("/invoices")}
+                      >
+                        Payments history
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
+
+                {/* Upcoming Renewals Card */}
+                <Card className="p-0 rounded-[10px] shadow-sm border border-[#E5E5E5] bg-white overflow-hidden h-[500px]">
+                  <div className="pt-6 px-6 flex flex-col h-full relative">
+                    <h3 className="text-xl font-semibold text-[#0A0A0A] mb-4" style={{ letterSpacing: "-0.4px" }}>Upcoming Renewals</h3>
+                    <div className="flex-1 overflow-y-auto pb-8">
+                      {upcomingRenewals.length === 0 ? (
+                        <div className="flex items-center gap-3 px-4 py-2 h-12 bg-[#E6F4F4] rounded-lg">
+                          <CalendarDays className="h-5 w-5 text-[#005055]" />
+                          <span className="text-sm font-medium text-[#005055]">
+                            No upcoming renewals
+                          </span>
+                        </div>
+                      ) : (
+                        upcomingRenewals.map((renewal, index) => (
+                          <div key={index} className="flex items-center gap-4 py-2 border-b border-slate-100 last:border-0">
+                            <div className="flex flex-col items-center justify-center min-w-[48px] h-12 bg-[#FAFAFA] rounded-lg border border-[#E5E5E5]">
+                              <span className="text-base font-semibold text-[#1E293B] text-center leading-tight">
+                                {renewal.date.getDate()}
+                              </span>
+                              <span className="text-[10px] font-medium text-[#9CA3AF] uppercase text-center leading-tight">
+                                {renewal.date.toLocaleDateString("en-US", { month: "short" }).toUpperCase()}
+                              </span>
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex flex-col gap-1">
+                                <span className="text-sm font-semibold text-[#0A0A0A]">{renewal.model}</span>
+                                <span className="text-xs text-[#71717A]">{renewal.plateNumber}</span>
+                              </div>
+                            </div>
+                            <div className="text-sm font-medium text-[#0A0A0A] whitespace-nowrap">{renewal.price}</div>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                    <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white to-transparent pointer-events-none" />
+                  </div>
+                </Card>
+              </>
+            )}
 
             {/* Fleet Overview */}
             <Card className="p-0 rounded-[10px] shadow-sm border border-[#E5E5E5] bg-white h-[500px] min-w-0 overflow-hidden">

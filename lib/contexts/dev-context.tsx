@@ -10,6 +10,7 @@ interface DevSettings {
   buyMoreButton: string
   showBanner: boolean
   showOverdueInvoices: boolean
+  useLegacyUpcomingEvents: boolean
 }
 
 interface DevContextType {
@@ -26,6 +27,7 @@ const defaultSettings: DevSettings = {
   buyMoreButton: "sidebar",
   showBanner: false,
   showOverdueInvoices: true,
+  useLegacyUpcomingEvents: false,
 }
 
 const STORAGE_KEY = "dev-settings"
