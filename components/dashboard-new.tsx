@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
-import { ChevronLeft, ChevronRight, ChevronDown, CalendarDays, Check, ShieldCheck } from "lucide-react"
-import { currentUser } from "@/lib/data"
+import { ChevronLeft, ChevronRight, ChevronDown, CalendarDays, Check, ShieldCheck, X, AlertTriangle } from "lucide-react"
+import { currentUser, getOverdueInvoices, getOldestOverdueInvoice, getDaysOverdue, parseInvoiceDate } from "@/lib/data"
 import { useDevSettings } from "@/lib/contexts/dev-context"
 import { cn } from "@/lib/utils"
 import { Label, Pie, PieChart } from "recharts"
@@ -164,9 +164,9 @@ const ageDistribution = currentUser.vehicles.reduce((acc, vehicle) => {
 
 // Age pie chart data
 const agePieData = [
-  { name: "1-2 yo", value: ageDistribution["1-2 years"] || 0, fill: "#034F54" },
-  { name: "3-4 yo", value: ageDistribution["3-4 years"] || 0, fill: "#22C55E" },
-  { name: "5+ yo", value: ageDistribution["5+ years"] || 0, fill: "#F59E0B" },
+  { name: "1-2 yo", value: ageDistribution["1-2 years"] || 0, fill: "#005055" },
+  { name: "3-4 yo", value: ageDistribution["3-4 years"] || 0, fill: "#D1D5DB" },
+  { name: "5+ yo", value: ageDistribution["5+ years"] || 0, fill: "#0D9488" },
 ]
 
 // Chart config for age pie chart
@@ -176,15 +176,15 @@ const ageChartConfig = {
   },
   "1-2 yo": {
     label: "1-2 yo",
-    color: "#034F54",
+    color: "#005055",
   },
   "3-4 yo": {
     label: "3-4 yo",
-    color: "#22C55E",
+    color: "#D1D5DB",
   },
   "5+ yo": {
     label: "5+ yo",
-    color: "#F59E0B",
+    color: "#0D9488",
   },
 } satisfies ChartConfig
 
@@ -510,61 +510,108 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
                 <Card className="p-0 rounded-[10px] shadow-sm border border-[#E5E5E5] bg-white overflow-hidden h-[500px]">
                   <div className="flex flex-col h-full relative">
                     {/* Gradient background area - extends to top */}
-                    <div className="absolute top-0 left-0 right-0 h-[220px] bg-gradient-to-b from-[#E0EEEF] to-white rounded-t-[10px]" />
+                    <div className={cn(
+                      "absolute top-0 left-0 right-0 h-[220px] bg-gradient-to-b rounded-t-[10px]",
+                      settings.showOverdueInvoices ? "from-[#FEE2E2] to-white" : "from-[#E0EEEF] to-white"
+                    )} />
 
                     {/* Header - on top of gradient */}
                     <div className="px-6 pt-6 relative z-10">
                       <h3 className="text-xl font-semibold text-black leading-7" style={{ letterSpacing: "-0.4px" }}>Invoices</h3>
                     </div>
 
-                    {/* Check icon centered in gradient area */}
+                    {/* Icon centered in gradient area */}
                     <div className="relative z-10 flex flex-col items-center mt-10">
-                      <div className="w-20 h-20 rounded-full bg-white flex items-center justify-center shadow-sm border border-[#E5E5E5]">
-                        <Check className="w-7 h-7 text-[#005055]" />
+                      <div className={cn(
+                        "w-20 h-20 rounded-full bg-white flex items-center justify-center shadow-sm border",
+                        settings.showOverdueInvoices ? "border-[#FECACA]" : "border-[#E5E5E5]"
+                      )}>
+                        {settings.showOverdueInvoices ? (
+                          <X className="w-7 h-7 text-[#DC2626]" />
+                        ) : (
+                          <Check className="w-7 h-7 text-[#005055]" />
+                        )}
                       </div>
                     </div>
 
-                    {/* All payments up to date message */}
+                    {/* Status message */}
                     <div className="text-center mt-4 relative z-10">
-                      <p className="text-[22px] font-medium text-black leading-[29px]">All payments up to date!</p>
+                      <p className="text-[22px] font-medium text-black leading-[29px]">
+                        {settings.showOverdueInvoices
+                          ? `${getOverdueInvoices().length} invoice${getOverdueInvoices().length !== 1 ? 's' : ''} overdue`
+                          : "All payments up to date!"}
+                      </p>
                     </div>
 
-                    {/* Coverage secure badge */}
+                    {/* Status badge */}
                     <div className="flex justify-center mt-4 relative z-10">
-                      <div className="bg-[#034F54] rounded-xl px-3 py-1 h-8 flex items-center gap-1.5">
-                        <span className="text-sm font-medium text-white leading-[7px]">Your coverage is secure</span>
-                        <ShieldCheck className="w-6 h-6 text-white" strokeWidth={1.5} />
-                      </div>
+                      {settings.showOverdueInvoices ? (
+                        <div className="bg-[#DC2626] rounded-xl px-3 py-1 h-8 flex items-center gap-1.5">
+                          <span className="text-sm font-medium text-white leading-[7px]">Action required</span>
+                          <AlertTriangle className="w-5 h-5 text-white" strokeWidth={1.5} />
+                        </div>
+                      ) : (
+                        <div className="bg-[#034F54] rounded-xl px-3 py-1 h-8 flex items-center gap-1.5">
+                          <span className="text-sm font-medium text-white leading-[7px]">Your coverage is secure</span>
+                          <ShieldCheck className="w-6 h-6 text-white" strokeWidth={1.5} />
+                        </div>
+                      )}
                     </div>
 
-                    {/* Next scheduled payment section */}
+                    {/* Payment info section */}
                     <div className="flex-1 flex flex-col justify-end px-6 pb-6">
                       <div className="flex flex-col gap-2 py-2">
-                        <p className="text-xs text-[#71717A] leading-4">Your next scheduled payment is:</p>
+                        <p className="text-xs text-[#71717A] leading-4">
+                          {settings.showOverdueInvoices ? "Oldest overdue invoice:" : "Your next scheduled payment is:"}
+                        </p>
                         <div className="flex items-center justify-between">
                           <p className="text-[22px] font-medium text-[#0A0A0A] leading-5">
-                            {upcomingInvoices.length > 0
-                              ? upcomingInvoices[0].date.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }).replace(",", "th,")
-                              : "No upcoming payments"
+                            {settings.showOverdueInvoices
+                              ? (() => {
+                                  const oldest = getOldestOverdueInvoice()
+                                  if (!oldest) return "No overdue invoices"
+                                  const date = parseInvoiceDate(oldest.dueDate)
+                                  return date.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }).replace(/(\d+),/, "$1th,")
+                                })()
+                              : upcomingInvoices.length > 0
+                                ? upcomingInvoices[0].date.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }).replace(",", "th,")
+                                : "No upcoming payments"
                             }
                           </p>
-                          {upcomingInvoices.length > 0 && (
-                            <div className="bg-[#F1F5F9] rounded-full px-2.5 h-6 flex items-center justify-center">
-                              <span className="text-xs font-semibold text-[#334155]">
-                                {Math.ceil((upcomingInvoices[0].date.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))} days left
+                          {settings.showOverdueInvoices ? (
+                            <div className="bg-[#FEE2E2] rounded-full px-2.5 h-6 flex items-center justify-center">
+                              <span className="text-xs font-semibold text-[#DC2626]">
+                                {(() => {
+                                  const oldest = getOldestOverdueInvoice()
+                                  if (!oldest) return ""
+                                  return `${getDaysOverdue(oldest)} days overdue`
+                                })()}
                               </span>
                             </div>
+                          ) : (
+                            upcomingInvoices.length > 0 && (
+                              <div className="bg-[#F1F5F9] rounded-full px-2.5 h-6 flex items-center justify-center">
+                                <span className="text-xs font-semibold text-[#334155]">
+                                  {Math.ceil((upcomingInvoices[0].date.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))} days left
+                                </span>
+                              </div>
+                            )
                           )}
                         </div>
                       </div>
 
-                      {/* Payments history button */}
+                      {/* Action button */}
                       <Button
                         variant="outline"
-                        className="h-8 px-4 py-2 text-sm font-medium border-[#E2E8F0] text-[#0F172A] bg-white hover:bg-slate-50 w-fit mt-4"
+                        className={cn(
+                          "h-8 px-4 py-2 text-sm font-medium w-fit mt-4",
+                          settings.showOverdueInvoices
+                            ? "border-[#DC2626] text-[#DC2626] bg-white hover:bg-red-50"
+                            : "border-[#E2E8F0] text-[#0F172A] bg-white hover:bg-slate-50"
+                        )}
                         onClick={() => router.push("/invoices")}
                       >
-                        Payments history
+                        {settings.showOverdueInvoices ? "Pay now" : "Payments history"}
                       </Button>
                     </div>
                   </div>

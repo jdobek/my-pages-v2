@@ -45,9 +45,9 @@ export function DevToolbar() {
               <span className="text-xs text-muted-foreground">Gallery</span>
             </div>
 
-            {/* Show Overdue Invoices Toggle */}
+            {/* Invoices Card State Toggle */}
             <div className="space-y-2">
-              <label className="text-sm font-medium">Show overdue invoices</label>
+              <label className="text-sm font-medium">Invoices card state</label>
               <div className="flex gap-2">
                 <Button
                   size="sm"
@@ -57,17 +57,17 @@ export function DevToolbar() {
                     !settings.showOverdueInvoices ? "bg-[#005055] hover:bg-[#003c3f]" : ""
                   }
                 >
-                  No
+                  All paid
                 </Button>
                 <Button
                   size="sm"
                   variant={settings.showOverdueInvoices ? "default" : "outline"}
                   onClick={() => updateSettings({ showOverdueInvoices: true })}
                   className={
-                    settings.showOverdueInvoices ? "bg-[#005055] hover:bg-[#003c3f]" : ""
+                    settings.showOverdueInvoices ? "bg-[#DC2626] hover:bg-[#B91C1C]" : ""
                   }
                 >
-                  Yes
+                  Overdue
                 </Button>
               </div>
             </div>
