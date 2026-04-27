@@ -99,6 +99,33 @@ export function DevToolbar() {
               </div>
             </div>
 
+            {/* Renewals Language Toggle */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Renewals language</label>
+              <div className="flex gap-2">
+                <Button
+                  size="sm"
+                  variant={settings.renewalsLanguage === "norwegian" ? "default" : "outline"}
+                  onClick={() => updateSettings({ renewalsLanguage: "norwegian" })}
+                  className={
+                    settings.renewalsLanguage === "norwegian" ? "bg-[#005055] hover:bg-[#003c3f]" : ""
+                  }
+                >
+                  Norwegian
+                </Button>
+                <Button
+                  size="sm"
+                  variant={settings.renewalsLanguage === "swedish" ? "default" : "outline"}
+                  onClick={() => updateSettings({ renewalsLanguage: "swedish" })}
+                  className={
+                    settings.renewalsLanguage === "swedish" ? "bg-[#005055] hover:bg-[#003c3f]" : ""
+                  }
+                >
+                  Swedish
+                </Button>
+              </div>
+            </div>
+
             {/* Reset Button */}
             <Button
               variant="outline"

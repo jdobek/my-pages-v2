@@ -5,12 +5,13 @@ import { useRouter } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
-import { ChevronLeft, ChevronRight, ChevronDown, CalendarDays, Check, ShieldCheck, X, AlertTriangle } from "lucide-react"
-import { currentUser, getOverdueInvoices, getOldestOverdueInvoice, getDaysOverdue, parseInvoiceDate } from "@/lib/data"
+import { ChevronLeft, ChevronRight, CalendarDays, Check, ShieldCheck, X, AlertTriangle, Info } from "lucide-react"
+import { currentUser, getOverdueInvoices, getOldestOverdueInvoice, getDaysOverdue, parseInvoiceDate, Vehicle } from "@/lib/data"
 import { useDevSettings } from "@/lib/contexts/dev-context"
 import { cn } from "@/lib/utils"
 import { Label, Pie, PieChart } from "recharts"
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart"
+import { VehicleDetailsModal } from "@/components/vehicle-details-modal"
 
 // Mock data for the dashboard
 const dashboardData = {
@@ -23,22 +24,27 @@ const dashboardData = {
 // Tasks data with Date objects
 // Note: April 14 (today) has no tasks, so user sees "no events" message on entry
 // Request/Claim events only appear for today and past dates, not future
+// Monthly Report events appear once per month, only for current and past months
 const tasksData = [
   // January 2026 (past - can have all types)
+  { date: new Date(2026, 0, 1), title: "Monthly Report Available: January 2026", action: "View", actionType: "report" },
   { date: new Date(2026, 0, 5), title: "January Recurring Invoice", action: "Pay now", actionType: "pay" },
   { date: new Date(2026, 0, 12), title: "Automatic Policy Renewal: GDA32100", action: null, actionType: null },
   { date: new Date(2026, 0, 23), title: "Claim fair-10002: Closed", action: "View", actionType: "view" },
   // February 2026 (past - can have all types)
+  { date: new Date(2026, 1, 1), title: "Monthly Report Available: February 2026", action: "View", actionType: "report" },
   { date: new Date(2026, 1, 3), title: "February Recurring Invoice", action: "Pay now", actionType: "pay" },
   { date: new Date(2026, 1, 14), title: "Request fair-10001: Closed", action: "View", actionType: "view" },
   { date: new Date(2026, 1, 21), title: "Automatic Policy Renewal: GDA32100", action: null, actionType: null },
   { date: new Date(2026, 1, 27), title: "Claim fair-10002: Closed", action: "View", actionType: "view" },
   // March 2026 (past - can have all types)
+  { date: new Date(2026, 2, 1), title: "Monthly Report Available: March 2026", action: "View", actionType: "report" },
   { date: new Date(2026, 2, 2), title: "March Recurring Invoice", action: "Pay now", actionType: "pay" },
   { date: new Date(2026, 2, 9), title: "Automatic Policy Renewal: GDA32100", action: null, actionType: null },
   { date: new Date(2026, 2, 18), title: "Request fair-10001: Closed", action: "View", actionType: "view" },
   { date: new Date(2026, 2, 25), title: "Claim fair-10002: Closed", action: "View", actionType: "view" },
   // April 2026 (today is April 14 - past dates can have all types, future only Invoice/Renewal)
+  { date: new Date(2026, 3, 1), title: "Monthly Report Available: April 2026", action: "View", actionType: "report" },
   { date: new Date(2026, 3, 1), title: "April Recurring Invoice", action: "Pay now", actionType: "pay" },
   { date: new Date(2026, 3, 7), title: "Claim fair-10002: Closed", action: "View", actionType: "view" },
   { date: new Date(2026, 3, 10), title: "Request fair-10001: Closed", action: "View", actionType: "view" },
@@ -82,7 +88,7 @@ const tasksData = [
   { date: new Date(2026, 11, 28), title: "Automatic Policy Renewal: WA65400", action: null, actionType: null },
 ]
 
-// Renewals data with vehicle details for the new version
+// Renewals data with vehicle details for Norwegian version (single vehicles)
 const renewalsData = [
   { date: new Date(2026, 3, 16), plateNumber: "GC72948", model: "Toyota Camry", price: "7 800 kr" },
   { date: new Date(2026, 3, 19), plateNumber: "AR77550", model: "Hyundai i30", price: "6 052 kr" },
@@ -100,6 +106,17 @@ const renewalsData = [
   { date: new Date(2026, 8, 15), plateNumber: "NJ25078", model: "Mercedes C-Class", price: "9 800 kr" },
   { date: new Date(2026, 8, 28), plateNumber: "OK13967", model: "Volvo XC60", price: "8 100 kr" },
 ]
+
+// Renewal data for Swedish version - Single annual renewal with all vehicles from policy
+const swedishAnnualRenewal = {
+  renewalDate: new Date(2026, 3, 16), // Next renewal date
+  vehicles: currentUser.vehicles.map(vehicle => ({
+    plateNumber: vehicle.plateNumber,
+    model: vehicle.model,
+    price: vehicle.price,
+    priceWithTFA: vehicle.priceWithTFA
+  }))
+}
 
 // Helper to check if two dates are the same day
 function isSameDay(date1: Date, date2: Date): boolean {
@@ -193,15 +210,9 @@ const ageChartConfig = {
 const eventDates = tasksData.map(t => new Date(t.date.getFullYear(), t.date.getMonth(), t.date.getDate()))
 
 function StatusBadge({ status }: { status: string }) {
-  const isPending = status === "Pending"
   return (
     <span
-      className={cn(
-        "inline-flex items-center justify-center rounded-full py-0.5 text-xs font-semibold w-[70px]",
-        isPending
-          ? "bg-slate-100 text-slate-700"
-          : "bg-[#E6F4F4] text-[#034F54]"
-      )}
+      className="inline-flex items-center justify-center rounded-full py-0.5 text-xs font-semibold w-[70px] bg-[#F5F5F5] border border-[#E5E5E5] text-[#0A0A0A]"
     >
       {status}
     </span>
@@ -220,7 +231,22 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
   const [selectedDate, setSelectedDate] = useState<Date>(today)
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date(2026, 3, 1))
   const [activeFleetTab, setActiveFleetTab] = useState<"coverLevel" | "addOns" | "age">("coverLevel")
-  const [showUpcoming, setShowUpcoming] = useState(false)
+  const [vehicleDrawer, setVehicleDrawer] = useState<{ isOpen: boolean; vehicle: Vehicle | null }>({
+    isOpen: false,
+    vehicle: null
+  })
+
+  // Handler for vehicle click - open drawer with vehicle details
+  const handleVehicleClick = (plateNumber: string) => {
+    const vehicle = currentUser.vehicles.find(v => v.plateNumber === plateNumber)
+    if (vehicle) {
+      setVehicleDrawer({ isOpen: true, vehicle })
+    }
+  }
+
+  const closeVehicleDrawer = () => {
+    setVehicleDrawer({ isOpen: false, vehicle: null })
+  }
 
   // Get tasks for selected date
   const selectedDateTasks = useMemo(() => {
@@ -241,15 +267,21 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
       .sort((a, b) => a.date.getTime() - b.date.getTime())
   }, [today])
 
-  // Get upcoming renewals (for new version) - uses renewalsData with vehicle details
-  const upcomingRenewals = useMemo(() => {
+  // Get upcoming renewals - Norwegian version (single vehicles)
+  const upcomingRenewalsNorwegian = useMemo(() => {
     return renewalsData
       .filter(renewal => renewal.date > today)
       .sort((a, b) => a.date.getTime() - b.date.getTime())
   }, [today])
 
+  // Get upcoming renewal - Swedish version (single annual renewal)
+  const upcomingRenewalSwedish = useMemo(() => {
+    return swedishAnnualRenewal.renewalDate > today ? swedishAnnualRenewal : null
+  }, [today])
+
   const isToday = isSameDay(selectedDate, today)
   const dateLabel = isToday ? "today" : selectedDate.toLocaleDateString("en-US", { month: "long", day: "numeric" })
+
 
   const handlePreviousMonth = () => {
     setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1))
@@ -312,8 +344,20 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
 
             {/* Total Premium */}
             <div className="flex flex-col gap-1.5 flex-1">
-              <span className="text-sm font-semibold text-[#727272]">Total premium</span>
-              <span className="text-2xl font-semibold text-[#0F172A]" style={{ letterSpacing: "-0.18px" }}>{dashboardData.totalPremium}</span>
+              <div className="flex items-center gap-1 relative group">
+                <span className="text-sm font-semibold text-[#727272]">Total premium</span>
+                <Info className="w-3.5 h-3.5 text-[#727272] cursor-help" />
+                <div className="absolute bottom-full left-0 mb-2 hidden group-hover:block z-50">
+                  <div className="bg-[#0A0A0A] text-white text-xs rounded-md px-2.5 py-2 whitespace-nowrap shadow-lg">
+                    Listed price includes TFA.<br />
+                    Price without TFA: {currentUser.totalPremiumWithoutTFA.toLocaleString('nb-NO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} kr
+                    <div className="absolute top-full left-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-[#0A0A0A]"></div>
+                  </div>
+                </div>
+              </div>
+              <span className="text-2xl font-semibold text-[#0F172A]" style={{ letterSpacing: "-0.18px" }}>
+                {currentUser.totalPremium.toLocaleString('nb-NO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} kr
+              </span>
             </div>
 
             {/* Divider */}
@@ -373,13 +417,27 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
                         outside: "text-[#D4D4D4] opacity-50",
                       }}
                     />
-                    <Button
-                      variant="outline"
-                      className="w-full mt-auto border-[#E5E5E5] text-[#0A0A0A] bg-transparent hover:bg-transparent"
-                      onClick={() => router.push("/events")}
-                    >
-                      View all
-                    </Button>
+                    <div className="mt-auto space-y-2">
+                      {!isSameDay(selectedDate, today) && (
+                        <Button
+                          variant="outline"
+                          className="w-full border-[#E5E5E5] text-[#0A0A0A] bg-transparent hover:bg-slate-50"
+                          onClick={() => {
+                            setSelectedDate(today)
+                            setCurrentMonth(new Date(2026, 3, 1))
+                          }}
+                        >
+                          Return to Today
+                        </Button>
+                      )}
+                      <Button
+                        variant="outline"
+                        className="w-full border-[#E5E5E5] text-[#0A0A0A] bg-transparent hover:bg-transparent"
+                        onClick={() => router.push("/events")}
+                      >
+                        View all
+                      </Button>
+                    </div>
                   </div>
 
                   {/* Vertical Divider */}
@@ -619,40 +677,143 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
 
                 {/* Upcoming Renewals Card */}
                 <Card className="p-0 rounded-[10px] shadow-sm border border-[#E5E5E5] bg-white overflow-hidden h-[500px]">
-                  <div className="pt-6 px-6 flex flex-col h-full relative">
-                    <h3 className="text-xl font-semibold text-[#0A0A0A] mb-4" style={{ letterSpacing: "-0.4px" }}>Upcoming Renewals</h3>
-                    <div className="flex-1 overflow-y-auto pb-8">
-                      {upcomingRenewals.length === 0 ? (
+                  {settings.renewalsLanguage === "norwegian" ? (
+                    /* Norwegian Version - Simple Vehicle List */
+                    <div className="pt-6 px-6 flex flex-col h-full relative">
+                      <h3 className="text-xl font-semibold text-[#0A0A0A] mb-4" style={{ letterSpacing: "-0.4px" }}>Upcoming Renewals</h3>
+                      <div className="flex-1 overflow-y-auto pb-8">
+                        {upcomingRenewalsNorwegian.length === 0 ? (
+                          <div className="flex items-center gap-3 px-4 py-2 h-12 bg-[#E6F4F4] rounded-lg">
+                            <CalendarDays className="h-5 w-5 text-[#005055]" />
+                            <span className="text-sm font-medium text-[#005055]">
+                              No upcoming renewals
+                            </span>
+                          </div>
+                        ) : (
+                          upcomingRenewalsNorwegian.map((renewal, index) => (
+                            <div
+                              key={index}
+                              className="flex items-center gap-4 py-2 cursor-pointer hover:bg-[#F9F9FB] -mx-3 px-3 transition-colors rounded-md"
+                              onClick={() => handleVehicleClick(renewal.plateNumber)}
+                            >
+                              <div className="flex flex-col items-center justify-center min-w-[48px] h-12 bg-[#FAFAFA] rounded-lg border border-[#E5E5E5]">
+                                <span className="text-base font-semibold text-[#1E293B] text-center leading-tight">
+                                  {renewal.date.getDate()}
+                                </span>
+                                <span className="text-[10px] font-medium text-[#9CA3AF] uppercase text-center leading-tight">
+                                  {renewal.date.toLocaleDateString("en-US", { month: "short" }).toUpperCase()}
+                                </span>
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex flex-col gap-1">
+                                  <span className="text-sm font-semibold text-[#0A0A0A]">{renewal.model}</span>
+                                  <span className="text-xs text-[#71717A]">{renewal.plateNumber}</span>
+                                </div>
+                              </div>
+                              <div className="text-sm font-medium text-[#0A0A0A] whitespace-nowrap">{renewal.price}</div>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                      <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white to-transparent pointer-events-none" />
+                    </div>
+                  ) : (
+                    /* Swedish Version - Figma Design */
+                    !upcomingRenewalSwedish ? (
+                      <div className="pt-6 px-6 flex flex-col h-full">
+                        <h3 className="text-xl font-semibold text-[#0A0A0A] mb-4" style={{ letterSpacing: "-0.4px" }}>Upcoming Renewals</h3>
                         <div className="flex items-center gap-3 px-4 py-2 h-12 bg-[#E6F4F4] rounded-lg">
                           <CalendarDays className="h-5 w-5 text-[#005055]" />
                           <span className="text-sm font-medium text-[#005055]">
                             No upcoming renewals
                           </span>
                         </div>
-                      ) : (
-                        upcomingRenewals.map((renewal, index) => (
-                          <div key={index} className="flex items-center gap-4 py-2 border-b border-slate-100 last:border-0">
-                            <div className="flex flex-col items-center justify-center min-w-[48px] h-12 bg-[#FAFAFA] rounded-lg border border-[#E5E5E5]">
-                              <span className="text-base font-semibold text-[#1E293B] text-center leading-tight">
-                                {renewal.date.getDate()}
-                              </span>
-                              <span className="text-[10px] font-medium text-[#9CA3AF] uppercase text-center leading-tight">
-                                {renewal.date.toLocaleDateString("en-US", { month: "short" }).toUpperCase()}
-                              </span>
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <div className="flex flex-col gap-1">
-                                <span className="text-sm font-semibold text-[#0A0A0A]">{renewal.model}</span>
-                                <span className="text-xs text-[#71717A]">{renewal.plateNumber}</span>
+                      </div>
+                    ) : (() => {
+                      const totalPriceWithTFA = upcomingRenewalSwedish.vehicles.reduce((sum, v) => sum + v.priceWithTFA, 0)
+                      const vehicleCount = upcomingRenewalSwedish.vehicles.length
+                      const daysLeft = Math.ceil((upcomingRenewalSwedish.renewalDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
+
+                      return (
+                        <div className="flex flex-col h-full relative">
+                          {/* Scrollable Content */}
+                          <div className="flex-1 overflow-y-auto pb-8">
+                            <div className="relative">
+                              {/* Gradient Background */}
+                              <div className="absolute top-0 left-0 right-0 h-[220px] bg-gradient-to-b from-[#F5F5F5] to-white rounded-t-[10px]" />
+
+                              {/* Header - on top of gradient */}
+                              <div className="px-6 pt-6 relative z-10">
+                                <h3 className="text-xl font-semibold text-black leading-7" style={{ letterSpacing: "-0.4px" }}>Upcoming renewals</h3>
+                              </div>
+
+                              {/* Centered Date Badge */}
+                              <div className="relative z-10 flex flex-col items-center mt-10">
+                              <div className="w-20 h-20 rounded-xl bg-white flex flex-col items-center justify-center shadow-sm border-[1.5px] border-[#E5E5E5]">
+                                <span className="text-2xl font-semibold text-[#1E293B] leading-[30px]">
+                                  {upcomingRenewalSwedish.renewalDate.getDate()}
+                                </span>
+                                <span className="text-[15px] font-medium text-[#9CA3AF] uppercase leading-[18.75px]">
+                                  {upcomingRenewalSwedish.renewalDate.toLocaleDateString("en-US", { month: "short" }).toUpperCase()}
+                                </span>
                               </div>
                             </div>
-                            <div className="text-sm font-medium text-[#0A0A0A] whitespace-nowrap">{renewal.price}</div>
+
+                              {/* Status message */}
+                              <div className="text-center mt-4 relative z-10">
+                                <p className="text-[22px] font-medium text-black leading-[29px]">
+                                  Renewed in {daysLeft} {daysLeft === 1 ? 'day' : 'days'}
+                                </p>
+                              </div>
+
+                              {/* Status badge */}
+                              <div className="flex justify-center mt-4 relative z-10">
+                                <div className="bg-white border border-[#E5E5E5] rounded-xl px-3 py-1 h-8 flex items-center gap-1.5">
+                                  <span className="text-sm font-medium text-[#0A0A0A] leading-[7px]">
+                                    {vehicleCount} {vehicleCount === 1 ? 'vehicle' : 'vehicles'} • {totalPriceWithTFA.toLocaleString()} kr
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Vehicle List */}
+                            <div className="px-6 mt-8">
+                              <div className="flex flex-col gap-2 py-2">
+                                <p className="text-xs text-[#71717A] leading-4">
+                                  Vehicles included in renewal:
+                                </p>
+                              </div>
+                              <div>
+                                {upcomingRenewalSwedish.vehicles.map((vehicle, vIndex) => (
+                                  <div
+                                    key={vIndex}
+                                    className="flex items-center gap-3 py-2 cursor-pointer hover:bg-[#F9F9FB] -mx-3 px-3 transition-colors rounded-md"
+                                    onClick={() => handleVehicleClick(vehicle.plateNumber)}
+                                  >
+                                    <div className="flex items-center justify-center w-6 h-6 rounded-full bg-[#F5F5F5] border border-[#E5E5E5] shrink-0">
+                                      <span className="text-xs font-semibold text-[#0A0A0A]">{vIndex + 1}</span>
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                      <div className="flex flex-col gap-0.5">
+                                        <span className="text-sm font-semibold text-[#0A0A0A]">{vehicle.model}</span>
+                                        <span className="text-xs text-[#71717A]">{vehicle.plateNumber}</span>
+                                      </div>
+                                    </div>
+                                    <div className="text-sm text-[#71717A] text-right whitespace-nowrap">
+                                      {vehicle.price.toLocaleString()} kr
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
                           </div>
-                        ))
-                      )}
-                    </div>
-                    <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white to-transparent pointer-events-none" />
-                  </div>
+
+                          {/* Gradient fade at bottom */}
+                          <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white to-transparent pointer-events-none" />
+                        </div>
+                      )
+                    })()
+                  )}
                 </Card>
               </>
             )}
@@ -936,6 +1097,13 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
           </div>
         </div>
       </div>
+
+      {/* Vehicle Details Drawer */}
+      <VehicleDetailsModal
+        vehicle={vehicleDrawer.vehicle}
+        isOpen={vehicleDrawer.isOpen}
+        onClose={closeVehicleDrawer}
+      />
     </div>
   )
 }

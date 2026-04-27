@@ -1464,7 +1464,7 @@ export default function InvoicesPage() {
                       08-12 33 40 80
                     </a>
                     <p className="text-xs text-slate-600 mt-1">
-                      Monday - Friday, 9:00 - 17:00
+                      Monday - Friday, 9:00 - 15:00
                     </p>
                   </div>
                   <svg

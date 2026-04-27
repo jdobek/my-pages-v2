@@ -11,6 +11,7 @@ interface DevSettings {
   showBanner: boolean
   showOverdueInvoices: boolean
   useLegacyUpcomingEvents: boolean
+  renewalsLanguage: "norwegian" | "swedish"
 }
 
 interface DevContextType {
@@ -28,6 +29,7 @@ const defaultSettings: DevSettings = {
   showBanner: false,
   showOverdueInvoices: true,
   useLegacyUpcomingEvents: false,
+  renewalsLanguage: "norwegian",
 }
 
 const STORAGE_KEY = "dev-settings"
