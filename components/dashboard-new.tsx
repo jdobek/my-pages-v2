@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
-import { ChevronLeft, ChevronRight, CalendarDays, Check, ShieldCheck, X, AlertTriangle, Info } from "lucide-react"
+import { ChevronLeft, ChevronRight, CalendarDays, Check, ShieldCheck, X, AlertTriangle, Info, Clock } from "lucide-react"
 import { currentUser, getOverdueInvoices, getOldestOverdueInvoice, getDaysOverdue, parseInvoiceDate, Vehicle } from "@/lib/data"
 import { useDevSettings } from "@/lib/contexts/dev-context"
 import { cn } from "@/lib/utils"
@@ -295,7 +295,7 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
 
   return (
     <div className="w-full bg-[#F9F9FB] min-h-screen">
-      <div className="container mx-auto max-w-7xl px-4 pb-4 pt-10 md:pb-4 md:pt-16">
+      <div className="container mx-auto max-w-7xl px-4 md:px-16 pb-4 pt-10 md:pb-4 md:pt-16">
         <div className="flex flex-col gap-6">
           {/* Header */}
           <div className="flex items-center justify-between">
@@ -311,39 +311,40 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
           </div>
 
           {/* Stats Row */}
-          <div className="flex items-center gap-6 bg-white rounded-lg border border-[#E3E8F0] p-4">
+          <div className="flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-6 bg-white rounded-lg border border-[#E3E8F0] p-4">
             {/* Risk Score */}
             <div
-              className="group flex flex-col gap-1.5 flex-1 -m-3 p-3 rounded-lg hover:bg-[#F5F5F5] cursor-pointer transition-colors"
+              className="group flex flex-col gap-1.5 flex-1 lg:-m-3 lg:p-3 rounded-lg hover:bg-[#F5F5F5] cursor-pointer transition-colors"
               onClick={() => router.push("/risk-score")}
             >
               <span className="text-sm font-semibold text-[#727272]">Risk score</span>
               <div className="flex items-end justify-between">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-2xl font-semibold text-[#0F172A]" style={{ letterSpacing: "-0.18px" }}>{dashboardData.riskScore}</span>
-                  <span className="text-base font-semibold text-[#B7B7B7]">/10</span>
+                  <span className="text-xl xl:text-2xl font-semibold text-[#0F172A]" style={{ letterSpacing: "-0.18px" }}>{dashboardData.riskScore}</span>
+                  <span className="text-sm xl:text-base font-semibold text-[#B7B7B7]">/10</span>
                 </div>
                 <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <span className="text-sm font-medium text-[#005055]">Check analytics</span>
+                  <span className="text-sm font-medium text-[#005055] xl:hidden">Check</span>
+                  <span className="text-sm font-medium text-[#005055] hidden xl:inline">Check analytics</span>
                   <ChevronRight className="h-4 w-4 text-[#005055]" />
                 </div>
               </div>
             </div>
 
             {/* Divider */}
-            <div className="w-px h-[54px] bg-[#E3E8F0]" />
+            <div className="hidden lg:block w-px h-[54px] bg-[#E3E8F0]" />
 
             {/* Total Vehicles */}
-            <div className="flex flex-col gap-1.5 flex-1">
+            <div className="flex flex-col gap-1.5 flex-1 min-w-0">
               <span className="text-sm font-semibold text-[#727272]">Total vehicles</span>
-              <span className="text-2xl font-semibold text-[#0F172A]" style={{ letterSpacing: "-0.18px" }}>{dashboardData.totalVehicles}</span>
+              <span className="text-xl xl:text-2xl font-semibold text-[#0F172A] whitespace-nowrap overflow-hidden text-ellipsis" style={{ letterSpacing: "-0.18px" }}>{dashboardData.totalVehicles}</span>
             </div>
 
             {/* Divider */}
-            <div className="w-px h-[54px] bg-[#E3E8F0]" />
+            <div className="hidden lg:block w-px h-[54px] bg-[#E3E8F0]" />
 
             {/* Total Premium */}
-            <div className="flex flex-col gap-1.5 flex-1">
+            <div className="flex flex-col gap-1.5 flex-1 min-w-0">
               <div className="flex items-center gap-1 relative group">
                 <span className="text-sm font-semibold text-[#727272]">Total premium</span>
                 <Info className="w-3.5 h-3.5 text-[#727272] cursor-help" />
@@ -355,18 +356,30 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
                   </div>
                 </div>
               </div>
-              <span className="text-2xl font-semibold text-[#0F172A]" style={{ letterSpacing: "-0.18px" }}>
+              <span className="text-xl xl:text-2xl font-semibold text-[#0F172A] whitespace-nowrap overflow-hidden text-ellipsis" style={{ letterSpacing: "-0.18px" }}>
                 {currentUser.totalPremium.toLocaleString('nb-NO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} kr
               </span>
             </div>
 
             {/* Divider */}
-            <div className="w-px h-[54px] bg-[#E3E8F0]" />
+            <div className="hidden lg:block w-px h-[54px] bg-[#E3E8F0]" />
 
             {/* Average Premium */}
-            <div className="flex flex-col gap-1.5 flex-1">
-              <span className="text-sm font-semibold text-[#727272]">Average premium</span>
-              <span className="text-2xl font-semibold text-[#0F172A]" style={{ letterSpacing: "-0.18px" }}>{dashboardData.averagePremium}</span>
+            <div className="flex flex-col gap-1.5 flex-1 min-w-0">
+              <div className="flex items-center gap-1 relative group">
+                <span className="text-sm font-semibold text-[#727272]">Avg. premium</span>
+                <Info className="w-3.5 h-3.5 text-[#727272] cursor-help" />
+                <div className="absolute bottom-full left-0 mb-2 hidden group-hover:block z-50">
+                  <div className="bg-[#0A0A0A] text-white text-xs rounded-md px-2.5 py-2 whitespace-nowrap shadow-lg">
+                    Listed price includes TFA.<br />
+                    Price without TFA: {(currentUser.totalPremiumWithoutTFA / currentUser.totalVehicles).toLocaleString('nb-NO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} kr
+                    <div className="absolute top-full left-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-[#0A0A0A]"></div>
+                  </div>
+                </div>
+              </div>
+              <span className="text-xl xl:text-2xl font-semibold text-[#0F172A] whitespace-nowrap overflow-hidden text-ellipsis" style={{ letterSpacing: "-0.18px" }}>
+                {(currentUser.totalPremium / currentUser.totalVehicles).toLocaleString('nb-NO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} kr
+              </span>
             </div>
           </div>
 
@@ -374,12 +387,12 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
           <div className={cn(
             "grid gap-6",
             settings.useLegacyUpcomingEvents
-              ? "grid-cols-[2fr_1fr]"
-              : "grid-cols-[1fr_1fr_1fr]"
+              ? "grid-cols-1 2xl:grid-cols-[2fr_1fr]"
+              : "grid-cols-1 md:grid-cols-2 2xl:grid-cols-[1fr_1fr_1fr]"
           )}>
             {settings.useLegacyUpcomingEvents ? (
               /* Legacy: Single combined card */
-              <Card className="p-0 rounded-[10px] shadow-sm border border-[#E5E5E5] bg-white overflow-hidden h-[500px]">
+              <Card className="p-0 rounded-[10px] shadow-sm border border-[#E5E5E5] bg-white overflow-hidden h-[500px] w-full">
                 <div className="flex h-full">
                   {/* Left: Upcoming Events - Calendar */}
                   <div className="p-6 w-[280px] flex-shrink-0 flex flex-col">
@@ -579,7 +592,7 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
                     </div>
 
                     {/* Icon centered in gradient area */}
-                    <div className="relative z-10 flex flex-col items-center mt-10">
+                    <div className="relative z-10 flex flex-col items-center mt-12">
                       <div className={cn(
                         "w-20 h-20 rounded-full bg-white flex items-center justify-center shadow-sm border",
                         settings.showOverdueInvoices ? "border-[#FECACA]" : "border-[#E5E5E5]"
@@ -648,8 +661,8 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
                             </div>
                           ) : (
                             upcomingInvoices.length > 0 && (
-                              <div className="bg-[#F1F5F9] rounded-full px-2.5 h-6 flex items-center justify-center">
-                                <span className="text-xs font-semibold text-[#334155]">
+                              <div className="bg-[#F5F5F5] border border-[#E5E5E5] rounded-full px-2.5 h-6 flex items-center justify-center">
+                                <span className="text-xs font-semibold text-[#0A0A0A]">
                                   {Math.ceil((upcomingInvoices[0].date.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))} days left
                                 </span>
                               </div>
@@ -730,86 +743,76 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
                         </div>
                       </div>
                     ) : (() => {
-                      const totalPriceWithTFA = upcomingRenewalSwedish.vehicles.reduce((sum, v) => sum + v.priceWithTFA, 0)
                       const vehicleCount = upcomingRenewalSwedish.vehicles.length
                       const daysLeft = Math.ceil((upcomingRenewalSwedish.renewalDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
 
                       return (
                         <div className="flex flex-col h-full relative">
-                          {/* Scrollable Content */}
-                          <div className="flex-1 overflow-y-auto pb-8">
-                            <div className="relative">
-                              {/* Gradient Background */}
-                              <div className="absolute top-0 left-0 right-0 h-[220px] bg-gradient-to-b from-[#F5F5F5] to-white rounded-t-[10px]" />
+                          {/* Gradient background area */}
+                          <div className="absolute top-0 left-0 right-0 h-[220px] bg-gradient-to-b from-[#F5F5F5] to-white rounded-t-[10px]" />
 
-                              {/* Header - on top of gradient */}
-                              <div className="px-6 pt-6 relative z-10">
-                                <h3 className="text-xl font-semibold text-black leading-7" style={{ letterSpacing: "-0.4px" }}>Upcoming renewals</h3>
-                              </div>
+                          {/* Header - on top of gradient */}
+                          <div className="px-6 pt-6 relative z-10">
+                            <h3 className="text-xl font-semibold text-black leading-7" style={{ letterSpacing: "-0.4px" }}>Upcoming renewals</h3>
+                          </div>
 
-                              {/* Centered Date Badge */}
-                              <div className="relative z-10 flex flex-col items-center mt-10">
-                              <div className="w-20 h-20 rounded-xl bg-white flex flex-col items-center justify-center shadow-sm border-[1.5px] border-[#E5E5E5]">
-                                <span className="text-2xl font-semibold text-[#1E293B] leading-[30px]">
-                                  {upcomingRenewalSwedish.renewalDate.getDate()}
-                                </span>
-                                <span className="text-[15px] font-medium text-[#9CA3AF] uppercase leading-[18.75px]">
-                                  {upcomingRenewalSwedish.renewalDate.toLocaleDateString("en-US", { month: "short" }).toUpperCase()}
-                                </span>
-                              </div>
+                          {/* Icon centered in gradient area */}
+                          <div className="relative z-10 flex flex-col items-center mt-12">
+                            <div className="w-20 h-20 rounded-xl bg-white flex flex-col items-center justify-center shadow-sm border-[1.5px] border-[#E5E5E5]">
+                              <span className="text-2xl font-semibold text-[#1E293B] leading-[30px]">
+                                {upcomingRenewalSwedish.renewalDate.getDate()}
+                              </span>
+                              <span className="text-[15px] font-medium text-[#9CA3AF] uppercase leading-[18.75px]">
+                                {upcomingRenewalSwedish.renewalDate.toLocaleDateString("en-US", { month: "short" }).toUpperCase()}
+                              </span>
                             </div>
+                          </div>
 
-                              {/* Status message */}
-                              <div className="text-center mt-4 relative z-10">
-                                <p className="text-[22px] font-medium text-black leading-[29px]">
-                                  Renewed in {daysLeft} {daysLeft === 1 ? 'day' : 'days'}
+                          {/* Status message */}
+                          <div className="text-center mt-4 relative z-10">
+                            <p className="text-[22px] font-medium text-black leading-[29px]">
+                              {vehicleCount} {vehicleCount === 1 ? 'vehicle' : 'vehicles'} renewing
+                            </p>
+                          </div>
+
+                          {/* Status badge */}
+                          <div className="flex justify-center mt-4 relative z-10">
+                            <div className="bg-[#F5F5F5] border border-[#E5E5E5] rounded-xl px-3 py-1 h-8 flex items-center gap-1.5">
+                              <span className="text-sm font-medium text-[#0A0A0A] leading-[7px]">Renewal approaching</span>
+                              <Clock className="w-5 h-5 text-[#0A0A0A]" strokeWidth={1.5} />
+                            </div>
+                          </div>
+
+                          {/* Renewal info section */}
+                          <div className="flex-1 flex flex-col justify-end px-6 pb-6">
+                            <div className="flex flex-col gap-2 py-2">
+                              <p className="text-xs text-[#71717A] leading-4">
+                                Your next renewal period:
+                              </p>
+                              <div className="flex items-center justify-between">
+                                <p className="text-[22px] font-medium text-[#0A0A0A] leading-5">
+                                  {upcomingRenewalSwedish.renewalDate.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }).replace(/(\d+),/, "$1th,")}
                                 </p>
-                              </div>
-
-                              {/* Status badge */}
-                              <div className="flex justify-center mt-4 relative z-10">
-                                <div className="bg-white border border-[#E5E5E5] rounded-xl px-3 py-1 h-8 flex items-center gap-1.5">
-                                  <span className="text-sm font-medium text-[#0A0A0A] leading-[7px]">
-                                    {vehicleCount} {vehicleCount === 1 ? 'vehicle' : 'vehicles'} • {totalPriceWithTFA.toLocaleString()} kr
+                                <div className="bg-[#F5F5F5] border border-[#E5E5E5] rounded-full px-2.5 h-6 flex items-center justify-center">
+                                  <span className="text-xs font-semibold text-[#0A0A0A]">
+                                    {daysLeft} {daysLeft === 1 ? 'day' : 'days'} left
                                   </span>
                                 </div>
                               </div>
                             </div>
 
-                            {/* Vehicle List */}
-                            <div className="px-6 mt-8">
-                              <div className="flex flex-col gap-2 py-2">
-                                <p className="text-xs text-[#71717A] leading-4">
-                                  Vehicles included in renewal:
-                                </p>
-                              </div>
-                              <div>
-                                {upcomingRenewalSwedish.vehicles.map((vehicle, vIndex) => (
-                                  <div
-                                    key={vIndex}
-                                    className="flex items-center gap-3 py-2 cursor-pointer hover:bg-[#F9F9FB] -mx-3 px-3 transition-colors rounded-md"
-                                    onClick={() => handleVehicleClick(vehicle.plateNumber)}
-                                  >
-                                    <div className="flex items-center justify-center w-6 h-6 rounded-full bg-[#F5F5F5] border border-[#E5E5E5] shrink-0">
-                                      <span className="text-xs font-semibold text-[#0A0A0A]">{vIndex + 1}</span>
-                                    </div>
-                                    <div className="flex-1 min-w-0">
-                                      <div className="flex flex-col gap-0.5">
-                                        <span className="text-sm font-semibold text-[#0A0A0A]">{vehicle.model}</span>
-                                        <span className="text-xs text-[#71717A]">{vehicle.plateNumber}</span>
-                                      </div>
-                                    </div>
-                                    <div className="text-sm text-[#71717A] text-right whitespace-nowrap">
-                                      {vehicle.price.toLocaleString()} kr
-                                    </div>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
+                            {/* Action button */}
+                            <Button
+                              variant="outline"
+                              className="h-8 px-4 py-2 text-sm font-medium w-fit mt-4 border-[#E2E8F0] text-[#0F172A] bg-white hover:bg-slate-50"
+                              onClick={() => {
+                                // TODO: Open renewal offer
+                                console.log('Opening renewal offer')
+                              }}
+                            >
+                              View renewal offer
+                            </Button>
                           </div>
-
-                          {/* Gradient fade at bottom */}
-                          <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white to-transparent pointer-events-none" />
                         </div>
                       )
                     })()
@@ -819,44 +822,50 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
             )}
 
             {/* Fleet Overview */}
-            <Card className="p-0 rounded-[10px] shadow-sm border border-[#E5E5E5] bg-white h-[500px] min-w-0 overflow-hidden">
-              <CardContent className="p-6 flex flex-col h-full min-w-0">
-                <h3 className="text-xl font-semibold text-[#0A0A0A] mb-4" style={{ letterSpacing: "-0.4px" }}>Fleet overview</h3>
-                {/* Tabs */}
-                <div className="flex gap-1 mb-6 bg-[#F4F4F5] p-1 rounded-lg">
-                  <button
-                    onClick={() => setActiveFleetTab("coverLevel")}
-                    className={cn(
-                      "flex-1 px-3 py-1.5 rounded-md text-sm font-medium transition-colors",
-                      activeFleetTab === "coverLevel"
-                        ? "bg-white text-[#0A0A0A] shadow-sm"
-                        : "text-[#71717A] hover:bg-white/50"
-                    )}
-                  >
-                    Cover level
-                  </button>
-                  <button
-                    onClick={() => setActiveFleetTab("addOns")}
-                    className={cn(
-                      "flex-1 px-3 py-1.5 rounded-md text-sm font-medium transition-colors",
-                      activeFleetTab === "addOns"
-                        ? "bg-white text-[#0A0A0A] shadow-sm"
-                        : "text-[#71717A] hover:bg-white/50"
-                    )}
-                  >
-                    Add-ons
-                  </button>
-                  <button
-                    onClick={() => setActiveFleetTab("age")}
-                    className={cn(
-                      "flex-1 px-3 py-1.5 rounded-md text-sm font-medium transition-colors",
-                      activeFleetTab === "age"
-                        ? "bg-white text-[#0A0A0A] shadow-sm"
-                        : "text-[#71717A] hover:bg-white/50"
-                    )}
-                  >
-                    Age
-                  </button>
+            <Card className={cn(
+              "p-0 rounded-[10px] shadow-sm border border-[#E5E5E5] bg-white h-[430px] 2xl:h-[500px] min-w-0 overflow-hidden",
+              settings.useLegacyUpcomingEvents ? "" : "md:col-span-2 2xl:col-span-1"
+            )}>
+              <CardContent className="p-6 flex flex-col 2xl:h-full min-w-0">
+                {/* Header with Tabs */}
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between 2xl:flex-col 2xl:items-start mb-4 2xl:mb-6">
+                  <h3 className="text-xl font-semibold text-[#0A0A0A] mb-4 md:mb-0 2xl:mb-4" style={{ letterSpacing: "-0.4px" }}>Fleet overview</h3>
+                  {/* Tabs */}
+                  <div className="flex gap-1 bg-[#F4F4F5] p-1 rounded-lg md:w-auto 2xl:w-full">
+                    <button
+                      onClick={() => setActiveFleetTab("coverLevel")}
+                      className={cn(
+                        "flex-none md:flex-none 2xl:flex-1 px-3 py-1.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap",
+                        activeFleetTab === "coverLevel"
+                          ? "bg-white text-[#0A0A0A] shadow-sm"
+                          : "text-[#71717A] hover:bg-white/50"
+                      )}
+                    >
+                      Cover level
+                    </button>
+                    <button
+                      onClick={() => setActiveFleetTab("addOns")}
+                      className={cn(
+                        "flex-none md:flex-none 2xl:flex-1 px-3 py-1.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap",
+                        activeFleetTab === "addOns"
+                          ? "bg-white text-[#0A0A0A] shadow-sm"
+                          : "text-[#71717A] hover:bg-white/50"
+                      )}
+                    >
+                      Add-ons
+                    </button>
+                    <button
+                      onClick={() => setActiveFleetTab("age")}
+                      className={cn(
+                        "flex-none md:flex-none 2xl:flex-1 px-3 py-1.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap",
+                        activeFleetTab === "age"
+                          ? "bg-white text-[#0A0A0A] shadow-sm"
+                          : "text-[#71717A] hover:bg-white/50"
+                      )}
+                    >
+                      Age
+                    </button>
+                  </div>
                 </div>
 
                 {/* Chart Area - Fixed height to prevent jumping */}
@@ -971,11 +980,11 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
                         </div>
 
                         {/* Bars */}
-                        <div className="absolute inset-0 flex items-end justify-center gap-4">
+                        <div className="absolute inset-0 flex items-end justify-center gap-4 md:gap-8 2xl:gap-4 md:px-12 2xl:px-0">
                           {fleetData.map((item, index) => {
                             const barHeight = (item.value / 20) * 200
                             return (
-                              <div key={`${activeFleetTab}-${index}`} className="flex flex-col items-center">
+                              <div key={`${activeFleetTab}-${index}`} className="flex flex-col items-center flex-1 max-w-[80px] md:max-w-none 2xl:max-w-[80px]">
                                 <span
                                   className="text-xs font-semibold text-[#0A0A0A] mb-1"
                                   style={{
@@ -986,7 +995,7 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
                                   {item.value}
                                 </span>
                                 <div
-                                  className="w-[80px] bg-[#034F54] rounded-t-md origin-bottom"
+                                  className="w-full bg-[#034F54] rounded-t-md origin-bottom"
                                   style={{
                                     height: `${barHeight}px`,
                                     animation: `barGrow 0.6s ease-out ${index * 150}ms forwards`,
@@ -1000,9 +1009,9 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
                       </div>
 
                       {/* X-Axis Labels */}
-                      <div className="flex justify-center gap-4 mt-2">
+                      <div className="flex justify-center gap-4 md:gap-8 2xl:gap-4 mt-2 md:px-12 2xl:px-0">
                         {fleetData.map((item, index) => (
-                          <span key={`${activeFleetTab}-label-${index}`} className="text-xs text-[#71717A] text-center w-[80px]">{item.label}</span>
+                          <span key={`${activeFleetTab}-label-${index}`} className="text-xs text-[#71717A] text-center flex-1 max-w-[80px] md:max-w-none 2xl:max-w-[80px]">{item.label}</span>
                         ))}
                       </div>
                     </div>
@@ -1011,7 +1020,7 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
                 </div>
 
                 {/* Chart Summary */}
-                <p className="text-sm text-[#71717A] mt-4">
+                <p className="text-sm text-[#71717A] mt-4 mb-0 md:mb-20 2xl:mb-0">
                   Distribution of {dashboardData.totalVehicles} vehicles across your fleet based on {activeFleetTab === "coverLevel" ? "coverage level" : activeFleetTab === "addOns" ? "add-on options" : "vehicle age"}.
                 </p>
 
@@ -1020,7 +1029,7 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
           </div>
 
           {/* Bottom Section - Tables */}
-          <div className="grid grid-cols-2 gap-7">
+          <div className="grid grid-cols-1 2xl:grid-cols-2 gap-6">
             {/* Submitted Requests Table */}
             <Card className="p-0 rounded-[10px] shadow-sm border border-[#E5E5E5] bg-white">
               <CardContent className="p-6">

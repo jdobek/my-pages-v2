@@ -11,7 +11,7 @@ const dashboardData = {
 export default function RiskScorePage() {
   return (
     <div className="w-full bg-[#F9F9FB] min-h-screen">
-      <div className="container mx-auto max-w-7xl px-4 pb-4 pt-10 md:pb-4 md:pt-16">
+      <div className="container mx-auto max-w-7xl px-4 md:px-8 lg:px-12 xl:px-16 pb-4 pt-10 md:pb-4 md:pt-16">
         <div className="flex flex-col gap-6">
           {/* Header */}
           <h1 className="text-black font-semibold" style={{ fontSize: "40px", letterSpacing: "0" }}>

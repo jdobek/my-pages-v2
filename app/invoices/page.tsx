@@ -104,7 +104,7 @@ export default function InvoicesPage() {
     <div className="w-full">
       {/* Header and boxes section */}
       <div>
-        <div className="container mx-auto max-w-7xl px-4 pb-4 pt-10 md:pb-4 md:pt-16">
+        <div className="container mx-auto max-w-7xl px-4 md:px-8 lg:px-12 xl:px-16 pb-4 pt-10 md:pb-4 md:pt-16">
           <div className="flex items-center justify-between mb-6">
             <h1 className="text-slate-950" style={{ fontSize: "2.5rem", fontWeight: 600 }}>
               Invoices
@@ -299,7 +299,7 @@ export default function InvoicesPage() {
         </div>
       </div>
 
-      <div className="container mx-auto max-w-7xl px-4 pb-4 pt-10 md:pb-4 md:pt-16">
+      <div className="container mx-auto max-w-7xl px-4 md:px-8 lg:px-12 xl:px-16 pb-4 pt-10 md:pb-4 md:pt-16">
         <div className="flex flex-col gap-6">
           <div className="flex flex-col gap-3">
             <h1
