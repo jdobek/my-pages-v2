@@ -113,7 +113,7 @@ export default function InvoicesPage() {
               <Button
                 variant="outline"
                 size="icon"
-                className="lg:hidden h-10 w-10 border-[#E5E5E5]"
+                className="lg:hidden h-10 w-10 border-[#E5E5E5] bg-white hover:bg-white"
                 onClick={toggleSidebar}
               >
                 <Menu className="h-5 w-5" />

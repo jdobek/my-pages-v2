@@ -5,13 +5,14 @@ import { useRouter } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
-import { ChevronLeft, ChevronRight, CalendarDays, Check, ShieldCheck, X, AlertTriangle, Info, Clock } from "lucide-react"
+import { ChevronLeft, ChevronRight, CalendarDays, Check, ShieldCheck, X, AlertTriangle, Info, Clock, Menu } from "lucide-react"
 import { currentUser, getOverdueInvoices, getOldestOverdueInvoice, getDaysOverdue, parseInvoiceDate, Vehicle } from "@/lib/data"
 import { useDevSettings } from "@/lib/contexts/dev-context"
 import { cn } from "@/lib/utils"
 import { Label, Pie, PieChart } from "recharts"
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart"
 import { VehicleDetailsModal } from "@/components/vehicle-details-modal"
+import { useSidebar } from "@/components/ui/sidebar"
 
 // Mock data for the dashboard
 const dashboardData = {
@@ -226,6 +227,7 @@ interface DashboardNewProps {
 export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
   const router = useRouter()
   const { settings } = useDevSettings()
+  const { toggleSidebar } = useSidebar()
   // Today is April 14, 2026
   const today = new Date(2026, 3, 14)
   const [selectedDate, setSelectedDate] = useState<Date>(today)
@@ -299,9 +301,19 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
         <div className="flex flex-col gap-6">
           {/* Header */}
           <div className="flex items-center justify-between">
-            <h1 className="text-black font-semibold" style={{ fontSize: "40px", letterSpacing: "0" }}>
-              Dashboard
-            </h1>
+            <div className="flex items-center gap-3">
+              <Button
+                variant="outline"
+                size="icon"
+                className="lg:hidden h-10 w-10 border-[#E5E5E5] bg-white hover:bg-white"
+                onClick={toggleSidebar}
+              >
+                <Menu className="h-5 w-5" />
+              </Button>
+              <h1 className="text-black font-semibold" style={{ fontSize: "40px", letterSpacing: "0" }}>
+                Dashboard
+              </h1>
+            </div>
             <Button
               className="bg-[#005055] hover:bg-[#003c3f] text-white px-5 py-2 h-10"
               onClick={onSubmitRequest}
