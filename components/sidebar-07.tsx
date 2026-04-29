@@ -103,7 +103,7 @@ function SidebarHeaderContent() {
           className="h-8 w-auto"
         />
       )}
-      {!isMobile && <SidebarToggleButton />}
+      <SidebarToggleButton />
     </div>
   )
 }
