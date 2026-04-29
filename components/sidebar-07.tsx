@@ -90,11 +90,11 @@ function SidebarToggleButton() {
 }
 
 function SidebarHeaderContent() {
-  const { state } = useSidebar()
+  const { state, isMobile } = useSidebar()
 
   return (
-    <div className={`flex items-center py-4 ${state === "collapsed" ? "justify-center px-1" : "justify-between px-2"}`}>
-      {state === "expanded" && (
+    <div className={`flex items-center py-4 ${state === "collapsed" && !isMobile ? "justify-center px-1" : "justify-between px-2"}`}>
+      {(state === "expanded" || isMobile) && (
         <Image
           src="/fair-logo.svg"
           alt="Fair Logo"
@@ -103,7 +103,7 @@ function SidebarHeaderContent() {
           className="h-8 w-auto"
         />
       )}
-      <SidebarToggleButton />
+      {!isMobile && <SidebarToggleButton />}
     </div>
   )
 }
