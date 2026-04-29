@@ -9,7 +9,7 @@ interface LayoutProviderProps {
 
 export function LayoutProvider({ children }: LayoutProviderProps) {
   return (
-    <SidebarProvider>
+    <SidebarProvider defaultOpen={true}>
       <Sidebar07 />
       <SidebarInset>{children}</SidebarInset>
     </SidebarProvider>

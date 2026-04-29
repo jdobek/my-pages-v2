@@ -311,10 +311,10 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
           </div>
 
           {/* Stats Row */}
-          <div className="flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-6 bg-white rounded-lg border border-[#E3E8F0] p-4">
+          <div className="grid grid-cols-2 lg:flex lg:flex-row lg:items-center gap-4 lg:gap-6 lg:bg-white lg:rounded-lg lg:border lg:border-[#E3E8F0] lg:p-4">
             {/* Risk Score */}
             <div
-              className="group flex flex-col gap-1.5 flex-1 lg:-m-3 lg:p-3 rounded-lg hover:bg-[#F5F5F5] cursor-pointer transition-colors"
+              className="group flex flex-col gap-1.5 flex-1 p-4 lg:-m-3 lg:p-3 rounded-lg bg-white border border-[#E3E8F0] lg:border-0 hover:bg-[#F5F5F5] cursor-pointer transition-colors"
               onClick={() => router.push("/risk-score")}
             >
               <span className="text-sm font-semibold text-[#727272]">Risk score</span>
@@ -335,7 +335,7 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
             <div className="hidden lg:block w-px h-[54px] bg-[#E3E8F0]" />
 
             {/* Total Vehicles */}
-            <div className="flex flex-col gap-1.5 flex-1 min-w-0">
+            <div className="flex flex-col gap-1.5 flex-1 min-w-0 p-4 lg:p-0 rounded-lg bg-white border border-[#E3E8F0] lg:border-0">
               <span className="text-sm font-semibold text-[#727272]">Total vehicles</span>
               <span className="text-xl xl:text-2xl font-semibold text-[#0F172A] whitespace-nowrap overflow-hidden text-ellipsis" style={{ letterSpacing: "-0.18px" }}>{dashboardData.totalVehicles}</span>
             </div>
@@ -344,7 +344,7 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
             <div className="hidden lg:block w-px h-[54px] bg-[#E3E8F0]" />
 
             {/* Total Premium */}
-            <div className="flex flex-col gap-1.5 flex-1 min-w-0">
+            <div className="flex flex-col gap-1.5 flex-1 min-w-0 p-4 lg:p-0 rounded-lg bg-white border border-[#E3E8F0] lg:border-0">
               <div className="flex items-center gap-1 relative group">
                 <span className="text-sm font-semibold text-[#727272]">Total premium</span>
                 <Info className="w-3.5 h-3.5 text-[#727272] cursor-help" />
@@ -365,7 +365,7 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
             <div className="hidden lg:block w-px h-[54px] bg-[#E3E8F0]" />
 
             {/* Average Premium */}
-            <div className="flex flex-col gap-1.5 flex-1 min-w-0">
+            <div className="flex flex-col gap-1.5 flex-1 min-w-0 p-4 lg:p-0 rounded-lg bg-white border border-[#E3E8F0] lg:border-0">
               <div className="flex items-center gap-1 relative group">
                 <span className="text-sm font-semibold text-[#727272]">Avg. premium</span>
                 <Info className="w-3.5 h-3.5 text-[#727272] cursor-help" />
@@ -388,7 +388,7 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
             "grid gap-6",
             settings.useLegacyUpcomingEvents
               ? "grid-cols-1 2xl:grid-cols-[2fr_1fr]"
-              : "grid-cols-1 md:grid-cols-2 2xl:grid-cols-[1fr_1fr_1fr]"
+              : "grid-cols-1 lg:grid-cols-2 2xl:grid-cols-[1fr_1fr_1fr]"
           )}>
             {settings.useLegacyUpcomingEvents ? (
               /* Legacy: Single combined card */
@@ -824,7 +824,7 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
             {/* Fleet Overview */}
             <Card className={cn(
               "p-0 rounded-[10px] shadow-sm border border-[#E5E5E5] bg-white h-[430px] 2xl:h-[500px] min-w-0 overflow-hidden",
-              settings.useLegacyUpcomingEvents ? "" : "md:col-span-2 2xl:col-span-1"
+              settings.useLegacyUpcomingEvents ? "" : "lg:col-span-2 2xl:col-span-1"
             )}>
               <CardContent className="p-6 flex flex-col 2xl:h-full min-w-0">
                 {/* Header with Tabs */}
