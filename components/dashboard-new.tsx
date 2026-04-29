@@ -636,7 +636,7 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
                           {settings.showOverdueInvoices ? "Oldest overdue invoice:" : "Your next scheduled payment is:"}
                         </p>
                         <div className="flex items-center justify-between">
-                          <p className="text-[22px] font-medium text-[#0A0A0A] leading-5">
+                          <p className="text-lg font-medium text-[#0A0A0A] leading-5">
                             {settings.showOverdueInvoices
                               ? (() => {
                                   const oldest = getOldestOverdueInvoice()
@@ -790,7 +790,7 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
                                 Your next renewal period:
                               </p>
                               <div className="flex items-center justify-between">
-                                <p className="text-[22px] font-medium text-[#0A0A0A] leading-5">
+                                <p className="text-lg font-medium text-[#0A0A0A] leading-5">
                                   {upcomingRenewalSwedish.renewalDate.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }).replace(/(\d+),/, "$1th,")}
                                 </p>
                                 <div className="bg-[#F5F5F5] border border-[#E5E5E5] rounded-full px-2.5 h-6 flex items-center justify-center">
