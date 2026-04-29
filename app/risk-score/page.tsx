@@ -1,7 +1,10 @@
 "use client"
 
 import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Menu } from "lucide-react"
 import { currentUser } from "@/lib/data"
+import { useSidebar } from "@/components/ui/sidebar"
 
 const dashboardData = {
   riskScore: 3,
@@ -9,14 +12,26 @@ const dashboardData = {
 }
 
 export default function RiskScorePage() {
+  const { toggleSidebar } = useSidebar()
+
   return (
     <div className="w-full bg-[#F9F9FB] min-h-screen">
       <div className="container mx-auto max-w-7xl px-4 md:px-8 lg:px-12 xl:px-16 pb-4 pt-10 md:pb-4 md:pt-16">
         <div className="flex flex-col gap-6">
           {/* Header */}
-          <h1 className="text-black font-semibold" style={{ fontSize: "40px", letterSpacing: "0" }}>
-            Risk Score
-          </h1>
+          <div className="flex items-center gap-3">
+            <Button
+              variant="outline"
+              size="icon"
+              className="lg:hidden h-10 w-10 border-[#E5E5E5]"
+              onClick={toggleSidebar}
+            >
+              <Menu className="h-5 w-5" />
+            </Button>
+            <h1 className="text-black font-semibold" style={{ fontSize: "40px", letterSpacing: "0" }}>
+              Risk Score
+            </h1>
+          </div>
 
           {/* Risk Score Overview Card */}
           <Card className="p-0 rounded-[10px] shadow-sm border border-[#E5E5E5] bg-white">

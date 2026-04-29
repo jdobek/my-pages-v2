@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import * as XLSX from "xlsx"
-import { ChevronDown, Search } from "lucide-react"
+import { ChevronDown, Search, Menu } from "lucide-react"
 
 import { currentUser, Vehicle } from "@/lib/data"
 import { SubmitRequestModal } from "@/components/submit-request-modal"
@@ -17,6 +17,8 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { useSidebar } from "@/components/ui/sidebar"
 
 type ModalState = {
   isOpen: boolean
@@ -24,6 +26,7 @@ type ModalState = {
 }
 
 export default function IndexPage() {
+  const { toggleSidebar } = useSidebar()
   const [selectedCoverLevels, setSelectedCoverLevels] = useState<string[]>([])
   const [selectedAddOns, setSelectedAddOns] = useState<string[]>([])
   const [selectedSortBy, setSelectedSortBy] = useState<string>("")
@@ -119,9 +122,19 @@ export default function IndexPage() {
       <div>
         <div className="container mx-auto max-w-7xl px-4 pb-4 pt-10 md:pb-4 md:pt-16">
           <div className="flex items-center justify-between mb-6">
-            <h1 className="text-slate-950" style={{ fontWeight: 600, fontSize: "2.5rem" }}>
-              Policies
-            </h1>
+            <div className="flex items-center gap-3">
+              <Button
+                variant="outline"
+                size="icon"
+                className="lg:hidden h-10 w-10 border-[#E5E5E5]"
+                onClick={toggleSidebar}
+              >
+                <Menu className="h-5 w-5" />
+              </Button>
+              <h1 className="text-slate-950" style={{ fontWeight: 600, fontSize: "2.5rem" }}>
+                Policies
+              </h1>
+            </div>
             <button
               onClick={openSubmitRequestModal}
               style={{

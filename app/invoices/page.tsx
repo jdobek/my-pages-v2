@@ -4,7 +4,9 @@ import { useState, useEffect } from "react"
 import { SubmitRequestModal } from "@/components/submit-request-modal"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { currentUser, baseInvoices, parseInvoiceDate, getDaysOverdue } from "@/lib/data"
-import { AlertCircle, Check, X, Search } from "lucide-react"
+import { AlertCircle, Check, X, Search, Menu } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { useSidebar } from "@/components/ui/sidebar"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -17,6 +19,7 @@ import { useDevSettings } from "@/lib/contexts/dev-context"
 
 export default function InvoicesPage() {
   const { settings } = useDevSettings()
+  const { toggleSidebar } = useSidebar()
   const [showSubmitRequestModal, setShowSubmitRequestModal] = useState(false)
   const [showSuccessAlert, setShowSuccessAlert] = useState(false)
   const [showHelpModal, setShowHelpModal] = useState(false)
@@ -106,9 +109,19 @@ export default function InvoicesPage() {
       <div>
         <div className="container mx-auto max-w-7xl px-4 md:px-8 lg:px-12 xl:px-16 pb-4 pt-10 md:pb-4 md:pt-16">
           <div className="flex items-center justify-between mb-6">
-            <h1 className="text-slate-950" style={{ fontSize: "2.5rem", fontWeight: 600 }}>
-              Invoices
-            </h1>
+            <div className="flex items-center gap-3">
+              <Button
+                variant="outline"
+                size="icon"
+                className="lg:hidden h-10 w-10 border-[#E5E5E5]"
+                onClick={toggleSidebar}
+              >
+                <Menu className="h-5 w-5" />
+              </Button>
+              <h1 className="text-slate-950" style={{ fontSize: "2.5rem", fontWeight: 600 }}>
+                Invoices
+              </h1>
+            </div>
             <button
               onClick={openSubmitRequestModal}
               style={{

@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
-import { ChevronLeft, ChevronRight, ArrowLeft } from "lucide-react"
+import { ChevronLeft, ChevronRight, ArrowLeft, Menu } from "lucide-react"
+import { useSidebar } from "@/components/ui/sidebar"
 import { cn } from "@/lib/utils"
 
 // Extended events data
@@ -138,6 +139,7 @@ function CategoryBadge({ category }: { category: string }) {
 
 export default function EventsPage() {
   const router = useRouter()
+  const { toggleSidebar } = useSidebar()
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date(2026, 3, 10))
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date(2026, 3, 1))
   const [activeFilter, setActiveFilter] = useState<string>("all")
@@ -167,6 +169,14 @@ export default function EventsPage() {
 
           {/* Header with Back Button */}
           <div className="flex items-center gap-4">
+            <Button
+              variant="outline"
+              size="icon"
+              className="lg:hidden h-10 w-10 rounded-lg border-[#E5E5E5] bg-white hover:bg-white"
+              onClick={toggleSidebar}
+            >
+              <Menu className="h-5 w-5" />
+            </Button>
             <Button
               variant="outline"
               size="icon"
