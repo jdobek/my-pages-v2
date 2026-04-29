@@ -840,14 +840,14 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
             )}>
               <CardContent className="p-6 flex flex-col 2xl:h-full min-w-0">
                 {/* Header with Tabs */}
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between 2xl:flex-col 2xl:items-start mb-6">
-                  <h3 className="text-xl font-semibold text-[#0A0A0A] mb-4 md:mb-0 2xl:mb-4" style={{ letterSpacing: "-0.4px" }}>Fleet overview</h3>
+                <div className="flex flex-row items-center justify-between 2xl:flex-col 2xl:items-start mb-4 2xl:mb-6">
+                  <h3 className="text-xl font-semibold text-[#0A0A0A] 2xl:mb-4" style={{ letterSpacing: "-0.4px" }}>Fleet overview</h3>
                   {/* Tabs */}
-                  <div className="flex gap-1 bg-[#F4F4F5] p-1 rounded-lg w-full md:w-auto 2xl:w-full">
+                  <div className="flex gap-1 bg-[#F4F4F5] p-1 rounded-lg w-auto 2xl:w-full">
                     <button
                       onClick={() => setActiveFleetTab("coverLevel")}
                       className={cn(
-                        "flex-1 md:flex-none 2xl:flex-1 px-3 py-1.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap",
+                        "flex-none 2xl:flex-1 px-3 py-1.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap",
                         activeFleetTab === "coverLevel"
                           ? "bg-white text-[#0A0A0A] shadow-sm"
                           : "text-[#71717A] hover:bg-white/50"
@@ -858,7 +858,7 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
                     <button
                       onClick={() => setActiveFleetTab("addOns")}
                       className={cn(
-                        "flex-1 md:flex-none 2xl:flex-1 px-3 py-1.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap",
+                        "flex-none 2xl:flex-1 px-3 py-1.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap",
                         activeFleetTab === "addOns"
                           ? "bg-white text-[#0A0A0A] shadow-sm"
                           : "text-[#71717A] hover:bg-white/50"
@@ -869,7 +869,7 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
                     <button
                       onClick={() => setActiveFleetTab("age")}
                       className={cn(
-                        "flex-1 md:flex-none 2xl:flex-1 px-3 py-1.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap",
+                        "flex-none 2xl:flex-1 px-3 py-1.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap",
                         activeFleetTab === "age"
                           ? "bg-white text-[#0A0A0A] shadow-sm"
                           : "text-[#71717A] hover:bg-white/50"
