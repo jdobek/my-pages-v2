@@ -623,7 +623,7 @@ export default function InvoicesPage() {
 
             <div className="mt-8">
             {/* Mobile/Tablet Card View - Hidden on Large Desktop */}
-            <div className="block 2xl:hidden space-y-4 bg-white p-4 rounded-lg border border-[#E2E8F0]">
+            <div className="block 2xl:hidden space-y-4">
               {(() => {
                 const filteredInvoices = invoices
                   .filter((invoice) => {

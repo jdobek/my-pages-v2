@@ -120,7 +120,7 @@ export default function IndexPage() {
     <section className="w-full">
       {/* Header and boxes section with light background */}
       <div>
-        <div className="container mx-auto max-w-7xl px-4 pb-4 pt-10 md:pb-4 md:pt-16">
+        <div className="container mx-auto max-w-7xl px-4 md:px-8 lg:px-12 xl:px-16 pb-4 pt-10 md:pb-4 md:pt-16">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
               <Button
@@ -310,7 +310,7 @@ export default function IndexPage() {
         </div>
       </div>
 
-      <div className="container mx-auto max-w-7xl px-4 pb-4 pt-10 md:pb-4 md:pt-16">
+      <div className="container mx-auto max-w-7xl px-4 md:px-8 lg:px-12 xl:px-16 pb-4 pt-10 md:pb-4 md:pt-16">
         <div className="flex flex-col gap-6">
           <div className="flex flex-col gap-3">
             <h1
@@ -846,7 +846,7 @@ export default function IndexPage() {
 
         <div className="mt-8">
             {/* Mobile/Tablet Card View - Hidden on Large Desktop */}
-            <div className="block 2xl:hidden space-y-4 bg-white p-4 rounded-lg border border-[#E2E8F0]">
+            <div className="block 2xl:hidden space-y-4">
               {(() => {
                 const filteredVehicles = currentUser.vehicles.filter((vehicle) => {
                   const query = searchQuery.toLowerCase()
