@@ -911,7 +911,7 @@ export default function IndexPage() {
                       backgroundColor: "white",
                     }}
                   >
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px", gap: "8px" }}>
                       <button
                         type="button"
                         onClick={() => openModal(vehicle)}
@@ -924,11 +924,13 @@ export default function IndexPage() {
                           border: "none",
                           cursor: "pointer",
                           padding: 0,
+                          flex: "0 1 auto",
+                          minWidth: "0",
                         }}
                       >
                         {vehicle.plateNumber}
                       </button>
-                      <div style={{ display: "flex", gap: "8px" }}>
+                      <div style={{ display: "flex", gap: "8px", flexShrink: 0 }}>
                         <button
                           onClick={() => openSubmitRequestModalForVehicle(vehicle)}
                           style={{
@@ -1091,7 +1093,7 @@ export default function IndexPage() {
               style={{
                 display: "grid",
                 gridTemplateColumns:
-                  "minmax(100px, 1fr) minmax(180px, 2fr) minmax(80px, 0.8fr) minmax(100px, 1fr) minmax(110px, 1.1fr) minmax(100px, 1fr) minmax(90px, 0.9fr) minmax(120px, 1.2fr) minmax(120px, 1.2fr) minmax(220px, 2fr)",
+                  "minmax(90px, 0.9fr) minmax(160px, 1.6fr) minmax(70px, 0.7fr) minmax(90px, 0.9fr) minmax(100px, 1fr) minmax(90px, 0.9fr) minmax(80px, 0.8fr) minmax(110px, 1.1fr) minmax(110px, 1.1fr) minmax(230px, 2.3fr)",
                 gap: "0",
                 marginBottom: "8px",
               }}
@@ -1110,7 +1112,7 @@ export default function IndexPage() {
               </div>
               <div
                 style={{
-                  padding: "8px 8px 8px 16px",
+                  padding: "8px 8px 8px 8px",
                   textAlign: "left",
                   fontWeight: "600",
                   fontSize: "14px",
@@ -1122,7 +1124,7 @@ export default function IndexPage() {
               </div>
               <div
                 style={{
-                  padding: "8px 8px 8px 16px",
+                  padding: "8px 8px 8px 8px",
                   textAlign: "left",
                   fontWeight: "600",
                   fontSize: "14px",
@@ -1134,7 +1136,7 @@ export default function IndexPage() {
               </div>
               <div
                 style={{
-                  padding: "8px 8px 8px 16px",
+                  padding: "8px 8px 8px 8px",
                   textAlign: "left",
                   fontWeight: "600",
                   fontSize: "14px",
@@ -1146,7 +1148,7 @@ export default function IndexPage() {
               </div>
               <div
                 style={{
-                  padding: "8px 8px 8px 16px",
+                  padding: "8px 8px 8px 8px",
                   textAlign: "left",
                   fontWeight: "600",
                   fontSize: "14px",
@@ -1158,7 +1160,7 @@ export default function IndexPage() {
               </div>
               <div
                 style={{
-                  padding: "8px 8px 8px 16px",
+                  padding: "8px 8px 8px 8px",
                   textAlign: "left",
                   fontWeight: "600",
                   fontSize: "14px",
@@ -1170,8 +1172,8 @@ export default function IndexPage() {
               </div>
               <div
                 style={{
-                  padding: "8px 8px 8px 16px",
-                  textAlign: "left",
+                  padding: "8px 20px 8px 8px",
+                  textAlign: "center",
                   fontWeight: "600",
                   fontSize: "14px",
                   color: "#0F172A",
@@ -1194,7 +1196,7 @@ export default function IndexPage() {
               </div>
               <div
                 style={{
-                  padding: "8px 8px 8px 16px",
+                  padding: "8px 8px 8px 8px",
                   textAlign: "left",
                   fontWeight: "600",
                   fontSize: "14px",
@@ -1208,8 +1210,8 @@ export default function IndexPage() {
                 style={{
                   paddingTop: "8px",
                   paddingBottom: "8px",
-                  paddingLeft: "32px",
-                  paddingRight: "8px",
+                  paddingLeft: "44px",
+                  paddingRight: "16px",
                   fontWeight: "600",
                   fontSize: "14px",
                   color: "#0F172A",
@@ -1307,7 +1309,7 @@ export default function IndexPage() {
                       style={{
                         display: "grid",
                         gridTemplateColumns:
-                          "minmax(100px, 1fr) minmax(180px, 2fr) minmax(80px, 0.8fr) minmax(100px, 1fr) minmax(110px, 1.1fr) minmax(100px, 1fr) minmax(90px, 0.9fr) minmax(120px, 1.2fr) minmax(120px, 1.2fr) minmax(220px, 2fr)",
+                          "minmax(90px, 0.9fr) minmax(160px, 1.6fr) minmax(70px, 0.7fr) minmax(90px, 0.9fr) minmax(100px, 1fr) minmax(90px, 0.9fr) minmax(80px, 0.8fr) minmax(110px, 1.1fr) minmax(110px, 1.1fr) minmax(230px, 2.3fr)",
                         gap: "0",
                         borderBottom:
                           index < filteredVehicles.length - 1
@@ -1344,7 +1346,7 @@ export default function IndexPage() {
                       </div>
                       <div
                         style={{
-                          padding: "8px 8px 8px 16px",
+                          padding: "8px 8px 8px 8px",
                           textAlign: "left",
                           fontSize: "14px",
                           color: "#0F172A",
@@ -1357,7 +1359,7 @@ export default function IndexPage() {
                       </div>
                       <div
                         style={{
-                          padding: "8px 8px 8px 16px",
+                          padding: "8px 8px 8px 8px",
                           textAlign: "left",
                           fontSize: "14px",
                           color: "#0F172A",
@@ -1368,7 +1370,7 @@ export default function IndexPage() {
                       </div>
                       <div
                         style={{
-                          padding: "8px 8px 8px 16px",
+                          padding: "8px 8px 8px 8px",
                           textAlign: "left",
                           fontSize: "14px",
                           color: "#0F172A",
@@ -1379,7 +1381,7 @@ export default function IndexPage() {
                       </div>
                       <div
                         style={{
-                          padding: "8px 8px 8px 16px",
+                          padding: "8px 8px 8px 8px",
                           textAlign: "left",
                           fontSize: "14px",
                           color: "#0F172A",
@@ -1390,7 +1392,7 @@ export default function IndexPage() {
                       </div>
                       <div
                         style={{
-                          padding: "8px 8px 8px 16px",
+                          padding: "8px 8px 8px 8px",
                           textAlign: "left",
                           fontSize: "14px",
                           color: "#0F172A",
@@ -1401,8 +1403,8 @@ export default function IndexPage() {
                       </div>
                       <div
                         style={{
-                          padding: "8px 8px 8px 16px",
-                          textAlign: "left",
+                          padding: "8px 12px 8px 8px",
+                          textAlign: "center",
                           fontSize: "14px",
                           color: "#0F172A",
                           whiteSpace: "nowrap",
@@ -1426,7 +1428,7 @@ export default function IndexPage() {
                       </div>
                       <div
                         style={{
-                          padding: "8px 8px 8px 16px",
+                          padding: "8px 8px 8px 8px",
                           textAlign: "left",
                           fontSize: "14px",
                           color: "#0F172A",
@@ -1442,13 +1444,12 @@ export default function IndexPage() {
                         style={{
                           paddingTop: "8px",
                           paddingBottom: "8px",
-                          paddingLeft: "16px",
-                          paddingRight: "8px",
-                          textAlign: "right",
+                          paddingLeft: "44px",
+                          paddingRight: "16px",
                           fontSize: "14px",
                           display: "flex",
                           alignItems: "center",
-                          justifyContent: "flex-end",
+                          justifyContent: "flex-start",
                           gap: "8px",
                           whiteSpace: "nowrap",
                         }}
