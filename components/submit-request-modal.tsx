@@ -23,6 +23,7 @@ const REQUEST_TYPES_GENERAL = [
   "Remove car",
   "Change cover level",
   "Adjust add-ons",
+  "Invoice issue",
   "Other",
 ]
 
@@ -54,6 +55,7 @@ export function SubmitRequestModal({ onClose, onSubmitSuccess, vehicle, vehicles
   const [message, setMessage] = useState("")
   const [plateNumberOrVIN, setPlateNumberOrVIN] = useState("")
   const [startDate, setStartDate] = useState("")
+  const [invoiceNumber, setInvoiceNumber] = useState("")
   const isVehicleSpecific = !!vehicle
 
   // Auto-fill cover level when plate number is selected
@@ -110,6 +112,9 @@ export function SubmitRequestModal({ onClose, onSubmitSuccess, vehicle, vehicles
         ...(startDate && { startDate })
       }),
       ...(requestType === "Adjust add-ons" && { selectedAddOns }),
+      ...(requestType === "Invoice issue" && {
+        ...(invoiceNumber && { invoiceNumber })
+      }),
       message,
       ...(vehicle && { vehicleId: vehicle.id, plateNumber: vehicle.plateNumber }),
     })
@@ -432,6 +437,22 @@ export function SubmitRequestModal({ onClose, onSubmitSuccess, vehicle, vehicles
                 </div>
               )}
             </>
+          )}
+
+          {/* Invoice Issue Section (only for Invoice issue) */}
+          {requestType === "Invoice issue" && (
+            <div>
+              <label className="mb-2 block text-sm font-medium text-slate-900">
+                Invoice number <span className="text-slate-500 font-normal">(optional)</span>
+              </label>
+              <input
+                type="text"
+                value={invoiceNumber}
+                onChange={(e) => setInvoiceNumber(e.target.value)}
+                placeholder="Enter invoice number"
+                className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-500 focus:border-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-400"
+              />
+            </div>
           )}
 
           {/* Reason Dropdown (only for Remove car) */}
