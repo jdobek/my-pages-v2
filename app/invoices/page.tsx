@@ -752,7 +752,7 @@ export default function InvoicesPage() {
                           {invoice.creditNote && (
                             <div style={{ fontSize: "12px", color: "#64748B" }}>
                               Credit Note: <a
-                                href="/Credit-Memo-300062.pdf"
+                                href="/Invoice-301944.pdf"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 style={{
@@ -828,7 +828,7 @@ export default function InvoicesPage() {
                           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "12px", paddingBottom: "12px" }}>
                             <span style={{ color: "#0F172A", fontWeight: "500" }}>Credit Note</span>
                             <a
-                              href="/Credit-Memo-300062.pdf"
+                              href="/Invoice-301944.pdf"
                               target="_blank"
                               rel="noopener noreferrer"
                               style={{
@@ -1247,7 +1247,7 @@ export default function InvoicesPage() {
                       >
                         {invoice.creditNote ? (
                           <a
-                            href="/Credit-Memo-300062.pdf"
+                            href="/Invoice-301944.pdf"
                             target="_blank"
                             rel="noopener noreferrer"
                             style={{
@@ -1332,7 +1332,7 @@ export default function InvoicesPage() {
                                 Invoice
                               </a>
                               <a
-                                href="/Credit-Memo-300062.pdf"
+                                href="/Invoice-301944.pdf"
                                 download
                                 style={{
                                   display: "block",

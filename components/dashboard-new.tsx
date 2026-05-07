@@ -629,7 +629,10 @@ export function DashboardNew({ onSubmitRequest }: DashboardNewProps) {
                     {/* Status badge */}
                     <div className="flex justify-center mt-4 relative z-10">
                       {settings.showOverdueInvoices ? (
-                        <div className="bg-[#DC2626] rounded-xl px-3 py-1 h-8 flex items-center gap-1.5">
+                        <div
+                          className="bg-[#DC2626] rounded-xl px-3 py-1 h-8 flex items-center gap-1.5 cursor-pointer hover:bg-[#B91C1C] transition-colors"
+                          onClick={() => router.push('/invoices')}
+                        >
                           <span className="text-sm font-medium text-white leading-[7px]">Action required</span>
                           <AlertTriangle className="w-5 h-5 text-white" strokeWidth={1.5} />
                         </div>

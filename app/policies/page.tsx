@@ -101,7 +101,7 @@ export default function IndexPage() {
 
   const downloadAllInsuranceLetters = () => {
     const link = document.createElement("a")
-    link.href = "/Insurance-Letter-Overview-.pdf"
+    link.href = "/Insurance-Letter-Overview.pdf"
     link.download = "Insurance-Letter-Overview.pdf"
     document.body.appendChild(link)
     link.click()
