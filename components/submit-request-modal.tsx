@@ -45,12 +45,14 @@ interface SubmitRequestModalProps {
 }
 
 const AVAILABLE_ADDONS = ["Rental car", "Tools", "Maskinskade"]
+const COVER_LEVELS = ["Ansvar", "Delkasko", "Kasko"]
 
 export function SubmitRequestModal({ onClose, onSubmitSuccess, vehicle, vehicles = [], isOpen, onBack }: SubmitRequestModalProps) {
   const [requestType, setRequestType] = useState("")
   const [reason, setReason] = useState("")
   const [customReason, setCustomReason] = useState("")
   const [coverLevel, setCoverLevel] = useState("")
+  const [newCoverLevel, setNewCoverLevel] = useState("")
   const [selectedAddOns, setSelectedAddOns] = useState<string[]>([])
   const [message, setMessage] = useState("")
   const [plateNumberOrVIN, setPlateNumberOrVIN] = useState("")
@@ -108,7 +110,8 @@ export function SubmitRequestModal({ onClose, onSubmitSuccess, vehicle, vehicles
       }),
       ...(requestType === "Change cover level" && {
         plateNumber: plateNumberOrVIN,
-        coverLevel,
+        currentCoverLevel: coverLevel,
+        newCoverLevel,
         ...(startDate && { startDate })
       }),
       ...(requestType === "Adjust add-ons" && { selectedAddOns }),
@@ -135,8 +138,8 @@ export function SubmitRequestModal({ onClose, onSubmitSuccess, vehicle, vehicles
     (requestType === "Remove car" && !reason) ||
     (requestType === "Remove car" && reason === "other" && !customReason.trim()) ||
     (requestType === "Remove car" && !isVehicleSpecific && !plateNumberOrVIN) ||
-    (requestType === "Change cover level" && !isVehicleSpecific && (!plateNumberOrVIN || !coverLevel)) ||
-    (requestType === "Change cover level" && isVehicleSpecific && !coverLevel) ||
+    (requestType === "Change cover level" && !isVehicleSpecific && (!plateNumberOrVIN || !newCoverLevel)) ||
+    (requestType === "Change cover level" && isVehicleSpecific && !newCoverLevel) ||
     (requestType === "Adjust add-ons" && !isVehicleSpecific && !plateNumberOrVIN) ||
     (requestType === "Adjust add-ons" && selectedAddOns.length === 0)
 
@@ -227,9 +230,11 @@ export function SubmitRequestModal({ onClose, onSubmitSuccess, vehicle, vehicles
                       <SelectValue placeholder="Select cover level" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="Ansvar">Ansvar</SelectItem>
-                      <SelectItem value="Delkasko">Delkasko</SelectItem>
-                      <SelectItem value="Kasko">Kasko</SelectItem>
+                      {COVER_LEVELS.map((level) => (
+                        <SelectItem key={level} value={level}>
+                          {level}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>
@@ -295,71 +300,143 @@ export function SubmitRequestModal({ onClose, onSubmitSuccess, vehicle, vehicles
           {requestType === "Change cover level" && (
             <>
               {!isVehicleSpecific && (
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-900">
-                    Plate number
-                  </label>
-                  <Select value={plateNumberOrVIN} onValueChange={setPlateNumberOrVIN}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select plate number" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {vehicles.map((v) => (
-                        <SelectItem key={v.id} value={v.plateNumber}>
-                          {v.plateNumber}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
-
-              {!isVehicleSpecific && (
-                <div className="grid grid-cols-2 gap-4">
+                <>
                   <div>
                     <label className="mb-2 block text-sm font-medium text-slate-900">
-                      Cover level
+                      Plate number
                     </label>
-                    <Select value={coverLevel} onValueChange={setCoverLevel} disabled={!plateNumberOrVIN}>
+                    <Select value={plateNumberOrVIN} onValueChange={setPlateNumberOrVIN}>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select cover level" />
+                        <SelectValue placeholder="Select plate number" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Ansvar">Ansvar</SelectItem>
-                        <SelectItem value="Delkasko">Delkasko</SelectItem>
-                        <SelectItem value="Kasko">Kasko</SelectItem>
+                        {vehicles.map((v) => (
+                          <SelectItem key={v.id} value={v.plateNumber}>
+                            {v.plateNumber}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </div>
 
-                  <div>
-                    <label className="mb-2 block text-sm font-medium text-slate-900">
-                      Start Date
-                    </label>
-                    <DatePicker
-                      value={startDate}
-                      onChange={setStartDate}
-                      placeholder="Select start date"
-                    />
-                  </div>
-                </div>
+                  {plateNumberOrVIN && (
+                    <>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="mb-2 block text-sm font-medium text-slate-900">
+                            Current cover level
+                          </label>
+                          <div className="relative">
+                            <input
+                              type="text"
+                              value={coverLevel}
+                              disabled
+                              className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 pr-10 text-sm text-slate-900"
+                            />
+                            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="16"
+                                height="16"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                className="text-slate-400"
+                              >
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                              </svg>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="mb-2 block text-sm font-medium text-slate-900">
+                            New cover level
+                          </label>
+                          <Select value={newCoverLevel} onValueChange={setNewCoverLevel}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select cover level" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {COVER_LEVELS.filter(level => level !== coverLevel).map((level) => (
+                                <SelectItem key={level} value={level}>
+                                  {level}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="mb-2 block text-sm font-medium text-slate-900">
+                          Start Date
+                        </label>
+                        <DatePicker
+                          value={startDate}
+                          onChange={setStartDate}
+                          placeholder="Select start date"
+                        />
+                      </div>
+                    </>
+                  )}
+                </>
               )}
 
               {isVehicleSpecific && (
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-900">
-                    Cover level
-                  </label>
-                  <Select value={coverLevel} onValueChange={setCoverLevel}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select cover level" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Ansvar">Ansvar</SelectItem>
-                      <SelectItem value="Delkasko">Delkasko</SelectItem>
-                      <SelectItem value="Kasko">Kasko</SelectItem>
-                    </SelectContent>
-                  </Select>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-slate-900">
+                      Current cover level
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        value={coverLevel}
+                        disabled
+                        className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 pr-10 text-sm text-slate-900"
+                      />
+                      <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="text-slate-400"
+                        >
+                          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-slate-900">
+                      New cover level
+                    </label>
+                    <Select value={newCoverLevel} onValueChange={setNewCoverLevel}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select cover level" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {COVER_LEVELS.filter(level => level !== coverLevel).map((level) => (
+                          <SelectItem key={level} value={level}>
+                            {level}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
               )}
             </>
