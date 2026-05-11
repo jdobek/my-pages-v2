@@ -94,6 +94,19 @@ export function SubmitRequestModal({ onClose, onSubmitSuccess, vehicle, vehicles
     }
   }, [requestType, vehicle, isVehicleSpecific])
 
+  const resetForm = () => {
+    setRequestType("")
+    setReason("")
+    setCustomReason("")
+    setCoverLevel("")
+    setNewCoverLevel("")
+    setSelectedAddOns([])
+    setMessage("")
+    setPlateNumberOrVIN("")
+    setStartDate("")
+    setInvoiceNumber("")
+  }
+
   const handleSubmit = () => {
     console.log("Submitting request:", {
       requestType,
@@ -121,6 +134,7 @@ export function SubmitRequestModal({ onClose, onSubmitSuccess, vehicle, vehicles
       message,
       ...(vehicle && { vehicleId: vehicle.id, plateNumber: vehicle.plateNumber }),
     })
+    resetForm()
     onSubmitSuccess()
     onClose()
   }
